@@ -4,8 +4,78 @@ const jobApi = require('../apis/job')
 const axios = require('axios')
 const Company = require('../models/company')
 const User = require('../models/user')
+const countryApi = require('../apis/getCountry')
 
 class jobController {
+
+    static async getCities(req, res, next) {
+        try {
+            let {
+                data
+            } = await axios({
+                method: 'GET',
+                url: `http://battuta.medunes.net/api/city/${req.query.country.trim()}/search/`,
+                params: {
+                    region: req.query.region,
+                    key: "8ebfb0d129a926198ed8fe7135aba63"
+                }
+            })
+            let cities = [{
+                text: "Select City",
+                value: null
+            }]
+            data.forEach(city => {
+                cities.push(city.city)
+            })
+            res.json(cities)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    static async getRegions(req, res, next) {
+        try {
+            let {
+                data
+            } = await axios({
+                method: 'GET',
+                url: `http://battuta.medunes.net/api/region/${req.query.region.trim()}/all/?key=8ebfb0d129a926198ed8fe7135aba636`
+            })
+            let regions = [{
+                text: "Select Regions",
+                value: null
+            }]
+            data.forEach(region => {
+                regions.push(region.region)
+            })
+            res.json(regions)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    static async getCountry(req, res, next) {
+        try {
+            let {
+                data
+            } = await countryApi.get('/', {
+                params: {
+                    key: "8ebfb0d129a926198ed8fe7135aba636"
+                }
+            })
+            let locations = [{
+                text: "Select Country",
+                value: null
+            }]
+            data.forEach(location => {
+                locations.push(`${location.name}, ${location.code}`)
+            })
+            res.json(locations)
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
 
     static async misapply(req, res, next) {
         try {
@@ -25,7 +95,11 @@ class jobController {
                         new: true,
                     })
                     if (updatedJob) {
-                        await User.findByIdAndUpdate(req.user._id, {$pull : { appliedJob : job._id }})
+                        await User.findByIdAndUpdate(req.user._id, {
+                            $pull: {
+                                appliedJob: job._id
+                            }
+                        })
                         res.json({
                             message: "misapplying job success",
                             job: updatedJob
@@ -37,7 +111,7 @@ class jobController {
                         })
                     }
                 } catch (err) {
-                    throw(err)                    
+                    throw (err)
                 }
             } else {
                 throw ({
@@ -77,13 +151,17 @@ class jobController {
                             context: 'query'
                         })
                         if (updatedJob) {
-                            await User.findByIdAndUpdate(req.user._id, {$push : { appliedJob : job._id }})
+                            await User.findByIdAndUpdate(req.user._id, {
+                                $push: {
+                                    appliedJob: job._id
+                                }
+                            })
                             res.json({
                                 message: "applying job success",
                                 job: updatedJob
                             })
                         } else {
-                            throw(err)
+                            throw (err)
                         }
                     } catch (err) {
                         console.log(err)
@@ -105,7 +183,6 @@ class jobController {
     }
 
     static async getJob(req, res, next) {
-        console.log(req.query)
         let {
             location,
             description,
@@ -126,53 +203,49 @@ class jobController {
                     location,
                 }
             })
-            if (data.length >= 10) {
-                res.json({
-                    github: data
-                })
-            } else {
+
+            let jobs2 = await axios({
+                method: 'get',
+                url: 'https://www.themuse.com/api/public/jobs?api_key=c5830b005d89c566e5af137269ab1079075e94f0f8937d3be331c416796c274e',
+                params: {
+                    page: 1,
+                    location,
+                    category
+                }
+            })
+            const jobs = jobs2.data
+            let result = jobs.results.filter(job => {
+                var re = new RegExp(description, "g");
+                return re.test(job.contents.toLowerCase())
+            })
+            let page = 2
+            while (result.length < 10 && (page <= Math.floor(jobs.total / jobs.items_per_page))) {
+                let temp = []
                 let jobs2 = await axios({
                     method: 'get',
                     url: 'https://www.themuse.com/api/public/jobs?api_key=c5830b005d89c566e5af137269ab1079075e94f0f8937d3be331c416796c274e',
                     params: {
-                        page: 1,
+                        page,
                         location,
                         category
                     }
                 })
-                const jobs = jobs2.data
-                let result = jobs.results.filter(job => {
+                temp = jobs2.data.results.filter(job => {
                     var re = new RegExp(description, "g");
                     return re.test(job.contents.toLowerCase())
                 })
-                let page = 2
-                while (result.length < 10 && (page <= Math.floor(jobs.total / jobs.items_per_page))) {
-                    let temp = []
-                    let jobs2 = await axios({
-                        method: 'get',
-                        url: 'https://www.themuse.com/api/public/jobs?api_key=c5830b005d89c566e5af137269ab1079075e94f0f8937d3be331c416796c274e',
-                        params: {
-                            page,
-                            location,
-                            category
-                        }
-                    })
-                    temp = jobs2.data.results.filter(job => {
-                        var re = new RegExp(description, "g");
-                        return re.test(job.contents.toLowerCase())
-                    })
-                    if (temp.length > 0) {
-                        temp.forEach(element => {
-                            result.push(element)
-                        });
-                    }
-                    page++
+                if (temp.length > 0) {
+                    temp.forEach(element => {
+                        result.push(element)
+                    });
                 }
-                res.json({
-                    github: data,
-                    themuse: result
-                })
+                page++
             }
+            res.json({
+                github: data,
+                themuse: result
+            })
+
         } catch (err) {
             next(err)
         }
@@ -252,24 +325,25 @@ class jobController {
         }
     }
 
-    static destroy(req, res, next) {
-        Job.
-        findByIdAndDelete(req.params.id)
-            .then(job => {
-                if (job) {
-                    res.json({
-                        job: job,
-                        message: "job succesfully deleted"
-                    })
-                } else {
-                    next({
-                        status: 404,
-                        message: 'job not found'
-                    })
-                }
-
-            })
-            .catch(next)
+    static async destroy(req, res, next) {
+        try {
+            let job = await
+            Job.
+            findByIdAndDelete(req.params.id)
+            if (job) {
+                res.json({
+                    job: job,
+                    message: "job succesfully deleted"
+                })
+            } else {
+                next({
+                    status: 404,
+                    message: 'job not found'
+                })
+            }
+        } catch (err) {
+            next(err)
+        }
 
     }
 

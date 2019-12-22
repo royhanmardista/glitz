@@ -4,6 +4,15 @@ const Job = require('../models/job')
 
 class companyController {
 
+    static async findUserCompany(req, res, next) {
+        try {
+            let company = await Company.findOne({ user : req.user._id})
+            res.json(company)
+        } catch(err) {
+            next(err)
+        }
+    }
+
     static async create(req, res, next) {
         let {
             name,

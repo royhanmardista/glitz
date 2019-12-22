@@ -5,7 +5,7 @@
         <div class="sticky-top">
           <nav
             class="navbarcolor navbar navbar-expand-md d-flex justify-content-between pt-1"
-            :class="{'navbarcolor' : !isLogin, 'bg-light border border-bottom border-secondary' : isLogin}"
+            :class="{'navbarcolor' : !isLogin, 'bg-light' : isLogin}"
           >
             <div class="nav navbar d-flex justify-content-start ml-1">
               <router-link to="/">
@@ -56,34 +56,34 @@
 </template>
 
 <script>
-import LoginModal from "@/components/LoginModal.vue";
-import { mapState } from "vuex";
+import LoginModal from '@/components/LoginModal.vue'
+import { mapState } from 'vuex'
 
 export default {
-  name: "App",
+  name: 'App',
   computed: {
-    ...mapState(["isLogin", "loggedUser"])
+    ...mapState(['isLogin', 'loggedUser'])
   },
   components: {
     LoginModal: LoginModal
   },
   methods: {
-    toRegister() {
-      this.$router.push("/register");
+    toRegister () {
+      this.$router.push('/register')
     },
-    logout() {
-      localStorage.removeItem("token");
-      this.$store.commit("CHECK_LOGIN");
-      this.$router.push("/");
+    logout () {
+      localStorage.removeItem('token')
+      this.$store.commit('CHECK_LOGIN')
+      this.$router.push('/')
     },
-    checkLogin() {
-      this.$store.commit("CHECK_LOGIN");
+    checkLogin () {
+      this.$store.commit('CHECK_LOGIN')
     }
   },
-  created() {
-    this.checkLogin();
+  created () {
+    this.checkLogin()
   }
-};
+}
 </script>
 
 <style>
@@ -105,7 +105,7 @@ export default {
 }
 
 #nav a {
-  font-weight: bold;
+  font-weight: 600;
   color: #131101;
 }
 
@@ -115,9 +115,9 @@ export default {
   transition-delay: 1s
 }
 
-#nav a.router-link-exact-active {  
+#nav a.router-link-exact-active {
   color: #38128a;
-  font-weight: bolder;
+  font-weight: 900;
 }
 
 h1,

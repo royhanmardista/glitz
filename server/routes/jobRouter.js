@@ -2,6 +2,8 @@ const router = require('express').Router()
 const jobController = require('../controllers/jobController')
 const { authenticate, jobAuthorization }  = require('../middlewares/auth.js')
 
+router.get('/country', jobController.getCountry)
+router.get('/regions', jobController.getRegions)
 router.get('/search', jobController.getJob)
 router.get('/',jobController.findAll)
 router.get('/:id',jobController.findOne)

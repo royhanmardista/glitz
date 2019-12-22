@@ -21,19 +21,19 @@ const routes = [
   },
   {
     path: '/register',
-    name : 'register',
-    component: () => import(/* webpackChunkName: "Register" */ '../views/Register.vue'),  
+    name: 'register',
+    component: () => import(/* webpackChunkName: "Register" */ '../views/Register.vue'),
     beforeEnter: (to, from, next) => {
       if (localStorage.getItem('token')) {
         next('/home')
       } else {
         next()
       }
-    }  
-  },  
+    }
+  },
   {
     path: '/home',
-    name : 'home',
+    name: 'home',
     component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
     beforeEnter: (to, from, next) => {
       if (!localStorage.getItem('token')) {
@@ -42,7 +42,32 @@ const routes = [
         next()
       }
     }
+  },
+  {
+    path: '/jobs',
+    name: 'job',
+    component: () => import(/* webpackChunkName: "Job" */ '../views/Jobs.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem('token')) {
+        next('/')
+      } else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/mycompany',
+    name: 'mycompany',
+    component: () => import(/* webpackChunkName: "mycompany" */ '../views/MyCompany.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem('token')) {
+        next('/')
+      } else {
+        next()
+      }
+    }
   }
+  
 ]
 
 const router = new VueRouter({
