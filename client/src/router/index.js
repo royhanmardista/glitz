@@ -3,22 +3,45 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [  
+const routes = [
   {
     path: '/',
     name: 'FrontPage',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue')
+    component: () => import(/* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue'),
+    beforeEnter: (to, from, next) => {
+      if (localStorage.getItem('token')) {
+        next('/home')
+      } else {
+        next()
+      }
+    }
   },
   {
-    path: '/test',
-    name: 'Test',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "Test" */ '../views/Test.vue')
+    path: '/register',
+    name : 'register',
+    component: () => import(/* webpackChunkName: "Register" */ '../views/Register.vue'),  
+    beforeEnter: (to, from, next) => {
+      if (localStorage.getItem('token')) {
+        next('/home')
+      } else {
+        next()
+      }
+    }  
+  },  
+  {
+    path: '/home',
+    name : 'home',
+    component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem('token')) {
+        next('/')
+      } else {
+        next()
+      }
+    }
   }
 ]
 

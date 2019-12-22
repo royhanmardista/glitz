@@ -30,7 +30,7 @@
       </div>
     </div>
     <!-- job container start -->
-    <div class="container-fluid">
+    <div class="container-fluid" v-if="github && themuse">
       <!-- github container start -->
       <h2 class="mt-5" v-b-toggle.github-collapse>Github</h2>
 
@@ -161,77 +161,76 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import moment from "moment";
+import { mapState } from 'vuex'
+// import moment from 'moment'
 
 export default {
-  created() {
+  created () {
     this.reload()
   },
   computed: {
-    ...mapState(["jobs", "isLoading", "github", "themuse"]),
-    rows() {
-      return this.github.length;
+    ...mapState(['jobs', 'isLoading', 'github', 'themuse']),
+    rows () {
+      return this.github.length
     },
-    themuseRows() {
-      return this.themuse.length;
+    themuseRows () {
+      return this.themuse.length
     },
-    themuseJobs() {
+    themuseJobs () {
       return this.themuse.slice(
         this.themuseCurrentPage,
         this.themuseCurrentPage + this.perPage
-      );
+      )
     },
-    jobs() {
+    jobs () {
       return this.github.slice(
         this.currentPage,
         this.currentPage + this.perPage
-      );
+      )
     }
   },
-  data() {
+  data () {
     return {
       themuseCurrentPage: 1,
       perPage: 10,
       currentPage: 1,
       form: {
-        description: "",
+        description: '',
         category: null,
-        location: ""
+        location: ''
       },
       categories: [
-        { text: "Select One", value: null },
-        "Sales",
-        "Engineering",
-        "Data Science",
-        "Retail",
-        "Education",
-        "Marketing & PR",
-        "Manufacturing",
-        "Creative & Design"
+        { text: 'Select One', value: null },
+        'Sales',
+        'Engineering',
+        'Data Science',
+        'Retail',
+        'Education',
+        'Marketing & PR',
+        'Manufacturing',
+        'Creative & Design'
       ]
-    };
+    }
   },
   methods: {
-    async reload() {
-      console.log(this.$router.currentRoute)
-      if (this.$router.currentRoute.fullPath != '/') {
-        this.$store.dispatch("searchJob", this.$router.currentRoute.query);
+    async reload () {
+      if (this.$router.currentRoute.fullPath !== '/') {
+        this.$store.dispatch('searchJob', this.$router.currentRoute.query)
       }
     },
-    async searchJob() {
+    async searchJob () {
       this.$router.push({
-        path: "/",
+        path: '/',
         query: {
           description: this.form.description,
           location: this.form.location
         }
-      });
-      this.isSearch = true;
-      await this.$store.dispatch("searchJob", this.form);
+      })
+      this.isSearch = true
+      await this.$store.dispatch('searchJob', this.form)
     }
   }
-};
+}
 </script>
 
 <style>

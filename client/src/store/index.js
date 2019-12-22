@@ -6,43 +6,59 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    github : [],
-    themuse : [],
-    jobs : [],
-    isLoading : false
+    github: null,
+    themuse: null,
+    jobs: [],
+    isLoading: false,
+    isLogin : false,
+    loggedUser : {},
   },
   mutations: {
-    SET_ISLOADING(state, payload) {
+    CHECK_LOGIN(state) {
+      if (localStorage.getItem('token')) {
+        state.isLogin = true
+      } else {
+        state.isLogin = false
+      }
+    },
+    SET_ISLOGIN(state, payload) {
+      state.isLogin = payload
+    },
+    SET_LOGGED_USER (state, user) {
+      state.loggedUser = user
+      state.isLoading = false
+    },
+    SET_ISLOADING (state, payload) {
       state.isLoading = payload
-    }, 
-    SET_EXTERNAL_JOBS(state, jobs) {
+    },
+    SET_EXTERNAL_JOBS (state, jobs) {
       let { github, themuse } = jobs
       state.github = github
-      state.themuse = themuse || []      
+      state.themuse = themuse || []
       state.isLoading = false
     }
   },
   actions: {
-    async searchJob({commit}, form) {
-      commit('SET_EXTERNAL_JOBS', {github : [], themuse : []} )
+    async searchJob ({ commit }, form) {
+      commit('SET_EXTERNAL_JOBS', { github: [], themuse: [] })
       let { description, location, category } = form
       try {
         commit('SET_ISLOADING', true)
         let { data } = await server.get('/jobs/search', {
-          params : {
+          params: {
             location,
             description,
-            category,
+            category
           },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         })
-        commit('SET_EXTERNAL_JOBS', data)        
-      } catch(err) {
+        commit('SET_EXTERNAL_JOBS', data)
+      } catch (err) {
         console.log(err)
         commit('SET_ISLOADING', false)
-      }      
+      }
     }
   },
   modules: {

@@ -39,26 +39,26 @@
 <script>
 import axios from 'axios'
 export default {
-  data() {
+  data () {
     return {
-      job : ''
+      job: ''
     }
   },
-  methods : {
-    async searchJob() {
+  methods: {
+    async searchJob () {
       axios({
-        method : 'GET',
-        url : 'http://localhost:3000/jobs/search',
-        params : {
-          location : this.job
+        method: 'GET',
+        url: 'http://localhost:3000/jobs/search',
+        params: {
+          location: this.job
         }
       })
-      .then(({data}) => {
-        console.log(data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+        .then(({ data }) => {
+          console.log(data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   name: 'HelloWorld',

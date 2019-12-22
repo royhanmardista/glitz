@@ -53,9 +53,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
-  data() {
+  data () {
     return {
       perPage: 10,
       currentPage: 1,
@@ -71,20 +71,20 @@ export default {
       //     { id: 8, first_name: "Rockhead", last_name: "Slate" },
       //     { id: 9, first_name: "Pearl", last_name: "Slaghoople" }
       //   ]
-    };
+    }
   },
   computed: {
-    ...mapState(["github", "isLoading"]),
-    rows() {
-      return this.github.length;
+    ...mapState(['github', 'isLoading']),
+    rows () {
+      return this.github.length
     },
-    jobs() {
+    jobs () {
       return this.github.slice(
         this.currentPage,
         this.currentPage + this.perPage
-      );
+      )
     }
   },
-  created() {}
-};
+  created () {}
+}
 </script>
