@@ -1,17 +1,25 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-10 offset-md-1 border rounded p-5 bg-light">
+      <div class="col-md-10 offset-md-1 border rounded p-5 bg-light" v-if="!isLoading">
         <h3 class="text-center">Let's Start by Filling this Form</h3>
-        <b-form>
+        <b-form @submit="createCompany">
           <b-form-group id="input-group-1" label="Company Name" label-for="input-1">
             <b-form-input
               id="input-1"
               v-model="name"
-              type="email"
+              type="text"
               required
               placeholder="Enter name"
             ></b-form-input>
+          </b-form-group>
+
+          <b-form-group label="Url" label-for="input-2">
+            <b-form-input v-model="url" required placeholder="Fill The Url"></b-form-input>
+          </b-form-group>
+
+          <b-form-group label="Category" label-for="inputCategory">
+            <b-form-select id="inputCategory" v-model="category" :options="categories" required></b-form-select>
           </b-form-group>
 
           <b-form-group id="input-group-2" label="Description" label-for="input-2">
@@ -24,17 +32,13 @@
               max-rows="6"
             ></b-form-textarea>
           </b-form-group>
-          <b-form-group  label="Select Location" label-for="input-1">
+
+          <b-form-group label="Select Location" label-for="input-1">
             <b-form-select v-model="country" :options="locations" required></b-form-select>
-            <b-form-select
-                class="mt-2"
-              v-model="region"
-              :options="regions"
-              required
-            ></b-form-select>
-            <b-form-select v-if="!isLoading" v-model="city" required class="mt-2"></b-form-select>
+            <b-form-select class="mt-2" v-model="region" :options="regions" required></b-form-select>
+            <b-form-select v-model="city" :options="cities" required class="mt-2"></b-form-select>
           </b-form-group>
-          <b-button type="submit" variant="primary mr-2">Submit</b-button>
+          <b-button type="submit" variant="primary mr-2" >Submit</b-button>
           <b-button type="reset" variant="danger">Reset</b-button>
         </b-form>
       </div>
@@ -47,25 +51,66 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["locations", "isLoading", "regions", "searchingRegion"])
+    ...mapState([
+      "locations",
+      "isLoading",
+      "regions",
+      "searchingRegion",
+      "cities",
+      "searchingCity"
+    ])
   },
   mounted() {},
   data() {
     return {
-      cities: [],
+      category: null,
       name: "",
       description: "",
       country: null,
       region: null,
-      city: null
+      city: null,
+      url: null,
+      categories: [
+        { text: "Select Category", value: null },
+        "Sales",
+        "Engineering",
+        "Data Science",
+        "Retail",
+        "Education",
+        "Marketing & PR",
+        "Manufacturing",
+        "Creative & Design"
+      ]
     };
   },
   watch: {
     country: function() {
-        this.region = null
+      this.region = null;
       this.$store.dispatch("getRegions", this.country.split(",")[1]);
+    },
+    region: function() {
+      this.city = null;
+      let payload = {
+        country: this.country.split(",")[1],
+        region: this.region
+      };
+      if (this.region) {
+        this.$store.dispatch("getCities", payload);
+      }
     }
   },
-  methods: {}
+  methods: {
+    async createCompany() {
+      
+      let form = {
+        name : this.name,
+        description : this.description,
+        url : this.url,
+        category : this.category,
+        location : `${this.city},${this.region},${this.country.split(',')[0]}`
+      }
+      await this.$store.dispatch('createCompany', form)
+    }
+  }
 };
 </script>

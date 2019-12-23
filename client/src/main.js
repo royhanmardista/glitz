@@ -10,13 +10,13 @@ import VueAlertify from 'vue-alertify'
 import GSignInButton from 'vue-google-signin-button'
 Vue.use(GSignInButton)
 
-Vue.use(VueAlertify, {  
+Vue.use(VueAlertify, {
   notifier: {
     delay: 2,
     position: 'bottom-left',
-    closeButton: false,
-  },
-});
+    closeButton: false
+  }
+})
 Vue.prototype.moment = moment
 
 Vue.use(BootstrapVue)

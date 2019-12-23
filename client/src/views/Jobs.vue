@@ -32,33 +32,33 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   computed: {
-    ...mapState(["locations", "isLoading"])
+    ...mapState(['locations', 'isLoading'])
   },
-  data() {
+  data () {
     return {
-      searchedJob: "",
-      country: "null",
+      searchedJob: '',
+      country: 'null',
       category: null,
       categories: [
-        { text: "Select Category", value: null },
-        "Sales",
-        "Engineering",
-        "Data Science",
-        "Retail",
-        "Education",
-        "Marketing & PR",
-        "Manufacturing",
-        "Creative & Design"
+        { text: 'Select Category', value: null },
+        'Sales',
+        'Engineering',
+        'Data Science',
+        'Retail',
+        'Education',
+        'Marketing & PR',
+        'Manufacturing',
+        'Creative & Design'
       ]
-    };
+    }
   },
-  created() {
-    this.$store.dispatch("getLocation");
+  created () {
+    this.$store.dispatch('getLocation')
   }
-};
+}
 </script>
 
 <style>

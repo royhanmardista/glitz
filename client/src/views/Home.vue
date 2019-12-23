@@ -22,15 +22,15 @@
 
 <script>
 export default {
-  methods : {
-    toJobs() {
+  methods: {
+    toJobs () {
       this.$router.push('/jobs')
     },
-    myCompany() {
+    myCompany () {
       this.$router.push('/mycompany')
     }
   }
-};
+}
 </script>
 
 <style>

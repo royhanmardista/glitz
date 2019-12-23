@@ -12,7 +12,7 @@
               <b-form inline>
                 <b-input class="mb-2 mr-sm-2 mb-sm-0" placeholder="Job" v-model="form.description"></b-input>
                 <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
-                  <b-input placeholder="Location" v-model="form.location"></b-input>                  
+                  <b-input placeholder="Location" v-model="form.location"></b-input>
                 </b-input-group>
                 <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
                   <b-form-select
@@ -195,7 +195,7 @@ export default {
       perPage: 10,
       currentPage: 1,
       form: {
-        description: "",
+        description: '',
         category: null,
         location: null
       },
