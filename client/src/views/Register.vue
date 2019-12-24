@@ -3,7 +3,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4 offset-md-4 col-sm-10 offset-sm-1 col-xs-10 offset-xs-1">
-          <h5 class="text-center text-white">First, create your <span class="text-danger">Glintzzz.com</span> account.</h5>
+          <h5 class="text-center text-dark">
+            First, create your
+            <span class="text-danger">Glintzzz.com</span> account.
+          </h5>
           <form
             id="register"
             @submit.prevent="register"
@@ -17,7 +20,14 @@
             </div>
             <div class="form-group">
               <label for="exampleInputEmail1">Email address</label>
-              <input v-model="email_register" id="email" type="email" class="form-control" required placeholder="Email" />
+              <input
+                v-model="email_register"
+                id="email"
+                type="email"
+                class="form-control"
+                required
+                placeholder="Email"
+              />
             </div>
             <div class="form-group">
               <label for="username">Username</label>
@@ -77,74 +87,75 @@
 </template>
 
 <script>
-import GSignInButton from 'vue-google-signin-button'
-import server from '@/api/server.js'
+import GSignInButton from "vue-google-signin-button";
+import server from "@/api/server.js";
 
 export default {
   components: {
-    GSignInButton
+    GSignInButton,
   },
-  data () {
+  data() {
     return {
-      errorMessage: '',
-      loginMessage: '',
+      errorMessage: "",
+      loginMessage: "",
       loginLoading: false,
       googleSignInParams: {
         client_id:
-          '628697528399-tm5hqkb025uttnahfoj889flu2jg3hvm.apps.googleusercontent.com'
+          "628697528399-tm5hqkb025uttnahfoj889flu2jg3hvm.apps.googleusercontent.com"
       },
-      email_register: '',
-      password_register: '',
-      username_register: ''
-    }
+      email_register: "",
+      password_register: "",
+      username_register: ""
+    };
   },
   methods: {
-    success: function (message) {
-      this.$alertify.success(message)
+    success: function(message) {
+      this.$alertify.success(message);
     },
-    async onSignInSuccess (googleUser) {
-      let idToken = googleUser.getAuthResponse().id_token
+    async onSignInSuccess(googleUser) {
+      let idToken = googleUser.getAuthResponse().id_token;
       try {
-        let { data } = await server
-          .post('/login-google', {
-            google_token: idToken
-          })
-        localStorage.setItem('token', data.token)
-        this.success(data.message)
-        this.$store.commit('SET_LOGGED_USER', data.user)
-        this.$store.commit('CHECK_LOGIN')
-        this.$router.push('/home')
+        let { data } = await server.post("/login-google", {
+          google_token: idToken
+        });
+        localStorage.setItem("token", data.token);
+        this.success(data.message);
+        this.$store.commit("SET_LOGGED_USER", data.user);
+        this.$store.commit("CHECK_LOGIN");
+        this.$router.push("/home");
       } catch (err) {
-        this.$alertify.error(this.err.response.data.message)
+        this.$alertify.error(this.err.response.data.message);
       }
     },
-    onSignInError (error) {
-      console.log('OH NOES', error)
+    onSignInError(error) {
+      console.log("OH NOES", error);
     },
-    async register () {
-      this.loginLoading = true
+    async register() {
+      this.loginLoading = true;
       try {
-        let { data } = await server.post('/register', {
+        let { data } = await server.post("/register", {
           username: this.username_register,
           email: this.email_register,
           password: this.password_register
-        })
-        this.success(data.message)
-        this.$router.push('/login')
+        });
+        this.success(data.message);
+
+        this.$bvModal.show("modal-login") 
       } catch (err) {
-        this.errorMessage = err.response.data.message.join(', ')
-        this.$alertify.error(this.errorMessage)
+        console.log(err)
+        this.errorMessage = err.response.data.message.join(", ");
+        this.$alertify.error(this.errorMessage);
       } finally {
-        this.loginLoading = false
+        this.loginLoading = false;
       }
     },
-    clearForm () {
-      this.email_register = ''
-      this.username_register = ''
-      this.password_register = ''
+    clearForm() {
+      this.email_register = "";
+      this.username_register = "";
+      this.password_register = "";
     }
   }
-}
+};
 </script>
 
 <style>

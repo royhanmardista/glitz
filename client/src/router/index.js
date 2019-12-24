@@ -3,14 +3,13 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'FrontPage',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue'),
+    component: () => import( /* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue'),
     beforeEnter: (to, from, next) => {
       if (localStorage.getItem('token')) {
         next('/home')
@@ -22,7 +21,7 @@ const routes = [
   {
     path: '/register',
     name: 'register',
-    component: () => import(/* webpackChunkName: "Register" */ '../views/Register.vue'),
+    component: () => import( /* webpackChunkName: "Register" */ '../views/Register.vue'),
     beforeEnter: (to, from, next) => {
       if (localStorage.getItem('token')) {
         next('/home')
@@ -34,7 +33,7 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
+    component: () => import( /* webpackChunkName: "Home" */ '../views/Home.vue'),
     beforeEnter: (to, from, next) => {
       if (!localStorage.getItem('token')) {
         next('/')
@@ -46,7 +45,7 @@ const routes = [
   {
     path: '/jobs',
     name: 'job',
-    component: () => import(/* webpackChunkName: "Job" */ '../views/Jobs.vue'),
+    component: () => import( /* webpackChunkName: "Job" */ '../views/Jobs.vue'),
     beforeEnter: (to, from, next) => {
       if (!localStorage.getItem('token')) {
         next('/')
@@ -58,7 +57,24 @@ const routes = [
   {
     path: '/mycompany',
     name: 'mycompany',
-    component: () => import(/* webpackChunkName: "mycompany" */ '../views/MyCompany.vue'),
+    component: () => import( /* webpackChunkName: "mycompany" */ '../views/MyCompany.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem('token')) {
+        next('/')
+      } else {
+        next()
+      }
+    },
+    children: [{
+      path: ':id',
+      name: 'Post',
+      component: () => import( /* webpackChunkName: "Post" */ '../components/AddJobForm.vue'),
+    }]
+  },
+  {
+    path: '/company/update',
+    name: 'UpdateCompany',
+    component: () => import( /* webpackChunkName: "UpdateCompany" */ '../components/UpdateCompany.vue'),
     beforeEnter: (to, from, next) => {
       if (!localStorage.getItem('token')) {
         next('/')

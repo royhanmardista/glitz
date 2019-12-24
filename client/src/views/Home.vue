@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="bg-light border-top" style="width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100; /* Just to keep it at the very top */">
     <b-jumbotron :fluid=true class="jumbotronColor">
       <template v-slot:header>Glintzzz</template>
 

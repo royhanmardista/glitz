@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import server from '@/api/server.js'
+import router from '@/router'
+
 
 Vue.use(Vuex)
 
@@ -64,8 +66,15 @@ export default new Vuex.Store({
       state.themuse = themuse || []
       state.isLoading = false
     },
-    SET_USER_COMPANY(state, company) {
-      state.userCompany = company
+    SET_USER_COMPANY(state, data) {
+      state.userCompany = data.company
+      if (state.userCompany) {
+        let locationArray = data.company.location.trim().split(',')
+        state.userCompany.country = `${locationArray[2]},${locationArray[3]}`
+        state.userCompany.region = locationArray[1]
+        state.userCompany.city = locationArray[0]
+        state.userCompany.jobs = data.jobs
+      }
     },
     SET_REGIONS(state, regions) {
       state.regions = regions
@@ -75,8 +84,94 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async updateCompany({
+      commit,
+      dispatch,
+      state
+    }, location) {
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.put(`/companies/${state.userCompany._id}`, {
+          name: state.userCompany.name,
+          location,
+          description: state.userCompany.description,
+          url: state.userCompany.url,
+          category : state.userCompany.category
+        }, {
+          headers : {
+            token : localStorage.getItem('token')
+          }
+        })
+        this._vm.$alertify.success(data.message)
+        dispatch('searchUserCompany')
+        router.push('/mycompany')
+      } catch (err) {
+        this._vm.$alertify.error(err.response.data.message)
+        commit('SET_ISLOADING', false)
+      }
+    },
+
+    async deleteJob({
+      commit,
+      dispatch
+    }, jobId) {
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.delete(`/jobs/${jobId}`, {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        this._vm.$alertify.success(data.message)
+        dispatch('searchUserCompany')
+      } catch (err) {
+        this._vm.$alertify.error(err.response.data.message)
+        commit('SET_ISLOADING', false)
+      }
+    },
+    async createJob({
+      commit,
+      dispatch
+    }, form) {
+      let {
+        name,
+        skills,
+        minExp,
+        description,
+        companyId,
+        location
+      } = form
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.post(`/jobs/${companyId}`, {
+          name,
+          skills,
+          minExp,
+          description,
+          location
+        }, {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        this._vm.$alertify.success(data.message)
+        dispatch('searchUserCompany')
+        router.push('/mycompany')
+      } catch (err) {
+        console.log(err)
+        this._vm.$alertify.error(err.response.data.message)
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
     async createCompany({
-      commit
+      commit,
     }, form) {
       try {
         commit('SET_ISLOADING', true)
@@ -119,7 +214,7 @@ export default new Vuex.Store({
       } = payload
       try {
         commit('SET_CITIES', [{
-          text: "Loading ....",
+          text: 'Loading ....',
           value: null
         }])
         commit('SET_SEARCHING_CITY', true)
@@ -135,7 +230,7 @@ export default new Vuex.Store({
       } catch (err) {
         this._vm.$alertify.error(err.response.data.message)
         commit('SET_CITIES', [{
-          text: "No data found ..",
+          text: 'No data found ..',
           value: null
         }])
       } finally {
@@ -149,7 +244,7 @@ export default new Vuex.Store({
       try {
         commit('SET_SEARCHING_REGION', true)
         commit('SET_REGIONS', [{
-          text: "Loading ....",
+          text: 'Loading ....',
           value: null
         }])
         let {
@@ -163,7 +258,7 @@ export default new Vuex.Store({
       } catch (err) {
         this._vm.$alertify.error(err.response.data.message)
         commit('SET_REGIONS', [{
-          text: "No data found ..",
+          text: 'No data found ..',
           value: null
         }])
       } finally {

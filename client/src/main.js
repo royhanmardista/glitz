@@ -2,17 +2,21 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import moment from 'moment'
 import VueAlertify from 'vue-alertify'
 import GSignInButton from 'vue-google-signin-button'
+import { VueSpinners } from '@saeris/vue-spinners'
+
+Vue.use(VueSpinners)
 Vue.use(GSignInButton)
 
 Vue.use(VueAlertify, {
   notifier: {
-    delay: 2,
+    delay: 4,
     position: 'bottom-left',
     closeButton: false
   }
