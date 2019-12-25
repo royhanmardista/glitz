@@ -1,11 +1,17 @@
 <template>
-  <div class="container-fluid" v-if="!isLoading">
+  <div class="container-fluid" v-if="!isLoading && jobDetail">
     <div class="row mx-1">
       <div class="col-md-8 offset-md-2 border rounded p-5 bg-light" v-if="!isLoading">
-        <h3 class="text-center mb-5">Please Fill This Form to Post a Job</h3>
-        <b-form @submit.prevent="createJob">
+        <h3 class="text-center mb-5">Please Fill This Form to Update Job</h3>
+        <b-form @submit.prevent="updateJob">
           <b-form-group id="input-group-1" label="Position Name" label-for="input-1">
-            <b-form-input id="input-1" v-model="name" type="text" required placeholder="Enter name"></b-form-input>
+            <b-form-input
+              id="input-1"
+              v-model="jobDetail.name"
+              type="text"
+              required
+              placeholder="Enter name"
+            ></b-form-input>
           </b-form-group>
 
           <b-form-group label="Skills" label-for="input-2">
@@ -17,11 +23,16 @@
           </b-form-group>
 
           <b-form-group label="Minimum Experience" label-for="inputCategory">
-            <b-form-select id="inputCategory" v-model="minExp" :options="categories" required></b-form-select>
+            <b-form-select
+              id="inputCategory"
+              v-model="jobDetail.minExp"
+              :options="categories"
+              required
+            ></b-form-select>
           </b-form-group>
 
           <b-form-group id="input-group-2" label="Description" label-for="input-2">
-            <vue-editor v-model="description" />
+            <vue-editor v-if="jobDetail.description" v-model="jobDetail.description" />
           </b-form-group>
 
           <b-form-group label="Select Location" label-for="input-1">
@@ -45,28 +56,40 @@ export default {
   components: {
     VueEditor
   },
-  name: "addJobForm",
+  name: "JobUpdateForm",
   computed: {
-    ...mapState([
-      "locations",
-      "isLoading",
-      "regions",
-      "searchingRegion",
-      "cities",
-      "searchingCity",
-      "userCompany"
-    ])
+    ...mapState(["locations", "isLoading", "regions", "cities", "jobDetail"]),
+    skills: {
+      get() {
+        if (this.jobDetail) {
+          return this.jobDetail.skills.join(", ");
+        }
+      },
+      set(newVal) {
+        return (this.inputSkills = newVal);
+      }
+    },
+    country: {
+      get() {
+        if (this.jobDetail) {
+          return this.jobDetail.country;
+        }
+      },
+      set(newVal) {
+        return (this.inputCountry = newVal);
+      }
+    }
   },
-  mounted() {},
+  created() {
+    this.findJobDetail();
+    this.setCountry();
+  },
   data() {
     return {
-      minExp: null,
-      name: "",
-      description: "",
-      country: null,
+      inputSkills: null,
+      inputCountry: null,
       region: null,
       city: null,
-      skills: null,
       categories: [
         { text: "Choose Experience", value: null },
         { text: "no experience", value: 0 },
@@ -75,12 +98,16 @@ export default {
         { text: "3 years", value: 3 },
         { text: "4 years", value: 4 },
         { text: "5 years", value: 5 },
-        { text: "6 years or more", value: 6 },
+        { text: "6 years or more", value: 6 }
       ]
     };
   },
   watch: {
-    country: function() {
+    inputCountry : function() {
+      this.region = null;
+      this.$store.dispatch("getRegions", this.country.split(",")[1]);
+    },
+    country : function() {
       this.region = null;
       this.$store.dispatch("getRegions", this.country.split(",")[1]);
     },
@@ -96,7 +123,19 @@ export default {
     }
   },
   methods: {
-    async createJob() {
+    async setCountry() {
+      if (this.jobDetail) {
+        this.inputCountry = this.jobDetail.country;
+      }
+      await this.$store.dispatch("getLocation");
+    },
+    findJobDetail() {
+      this.$store.dispatch(
+        "findJobDetail",
+        this.$router.currentRoute.params.id
+      );
+    },
+    async updateJob() {
       let location = [];
       if (this.city) {
         location.push(this.city);
@@ -104,20 +143,13 @@ export default {
       if (this.region) {
         location.push(this.region);
       }
-      location.push(this.country);
+      location.push(this.inputCountry);
       let skills = [];
       this.skills.split(",").forEach(skill => {
         skills.push(skill.trim());
       });
-      let form = {
-        name: this.name,
-        description: this.description,
-        skills,
-        minExp: this.minExp,
-        companyId: this.userCompany._id,
-        location: location.join(", ")
-      };
-      await this.$store.dispatch("createJob", form);
+      location = location.join(", ");
+      await this.$store.dispatch("updateJob", location);
     }
   }
 };

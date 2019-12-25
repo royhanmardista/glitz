@@ -87,75 +87,75 @@
 </template>
 
 <script>
-import GSignInButton from "vue-google-signin-button";
-import server from "@/api/server.js";
+import GSignInButton from 'vue-google-signin-button'
+import server from '@/api/server.js'
 
 export default {
   components: {
-    GSignInButton,
+    GSignInButton
   },
-  data() {
+  data () {
     return {
-      errorMessage: "",
-      loginMessage: "",
+      errorMessage: '',
+      loginMessage: '',
       loginLoading: false,
       googleSignInParams: {
         client_id:
-          "628697528399-tm5hqkb025uttnahfoj889flu2jg3hvm.apps.googleusercontent.com"
+          '628697528399-tm5hqkb025uttnahfoj889flu2jg3hvm.apps.googleusercontent.com'
       },
-      email_register: "",
-      password_register: "",
-      username_register: ""
-    };
+      email_register: '',
+      password_register: '',
+      username_register: ''
+    }
   },
   methods: {
-    success: function(message) {
-      this.$alertify.success(message);
+    success: function (message) {
+      this.$alertify.success(message)
     },
-    async onSignInSuccess(googleUser) {
-      let idToken = googleUser.getAuthResponse().id_token;
+    async onSignInSuccess (googleUser) {
+      let idToken = googleUser.getAuthResponse().id_token
       try {
-        let { data } = await server.post("/login-google", {
+        let { data } = await server.post('/login-google', {
           google_token: idToken
-        });
-        localStorage.setItem("token", data.token);
-        this.success(data.message);
-        this.$store.commit("SET_LOGGED_USER", data.user);
-        this.$store.commit("CHECK_LOGIN");
-        this.$router.push("/home");
+        })
+        localStorage.setItem('token', data.token)
+        this.success(data.message)
+        this.$store.commit('SET_LOGGED_USER', data.user)
+        this.$store.commit('CHECK_LOGIN')
+        this.$router.push('/home')
       } catch (err) {
-        this.$alertify.error(this.err.response.data.message);
+        this.$alertify.error(this.err.response.data.message)
       }
     },
-    onSignInError(error) {
-      console.log("OH NOES", error);
+    onSignInError (error) {
+      console.log('OH NOES', error)
     },
-    async register() {
-      this.loginLoading = true;
+    async register () {
+      this.loginLoading = true
       try {
-        let { data } = await server.post("/register", {
+        let { data } = await server.post('/register', {
           username: this.username_register,
           email: this.email_register,
           password: this.password_register
-        });
-        this.success(data.message);
+        })
+        this.success(data.message)
 
-        this.$bvModal.show("modal-login") 
+        this.$bvModal.show('modal-login')
       } catch (err) {
         console.log(err)
-        this.errorMessage = err.response.data.message.join(", ");
-        this.$alertify.error(this.errorMessage);
+        this.errorMessage = err.response.data.message.join(', ')
+        this.$alertify.error(this.errorMessage)
       } finally {
-        this.loginLoading = false;
+        this.loginLoading = false
       }
     },
-    clearForm() {
-      this.email_register = "";
-      this.username_register = "";
-      this.password_register = "";
+    clearForm () {
+      this.email_register = ''
+      this.username_register = ''
+      this.password_register = ''
     }
   }
-};
+}
 </script>
 
 <style>

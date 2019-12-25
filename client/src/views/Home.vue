@@ -1,11 +1,14 @@
 <template>
-  <div class="bg-light border-top" style="width: 100%;
+  <div
+    class="bg-light border-top"
+    style="width: 100%;
     height: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100; /* Just to keep it at the very top */">
-    <b-jumbotron :fluid=true class="jumbotronColor">
+    z-index: 100; /* Just to keep it at the very top */"
+  >
+    <b-jumbotron :fluid="true" class="jumbotronColor">
       <template v-slot:header>Glintzzz</template>
 
       <template
@@ -27,15 +30,19 @@
 
 <script>
 export default {
+  components: {},
+  data() {
+    return {};
+  },
   methods: {
-    toJobs () {
-      this.$router.push('/jobs')
+    toJobs() {
+      this.$router.push("/jobs");
     },
-    myCompany () {
-      this.$router.push('/mycompany')
+    myCompany() {
+      this.$router.push("/mycompany");
     }
   }
-}
+};
 </script>
 
 <style>

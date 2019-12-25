@@ -68,13 +68,37 @@ const routes = [{
     children: [{
       path: ':id',
       name: 'Post',
-      component: () => import( /* webpackChunkName: "Post" */ '../components/AddJobForm.vue'),
+      component: () => import( /* webpackChunkName: "Post" */ '../components/AddJobForm.vue')
     }]
   },
   {
     path: '/company/update',
     name: 'UpdateCompany',
     component: () => import( /* webpackChunkName: "UpdateCompany" */ '../components/UpdateCompany.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem('token')) {
+        next('/')
+      } else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/jobs/:id',
+    name: 'JobDetail',
+    component: () => import( /* webpackChunkName: "JobDetail" */ '../components/JobDetail.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem('token')) {
+        next('/')
+      } else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/jobs/update/:id',
+    name: 'JobUpdate',
+    component: () => import(/* webpackChunkName: "JobUpdate" */ '../components/JobUpdateForm.vue'),
     beforeEnter: (to, from, next) => {
       if (!localStorage.getItem('token')) {
         next('/')

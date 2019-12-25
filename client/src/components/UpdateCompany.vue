@@ -55,49 +55,51 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 
 export default {
-  name: "updateCompany",
+  name: 'updateCompany',
   computed: {
     ...mapState([
-      "locations",
-      "isLoading",
-      "regions",
-      "searchingRegion",
-      "cities",
-      "searchingCity",
-      "userCompany"
+      'locations',
+      'isLoading',
+      'regions',
+      'searchingRegion',
+      'cities',
+      'searchingCity',
+      'userCompany'
     ])
   },
-  mounted() {
-    this.searchCompany();
-    this.setCountry();
+  mounted () {
+    this.searchCompany()
+    this.setCountry()
   },
-  data() {
+  data () {
     return {
-      country: "",
-      region : null,
-      city : null,
+      country: '',
+      region: null,
+      city: null,
       categories: [
-        { text: "Select Category", value: null },
-        "Sales",
-        "Engineering",
-        "Data Science",
-        "Retail",
-        "Education",
-        "Marketing & PR",
-        "Manufacturing",
-        "Creative & Design",
-        "userCompany"
+        { text: 'Select Category', value: null },
+        'Sales',
+        'Engineering',
+        'Data Science',
+        'Retail',
+        'Education',
+        'Marketing & PR',
+        'Manufacturing',
+        'Creative & Design',
+        'userCompany'
       ]
-    };
+    }
   },
 
   watch: {
-    country: function() {
-      this.region = null;
-      this.$store.dispatch("getRegions", this.country.split(",")[1]);
+    country: function () {
+      this.region = null
+      if (this.country) {
+        this.$store.dispatch('getRegions', this.country.split(',')[1])
+      }
     },
     region: function () {
       this.city = null
@@ -111,26 +113,26 @@ export default {
     }
   },
   methods: {
-    async setCountry() {
+    async setCountry () {
       if (this.userCompany) {
-        this.country = this.userCompany.country;
+        this.country = this.userCompany.country.trim()
       }
     },
-    async searchCompany() {
-      await this.$store.dispatch("searchUserCompany");
-      await this.$store.dispatch("getLocation");
+    async searchCompany () {
+      await this.$store.dispatch('searchUserCompany')
+      await this.$store.dispatch('getLocation')
     },
-    async updateCompany() {
-      let location = [];
+    async updateCompany () {
+      let location = []
       if (this.city) {
-        location.push(this.city);
+        location.push(this.city)
       }
       if (this.region) {
-        location.push(this.region);
+        location.push(this.region)
       }
-      location.push(this.country.split(",")[0]);      
-      await this.$store.dispatch("updateCompany", location.join(', '));
+      location.push(this.country)
+      await this.$store.dispatch('updateCompany', location.join(', '))
     }
   }
-};
+}
 </script>
