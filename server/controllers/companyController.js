@@ -6,19 +6,29 @@ class companyController {
 
     static async findUserCompany(req, res, next) {
         try {
-            let company = await Company.findOne({ user : req.user._id})
-            res.json(company)
-        } catch(err) {
+            let company = await Company.findOne({
+                user: req.user._id
+            })
+            let jobs = []
+            if (company) {
+                jobs = await Job.find({
+                    companyId: company._id
+                })
+            }
+            res.json({company, jobs})
+        } catch (err) {
             next(err)
         }
     }
 
     static async create(req, res, next) {
+        console.log('masuk crate company', req.body)
         let {
             name,
             location,
             description,
-            url
+            url,
+            category
         } = req.body
         try {
             let company = await Company.
@@ -27,7 +37,8 @@ class companyController {
                 location,
                 user: req.user._id,
                 description: description,
-                url
+                url,
+                category
             })
             res.status(201).json({
                 company: company,
@@ -48,11 +59,17 @@ class companyController {
     }
 
     static async findOne(req, res, next) {
+        console.log('masuk sini')
         try {
             let company = await Company.findById(req.params.id)
             if (company) {
-                let jobs = await Job.find({companyId : company._id})
-                res.json({company, jobs})
+                let jobs = await Job.find({
+                    companyId: company._id
+                })
+                res.json({
+                    company,
+                    jobs
+                })
             } else {
                 next({
                     status: 404,
@@ -88,7 +105,8 @@ class companyController {
             name,
             location,
             description,
-            url
+            url,
+            category
         } = req.body
         try {
             let company = await Company.findOneAndUpdate({
@@ -97,12 +115,13 @@ class companyController {
                 name,
                 location,
                 description,
-                url
+                url,
+                category
             }, {
                 upsert: true,
                 new: true,
                 runValidators: true,
-                context: 'query'                
+                context: 'query'
             })
             if (company) {
                 res.json({
@@ -118,7 +137,7 @@ class companyController {
         } catch (err) {
             next(err)
         }
-    }    
+    }
 }
 
 module.exports = companyController

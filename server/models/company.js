@@ -12,13 +12,13 @@ const companySchema = new Schema({
         type: String,
         index: true,
         required: [true, 'you must fill the name of your company'],
-        unique : true,
+        unique: true,
         trim: true,
     },
     location: {
         type: String,
         required: [true, 'please choose the location'],
-        trim : true,
+        trim: true,
     },
     description: {
         type: String,
@@ -28,21 +28,38 @@ const companySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    url : {
-        index : true,
-        type : String,
-        required : [true, 'you must fill the url of your company'],
-        trim : true,
-        unique : true
-    },    
-}, {timestamps : true, runSettersOnQuery: true } )
+    url: {
+        index: true,
+        type: String,
+        required: [true, 'you must fill the url of your company'],
+        trim: true,
+        unique: true
+    },
+    category: {
+        type: String,
+        enum: ['Sales',
+            'Engineering',
+            'Data Science',
+            'Retail',
+            'Education',
+            'Marketing & PR',
+            'Manufacturing',
+            'Creative & Design', null
+        ]
+    }
+}, {
+    timestamps: true,
+    runSettersOnQuery: true
+})
 
 companySchema.plugin(uniqueValidator, {
     type: 'mongoose-unique-validator',
     message: '{VALUE} already exist , please pick other {PATH}'
 });
-companySchema.post('findOneAndDelete', async function(doc, next) {
-    await Job.deleteMany({ companyId : doc._id}) 
+companySchema.post('findOneAndDelete', async function (doc, next) {
+    await Job.deleteMany({
+        companyId: doc._id
+    })
     next()
 })
 const Company = model('Company', companySchema)

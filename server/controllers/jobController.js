@@ -5,8 +5,65 @@ const axios = require('axios')
 const Company = require('../models/company')
 const User = require('../models/user')
 const countryApi = require('../apis/getCountry')
+const Country = require('../models/country')
 
 class jobController {
+
+    static async searchJob(req, res, next) {
+        console.log(req.query)
+        let {
+            country,
+            description,
+            minExp,
+            skills
+        } = req.query
+        console.log(country)
+        if (!minExp) {
+            minExp = 7
+        }        
+        try {
+            let jobs = await Job.find({
+                $or: [{
+                    description: {
+                        $regex: new RegExp(description),
+                        $options: "i"
+                    }
+                }, {
+                    name: {
+                        $regex: new RegExp(description),
+                        $options: "i"
+                    }
+                }],
+                skills: {
+                    $regex: new RegExp(skills),
+                    $options : 'i'
+                }, 
+                minExp : {
+                    $lte : minExp,
+                },
+                location : {
+                    $regex : new RegExp(country),
+                    $options : 'i'
+                },
+                userId : {
+                    $ne : req.user._id
+                }
+            }).populate('companyId')
+            res.json(jobs)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    static async insertMany(req, res, next) {
+        Country.insertMany(JSON.parse(req.body.array))
+            .then(() => {
+                res.json({
+                    message: 'data saved'
+                })
+            })
+            .catch(next)
+    }
 
     static async getCities(req, res, next) {
         try {
@@ -17,9 +74,10 @@ class jobController {
                 url: `http://battuta.medunes.net/api/city/${req.query.country.trim()}/search/`,
                 params: {
                     region: req.query.region,
-                    key: "8ebfb0d129a926198ed8fe7135aba63"
+                    key: "09d41e9800bdfa6510cae705a6706a18"
                 }
             })
+            console.log(data)
             let cities = [{
                 text: "Select City",
                 value: null
@@ -39,7 +97,7 @@ class jobController {
                 data
             } = await axios({
                 method: 'GET',
-                url: `http://battuta.medunes.net/api/region/${req.query.region.trim()}/all/?key=8ebfb0d129a926198ed8fe7135aba636`
+                url: `http://battuta.medunes.net/api/region/${req.query.country.trim()}/all/?key=09d41e9800bdfa6510cae705a6706a18`
             })
             let regions = [{
                 text: "Select Regions",
@@ -56,13 +114,7 @@ class jobController {
 
     static async getCountry(req, res, next) {
         try {
-            let {
-                data
-            } = await countryApi.get('/', {
-                params: {
-                    key: "8ebfb0d129a926198ed8fe7135aba636"
-                }
-            })
+            let data = await Country.find()
             let locations = [{
                 text: "Select Country",
                 value: null
@@ -72,7 +124,6 @@ class jobController {
             })
             res.json(locations)
         } catch (err) {
-            console.log(err)
             next(err)
         }
     }
@@ -220,6 +271,7 @@ class jobController {
             })
             let page = 2
             while (result.length < 10 && (page <= Math.floor(jobs.total / jobs.items_per_page))) {
+                console.log(page)
                 let temp = []
                 let jobs2 = await axios({
                     method: 'get',

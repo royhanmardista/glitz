@@ -33,7 +33,8 @@ const jobSchema = new Schema({
     },
     minExp : {
         type : Number,
-        default : 0
+        default : 0,
+        min : [0, 'minimum experience is 0']
     },  
     location : {
         type : String,

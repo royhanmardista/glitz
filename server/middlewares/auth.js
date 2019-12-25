@@ -5,7 +5,7 @@ const {
 const User = require('../models/user')
 const Job = require('../models/job')
 const Company = require('../models/company')
-
+const UserDetail = require('../models/userDetail')
 module.exports = {
     authenticate: (req, res, next) => {
         if (!req.headers.token) {
@@ -29,6 +29,30 @@ module.exports = {
                     }
                 })
 
+        } catch (err) {
+            next(err)
+        }
+    },
+    userDetailAuthorization: async function (req, res, next) {
+        try {
+            let userDetail = await UserDetail.findOne({
+                userId: req.params.userId
+            })
+            if (!userDetail) {
+                throw ({
+                    status: 404,
+                    message: "user detail not found"
+                })
+            } else {
+                if (String(userDetail.userId) == req.user._id) {
+                    next()
+                } else {
+                    throw ({
+                        status: 403,
+                        message: 'you are not authorized'
+                    })
+                }
+            }
         } catch (err) {
             next(err)
         }
@@ -76,5 +100,42 @@ module.exports = {
         } catch (err) {
             next(err)
         }
+    },
+    viewUserDetailAuthorization: async function (req, res, next) {
+        try {
+            let userDetail = await UserDetail.findOne({
+                userId: req.params.userId
+            })
+            if (!userDetail) {
+                throw ({
+                    status: 404,
+                    message: "user detail not found"
+                })
+            } else {
+                if (String(userDetail.userId) == req.user._id) {
+                    next()
+                } else {
+                    let employer = await Job.findOne({
+                        userId: {
+                            $eq: req.user._id
+                        },
+                        applicants: {
+                            $in: [req.params.id]
+                        }
+                    })
+                    if (employer) {
+                        next()
+                    } else {
+                        throw ({
+                            status: 403,
+                            message: "only the user or the company user's applied to can view the profile"
+                        })
+                    }
+                }
+            }
+        } catch (err) {
+            next(err)
+        }
     }
+
 }
