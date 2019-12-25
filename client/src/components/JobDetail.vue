@@ -2,7 +2,7 @@
   <div class="bg-light border-top" style="min-height:600px">
     <div class="container-fluid mt-3">
       <div class="row" v-if="!isLoading">
-        <div class="col-md-10 offset-md-1" >
+        <div class="col-md-10 offset-md-1">
           <h3 class="mb-3">{{jobDetail.name}}</h3>
           <div class="ml-3">
             <p>
@@ -18,21 +18,21 @@
               Last update {{moment(jobDetail.updatedAt).fromNow()}}
             </p>
             <div class="d-flex justify-content-end my-3">
-              <b-button size="lg" variant="warning"><h4>Apply</h4></b-button>
+              <b-button size="lg" variant="warning">
+                <h4>Apply</h4>
+              </b-button>
             </div>
           </div>
           <div class="border p-3 rounded">
-            <h5
+            <div class="d-flex justify-content-between">
+              <h5
               @click="descShow = !descShow"
               :class="descShow ? null : 'collapsed'"
               :aria-expanded="descShow ? 'true' : 'false'"
               style="cursor:pointer"
-            >
-              Job Description
-              <i
-                :class="{'fa fa-caret-down' : !descShow, 'fa fa-caret-up' : descShow }"
-              ></i>
-            </h5>
+            >Job Description</h5>
+            <i :class="{'fa fa-caret-down fa-2x' : !descShow, 'fa fa-caret-up fa-2x' : descShow }"></i>
+            </div>
             <b-collapse id="description" v-model="descShow">
               <div class="ml-3 mt-4" v-html="jobDetail.description"></div>
             </b-collapse>
@@ -60,24 +60,26 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  name : 'JobDetail',
+  name: "JobDetail",
   computed: {
-    ...mapState(["jobDetail",  "isLoading"])
+    ...mapState(["jobDetail", "isLoading"])
   },
   data() {
     return {
       descShow: true
     };
   },
-  methods : {
+  methods: {
     findJobDetail() {
-      this.$store.dispatch('findJobDetail', this.$router.currentRoute.params.id)
+      this.$store.dispatch(
+        "findJobDetail",
+        this.$router.currentRoute.params.id
+      );
     }
   },
   created() {
-    this.findJobDetail()
+    this.findJobDetail();
   }
-
 };
 </script>
 

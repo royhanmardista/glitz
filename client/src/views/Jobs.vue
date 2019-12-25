@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- job container -->
-    <div class="row mt-5 mx-1">
+    <div class="row mt-5 mx-1" v-if="!isLoading">
       <!-- job container start -->
       <div class="col-md-10 offset-md-1" v-if="internalJob">
         <!-- internalJob container start -->
@@ -71,16 +71,16 @@
                     class="col-md-11 col-xs-11 col-sm-11 d-flex flex-column justify-content-between"
                   >
                     <h5>
-                      <a class="text-dark" href=""  @click.prevent="showJobDetail(job)">{{job.name}}</a>
+                      <a class="text-dark" href @click.prevent="showJobDetail(job)">{{job.name}}</a>
                     </h5>
-                    <a href="" @click.prevent="showCompanyDetail(job.companyId)">
+                    <a href @click.prevent="showCompanyDetail(job.companyId)">
                       <i class="fa fa-building-o"></i>
                       {{job.companyId.name}}
                     </a>
-                    <p>
-                      <i class="fa fa-map-marker"></i>
-                      {{job.location}}
-                    </p>
+                    <div class="d-flex mt-1">
+                      <i class="fa fa-map-marker mr-2" style></i>
+                      <p class="text-secondary" style="font-size:0.8rem">{{job.location}}</p>
+                    </div>
                   </div>
                   <div class="col-md-1 col-xs-1 col-sm-1 p-0">
                     <div class>
@@ -88,7 +88,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="text-center border-top pt-1">
+                <div class="text-center border-top pt-1" style="font-size:0.8rem">
                   <i class="fa fa-clock-o"></i>
                   last update {{moment(job.createdAt).fromNow()}}
                 </div>
@@ -135,18 +135,21 @@ export default {
     };
   },
   methods: {
-    showJobDetail (job) {
-      this.$router.push(`jobs/${job._id}`)
-      this.$store.commit('SET_JOBDETAIL', job)
+    showJobDetail(job) {
+      this.$router.push(`jobs/${job._id}`);
+      this.$store.commit("SET_JOBDETAIL", job);
     },
     showCompanyDetail(company) {
-      this.$router.push(`company/${company._id}`)
-      this.$store.dispatch('getCompanyDetail', company._id)
+      this.$router.push(`company/${company._id}`);
+      this.$store.dispatch("getCompanyDetail", company._id);
     },
     async reload() {
       if (this.$router.currentRoute.fullPath !== "/jobs") {
-        this.$store.dispatch("searchInternalJob", this.$router.currentRoute.query);
-        this.currentPage = this.$router.currentRoute.query.page
+        this.$store.dispatch(
+          "searchInternalJob",
+          this.$router.currentRoute.query
+        );
+        this.currentPage = this.$router.currentRoute.query.page;
       }
     },
     async searchJob() {
@@ -171,7 +174,7 @@ export default {
   },
   created() {
     this.$store.dispatch("getLocation");
-    this.reload()
+    this.reload();
   }
 };
 </script>
@@ -179,9 +182,9 @@ export default {
 <style scoped>
 a:hover {
   color: rgb(37, 82, 189) !important;
-  text-decoration : none
+  text-decoration: none;
 }
 a {
-  color: blue !important
+  color: blue !important;
 }
 </style>

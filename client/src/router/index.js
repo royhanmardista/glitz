@@ -119,6 +119,18 @@ const routes = [{
       }
     }
   },
+  {
+    path: '/profile/:id',
+    name: 'UserProfile',
+    component: () => import( /* webpackChunkName: "UserProfile" */ '../components/UserProfile.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem('token')) {
+        next('/')
+      } else {
+        next()
+      }
+    }
+  }
 
 ]
 

@@ -29,8 +29,9 @@ export default new Vuex.Store({
     searchingRegion: false,
     searchingCity: false,
     jobDetail: null,
-    internalJob : null,
-    companyDetail : null,
+    internalJob: null,
+    companyDetail: null,
+    isSearchingUser : false
   },
   mutations: {
     SET_JOBDETAIL(state, job) {
@@ -63,7 +64,6 @@ export default new Vuex.Store({
     },
     SET_LOGGED_USER(state, user) {
       state.loggedUser = user
-      state.isLoading = false
     },
     SET_ISLOADING(state, payload) {
       state.isLoading = payload
@@ -97,18 +97,79 @@ export default new Vuex.Store({
       state.internalJob = jobs
     },
     SET_COMPANY_DETAIL(state, data) {
-      let { company, jobs } = data
+      let {
+        company,
+        jobs
+      } = data
       state.companyDetail = company
       state.companyDetail.jobs = jobs
+    },
+    SET_USER_PROFILE(state, data) {
+      state.userProfile = data
+    },
+    SET_SEARCHING_USER(state, payload) {
+      state.isSearchingUser = payload
     }
   },
   actions: {
-    async getCompanyDetail({ commit }, companyId) {
+    async findUseProfile({
+      commit
+    }, userId) {
       try {
         commit('SET_ISLOADING', true)
-        let { data } = await server.get(`companies/${companyId}`)
+        let {
+          data
+        } = await server.get(`/profile/${userId}`, {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        let {
+          user,
+          userDetail
+        } = data
+        userDetail.email = user.email
+        userDetail.username = user.username
+        commit('SET_USER_PROFILE', userDetail)
+      } catch (err) {
+        console.log(err)
+        this._vm.$alertify.error(err.response.data.message)
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
+    async findUser({
+      commit
+    }) {
+      commit('SET_SEARCHING_USER', true)
+      try {
+        const {
+          data
+        } = await
+        server.get('user', {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        if (data) {
+          commit('SET_LOGGED_USER', data)
+        }
+      } catch (err) {
+        this._vm.$alertify.error(err.response.data.message)
+      } finally {
+        commit('SET_SEARCHING_USER', false)
+      }
+    },
+    async getCompanyDetail({
+      commit
+    }, companyId) {
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.get(`companies/${companyId}`)
         commit('SET_COMPANY_DETAIL', data)
-      } catch(err) {
+      } catch (err) {
         console.log(err)
         this._vm.$alertify.error(err.response.data.message)
       } finally {
@@ -123,7 +184,7 @@ export default new Vuex.Store({
         minExp,
         country,
         skills
-      } = form     
+      } = form
       try {
         commit('SET_ISLOADING', true)
         let {
@@ -140,7 +201,7 @@ export default new Vuex.Store({
           }
         })
         commit('SET_INTERNALJOB', data)
-      } catch(err) {
+      } catch (err) {
         console.log(err)
         this._vm.$alertify(err.response.data.message)
       } finally {

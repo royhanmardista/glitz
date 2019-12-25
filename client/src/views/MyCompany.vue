@@ -40,17 +40,17 @@
               </div>
             </div>
             <div class="ml-auto mt-2">
-              <b-button class="mr-2" variant="info" @click.prevent="updateCompany()">
+              <b-button class="mr-2" variant="info" size="lg" @click.prevent="updateCompany()">
                 <h5>
                   <i class="fa fa-cog"></i> Update Company
                 </h5>
               </b-button>
-              <b-button class="mr-2" variant="warning" @click.prevent="postJob(userCompany._id)">
+              <b-button class="mr-2" variant="warning" size="lg" @click.prevent="postJob(userCompany._id)">
                 <h5>
                   <i class="fa fa-clipboard"></i> Post Job
                 </h5>
               </b-button>
-              <b-button class="mr-2" variant="danger" @click.prevent="deleteCompany()">
+              <b-button class="mr-2" variant="danger" size="lg" @click.prevent="deleteCompany()">
                 <h5>
                   <i class="fa fa-ban"></i> Delete Company
                 </h5>

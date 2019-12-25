@@ -37,12 +37,30 @@
                 <b-nav-item v-if="!isLogin" class="nav-item">
                   <router-link to="/register">Register</router-link>
                 </b-nav-item>
-                <!-- <b-nav-item v-if="isLogin" class="nav-item d-flex flex-column">
-                  <div>Hello,</div>
-                  <div>{{loggedUser.username}}</div>
-                </b-nav-item>-->
-                <b-nav-item v-if="isLogin" class="nav-item" @click.prevent="logout">
-                  <i class="fa fa-power-off"></i> Signout
+
+                <b-nav-item v-if="isLogin && loggedUser.username" class="nav-item">
+                  <b-dropdown
+                    variant="light"
+                    :text="`Hello, ${loggedUser.username}`"
+                    class="m-md-2"
+                  >
+                    <b-dropdown-item @click.prevent="showProfile(loggedUser._id)">
+                      <div class="d-flex justify-content-between h6">
+                        <div>My Profile</div>
+                        <div>
+                          <i class="fa fa-user"></i>
+                        </div>
+                      </div>
+                    </b-dropdown-item>
+                    <b-dropdown-item @click.prevent="logout">
+                      <div class="d-flex justify-content-between h6">
+                        <div>Signout</div>
+                        <div>
+                          <i class="fa fa-power-off"></i>
+                        </div>
+                      </div>
+                    </b-dropdown-item>
+                  </b-dropdown>
                 </b-nav-item>
               </b-navbar-nav>
             </b-collapse>
@@ -68,6 +86,10 @@ export default {
     LoginModal: LoginModal
   },
   methods: {
+    showProfile(userId) {
+      //this.$store.dispatch("findUseProfile", userId);
+      this.$router.push(`/profile/${userId}`)
+    },
     toRegister() {
       this.$router.push("/register");
     },
@@ -76,8 +98,11 @@ export default {
       this.$store.commit("CHECK_LOGIN");
       this.$router.push("/");
     },
-    checkLogin() {
-      this.$store.commit("CHECK_LOGIN");
+    async checkLogin() {
+      await this.$store.commit("CHECK_LOGIN");
+      if (localStorage.getItem("token")) {
+        await this.$store.dispatch("findUser");
+      }
     }
   },
   created() {
@@ -127,5 +152,4 @@ h4,
 h5 {
   font-family: "Oswald", sans-serif;
 }
-
 </style>
