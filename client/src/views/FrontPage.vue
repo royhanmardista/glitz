@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center">
+  <div class="text-center" id="frontPage">
     <div class="d-flex justify-content-center container-fluid">
       <div class="row mx-1">
         <div id="search" class="d-flex flex-column justify-content-center">
@@ -161,76 +161,94 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-  created () {
-    this.reload()
+  created() {
+    this.reload();
   },
   computed: {
-    ...mapState(['jobs', 'isLoading', 'github', 'themuse', 'locations']),
-    rows () {
-      return this.github.length
+    ...mapState(["jobs", "isLoading", "github", "themuse", "locations"]),
+    rows() {
+      return this.github.length;
     },
-    themuseRows () {
-      return this.themuse.length
+    themuseRows() {
+      return this.themuse.length;
     },
-    themuseJobs () {
+    themuseJobs() {
       return this.themuse.slice(
         (this.themuseCurrentPage - 1) * this.perPage,
         this.themuseCurrentPage * this.perPage
-      )
+      );
     },
-    jobs () {
+    jobs() {
       return this.github.slice(
         (this.currentPage - 1) * this.perPage,
         this.currentPage * this.perPage
-      )
+      );
     }
   },
-  data () {
+  data() {
     return {
       themuseCurrentPage: 1,
       perPage: 9,
       currentPage: 1,
       form: {
-        description: '',
+        description: "",
         category: null,
         location: null
       },
       categories: [
-        { text: 'Select One', value: null },
-        'Sales',
-        'Engineering',
-        'Data Science',
-        'Retail',
-        'Education',
-        'Marketing & PR',
-        'Manufacturing',
-        'Creative & Design'
+        { text: "Select One", value: null },
+        "Sales",
+        "Engineering",
+        "Data Science",
+        "Retail",
+        "Education",
+        "Marketing & PR",
+        "Manufacturing",
+        "Creative & Design"
       ]
-    }
+    };
   },
   methods: {
-    async reload () {
-      if (this.$router.currentRoute.fullPath !== '/') {
-        this.$store.dispatch('searchJob', this.$router.currentRoute.query)
+    async reload() {
+      if (this.$router.currentRoute.fullPath !== "/") {
+        this.$store.dispatch("searchJob", this.$router.currentRoute.query);
       }
     },
-    async searchJob () {
+    async searchJob() {
       this.$router.push({
-        path: '/',
+        path: "/",
         query: {
           description: this.form.description,
           location: this.form.location
         }
-      })
-      this.isSearch = true
-      await this.$store.dispatch('searchJob', this.form)
+      });
+      this.isSearch = true;
+      await this.$store.dispatch("searchJob", this.form);
     }
   }
-}
+};
 </script>
 
 <style>
+body {
+  background: rgb(22, 88, 223);
+  background: linear-gradient(
+    90deg,
+    rgba(22, 88, 223, 1) 0%,
+    rgba(234, 234, 226, 1) 0%,
+    rgba(211, 201, 194, 1) 0%,
+    rgba(215, 215, 215, 1) 0%,
+    rgba(170, 98, 57, 1) 0%,
+    rgba(197, 197, 42, 1) 0%,
+    rgba(226, 114, 46, 1) 0%,
+    rgba(35, 210, 225, 1) 0%,
+    rgba(29, 213, 229, 1) 18%,
+    rgba(7, 198, 201, 1) 49%,
+    rgba(14, 115, 138, 1) 100%,
+    rgba(99, 135, 215, 1) 100%
+  );
+}
 </style>

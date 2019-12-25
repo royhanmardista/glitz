@@ -56,34 +56,34 @@
 </template>
 
 <script>
-import LoginModal from '@/components/LoginModal.vue'
-import { mapState } from 'vuex'
+import LoginModal from "@/components/LoginModal.vue";
+import { mapState } from "vuex";
 
 export default {
-  name: 'App',
+  name: "App",
   computed: {
-    ...mapState(['isLogin', 'loggedUser'])
+    ...mapState(["isLogin", "loggedUser"])
   },
   components: {
     LoginModal: LoginModal
   },
   methods: {
-    toRegister () {
-      this.$router.push('/register')
+    toRegister() {
+      this.$router.push("/register");
     },
-    logout () {
-      localStorage.removeItem('token')
-      this.$store.commit('CHECK_LOGIN')
-      this.$router.push('/')
+    logout() {
+      localStorage.removeItem("token");
+      this.$store.commit("CHECK_LOGIN");
+      this.$router.push("/");
     },
-    checkLogin () {
-      this.$store.commit('CHECK_LOGIN')
+    checkLogin() {
+      this.$store.commit("CHECK_LOGIN");
     }
   },
-  created () {
-    this.checkLogin()
+  created() {
+    this.checkLogin();
   }
-}
+};
 </script>
 
 <style>
@@ -112,7 +112,7 @@ export default {
 #nav a:hover {
   color: #11172b;
   text-decoration: none;
-  transition-delay: 1s
+  transition-delay: 1s;
 }
 
 #nav a.router-link-exact-active {
@@ -127,22 +127,5 @@ h4,
 h5 {
   font-family: "Oswald", sans-serif;
 }
-body {
-  background: rgb(22, 88, 223);
-  background: linear-gradient(
-    90deg,
-    rgba(22, 88, 223, 1) 0%,
-    rgba(234, 234, 226, 1) 0%,
-    rgba(211, 201, 194, 1) 0%,
-    rgba(215, 215, 215, 1) 0%,
-    rgba(170, 98, 57, 1) 0%,
-    rgba(197, 197, 42, 1) 0%,
-    rgba(226, 114, 46, 1) 0%,
-    rgba(35, 210, 225, 1) 0%,
-    rgba(29, 213, 229, 1) 18%,
-    rgba(7, 198, 201, 1) 49%,
-    rgba(14, 115, 138, 1) 100%,
-    rgba(99, 135, 215, 1) 100%
-  );
-}
+
 </style>

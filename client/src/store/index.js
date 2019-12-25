@@ -28,14 +28,16 @@ export default new Vuex.Store({
     }],
     searchingRegion: false,
     searchingCity: false,
-    jobDetail: null
+    jobDetail: null,
+    internalJob : null,
+    companyDetail : null,
   },
   mutations: {
     SET_JOBDETAIL(state, job) {
       state.jobDetail = job
       if (state.jobDetail) {
         let locationArray = job.location.trim().split(',')
-        state.jobDetail.country = `${locationArray[2].trim()},${locationArray[3]}`
+        state.jobDetail.country = `${locationArray[locationArray.length - 2].trim()},${locationArray[locationArray.length-1]}`
         state.jobDetail.region = locationArray[1]
         state.jobDetail.city = locationArray[0]
       }
@@ -90,9 +92,61 @@ export default new Vuex.Store({
     },
     SET_CITIES(state, cities) {
       state.cities = cities
+    },
+    SET_INTERNALJOB(state, jobs) {
+      state.internalJob = jobs
+    },
+    SET_COMPANY_DETAIL(state, data) {
+      let { company, jobs } = data
+      state.companyDetail = company
+      state.companyDetail.jobs = jobs
     }
   },
   actions: {
+    async getCompanyDetail({ commit }, companyId) {
+      try {
+        commit('SET_ISLOADING', true)
+        let { data } = await server.get(`companies/${companyId}`)
+        commit('SET_COMPANY_DETAIL', data)
+      } catch(err) {
+        console.log(err)
+        this._vm.$alertify.error(err.response.data.message)
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
+    async searchInternalJob({
+      commit
+    }, form) {
+      let {
+        description,
+        minExp,
+        country,
+        skills
+      } = form     
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.get('/jobs/search/glintzzz', {
+          params: {
+            description,
+            minExp,
+            country,
+            skills
+          },
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        commit('SET_INTERNALJOB', data)
+      } catch(err) {
+        console.log(err)
+        this._vm.$alertify(err.response.data.message)
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
     async updateJob({
       commit,
       dispatch,

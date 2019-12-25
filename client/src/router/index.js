@@ -106,7 +106,19 @@ const routes = [{
         next()
       }
     }
-  }
+  },
+  {
+    path: '/company/:id',
+    name: 'CompanyDetail',
+    component: () => import( /* webpackChunkName: "CompanyDetail" */ '../components/CompanyDetail.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem('token')) {
+        next('/')
+      } else {
+        next()
+      }
+    }
+  },
 
 ]
 

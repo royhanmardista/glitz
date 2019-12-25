@@ -1,65 +1,187 @@
 <template>
-  <div >
-    <div class="container" >
+  <div class="border-top">
+    <div class="container mt-5">
       <div class="row">
-        <div class="col-md-10 offset-md-1" v-if="!isLoading">
-          <div>
-            <b-input-group size="lg" class="mt-5" placeholder="search">
-              <b-form-input v-model="searchedJob" placeholder="Search ..."></b-form-input>
+        <div class="col-md-10 offset-md-1 border pb-2 bg-info rounded" v-if="!isLoading">
+          <b-form @submit.prevent="searchJob">
+            <b-input-group size="lg" class="mt-2" placeholder="search">
+              <b-form-input v-model="description" placeholder="Search ..."></b-form-input>
               <b-input-group-append>
-                <b-button size="sm" text="Button" variant="primary">
+                <b-button size="lg" text="Button" variant="primary" type="submit">
                   <i class="fa fa-search"></i>
                 </b-button>
               </b-input-group-append>
             </b-input-group>
-          </div>
-          <div class="col-md-10 offset-md-1 mt-1">
-            <div>
-              <b-form inline>
-                <b-input-group class="mb-2 mr-sm-2 mb-sm-0 ">
-                  <b-form-select id="input-3" v-model="country" :options="locations" required></b-form-select>
-                </b-input-group>
-                <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
-                  <b-form-select id="input-3" v-model="category" :options="categories" required></b-form-select>
-                </b-input-group>
-              </b-form>
+
+            <div class="mt-1 container-fluid pt-1">
+              <div class="row">
+                <div class="d-flex justify-content-between">
+                  <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
+                    <b-form-select v-model="country" :options="locations"></b-form-select>
+                  </b-input-group>
+                  <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
+                    <b-form-select v-model="minExp" :options="minExperiences"></b-form-select>
+                  </b-input-group>
+                  <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
+                    <b-form-input v-model="skills" placeholder="Input Skills"></b-form-input>
+                  </b-input-group>
+                </div>
+              </div>
             </div>
-          </div>
+          </b-form>
         </div>
       </div>
     </div>
+    <!-- job container -->
+    <div class="row mt-5 mx-1">
+      <!-- job container start -->
+      <div class="col-md-10 offset-md-1" v-if="internalJob">
+        <!-- internalJob container start -->
+        <h4 class style="cursor: pointer" v-b-toggle.job-collapse>{{internalJob.length}} jobs found</h4>
+        <b-collapse class id="job-collapse" :visible="true">
+          <p>Page: {{ currentPage }}</p>
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="pageRows"
+            :per-page="perPage"
+            aria-controls="internalJob"
+          ></b-pagination>
+          <!-- spinner start -->
+          <div v-if="isLoading">
+            <div class="text-center d-flex justify-content-center">
+              <b-spinner type="grow" label="Loading..."></b-spinner>
+            </div>
+          </div>
+          <!-- spinner end -->
+          <div class="row" v-if="!isLoading">
+            <div
+              id="internalJob"
+              :per-page="perPage"
+              :current-page="currentPage"
+              class="col-md-4 col-xs-12 col-sm-12"
+              v-for="job in internalJob"
+              :key="job._id"
+            >
+              <div
+                class="border rounded px-3 py-1 mb-3 d-flex flex-column justify-content-between"
+                style="min-height:180px"
+              >
+                <div class="row text-left">
+                  <div
+                    class="col-md-11 col-xs-11 col-sm-11 d-flex flex-column justify-content-between"
+                  >
+                    <h5>
+                      <a class="text-dark" href=""  @click.prevent="showJobDetail(job)">{{job.name}}</a>
+                    </h5>
+                    <a href="" @click.prevent="showCompanyDetail(job.companyId)">
+                      <i class="fa fa-building-o"></i>
+                      {{job.companyId.name}}
+                    </a>
+                    <p>
+                      <i class="fa fa-map-marker"></i>
+                      {{job.location}}
+                    </p>
+                  </div>
+                  <div class="col-md-1 col-xs-1 col-sm-1 p-0">
+                    <div class>
+                      <i class="fa fa-bookmark"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center border-top pt-1">
+                  <i class="fa fa-clock-o"></i>
+                  last update {{moment(job.createdAt).fromNow()}}
+                </div>
+              </div>
+            </div>
+            <!-- the muse container end -->
+          </div>
+        </b-collapse>
+      </div>
+      <!-- job container end -->
+    </div>
+    <!-- job container end -->
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState(['locations', 'isLoading'])
-  },
-  data () {
-    return {
-      searchedJob: '',
-      country: 'null',
-      category: null,
-      categories: [
-        { text: 'Select Category', value: null },
-        'Sales',
-        'Engineering',
-        'Data Science',
-        'Retail',
-        'Education',
-        'Marketing & PR',
-        'Manufacturing',
-        'Creative & Design'
-      ]
+    ...mapState(["locations", "isLoading", "internalJob"]),
+    pageRows() {
+      return this.internalJob.length;
     }
   },
-  created () {
-    this.$store.dispatch('getLocation')
+  data() {
+    return {
+      currentPage: 1,
+      perPage: 9,
+      currentPage: 1,
+      description: "",
+      minExp: null,
+      country: null,
+      skills: null,
+      minExperiences: [
+        { text: "Choose Experience", value: null },
+        { text: "no experience", value: 0 },
+        { text: "1 year", value: 1 },
+        { text: "2 years", value: 2 },
+        { text: "3 years", value: 3 },
+        { text: "4 years", value: 4 },
+        { text: "5 years", value: 5 },
+        { text: "6 years or more", value: 6 }
+      ]
+    };
+  },
+  methods: {
+    showJobDetail (job) {
+      this.$router.push(`jobs/${job._id}`)
+      this.$store.commit('SET_JOBDETAIL', job)
+    },
+    showCompanyDetail(company) {
+      this.$router.push(`company/${company._id}`)
+      this.$store.dispatch('getCompanyDetail', company._id)
+    },
+    async reload() {
+      if (this.$router.currentRoute.fullPath !== "/jobs") {
+        this.$store.dispatch("searchInternalJob", this.$router.currentRoute.query);
+        this.currentPage = this.$router.currentRoute.query.page
+      }
+    },
+    async searchJob() {
+      this.$router.push({
+        path: "/jobs",
+        query: {
+          description: this.description,
+          minExp: this.minExp,
+          country: this.country,
+          skills: this.skills,
+          page: this.currentPage
+        }
+      });
+      let form = {
+        description: this.description,
+        minExp: this.minExp,
+        country: this.country,
+        skills: this.skills
+      };
+      await this.$store.dispatch("searchInternalJob", form);
+    }
+  },
+  created() {
+    this.$store.dispatch("getLocation");
+    this.reload()
   }
-}
+};
 </script>
 
-<style>
+<style scoped>
+a:hover {
+  color: rgb(37, 82, 189) !important;
+  text-decoration : none
+}
+a {
+  color: blue !important
+}
 </style>

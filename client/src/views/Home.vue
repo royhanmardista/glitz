@@ -1,13 +1,5 @@
 <template>
-  <div
-    class="bg-light border-top"
-    style="width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100; /* Just to keep it at the very top */"
-  >
+  <div>
     <b-jumbotron :fluid="true" class="jumbotronColor">
       <template v-slot:header>Glintzzz</template>
 
@@ -61,5 +53,8 @@ export default {
     rgba(39, 121, 216, 1) 78%,
     rgba(7, 118, 199, 1) 96%
   );
+}
+body {
+  background-color: white;
 }
 </style>
