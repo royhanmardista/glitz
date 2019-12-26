@@ -1,72 +1,118 @@
 <template>
-  <div v-if="!isLoading" class="border-top">
-    <div class="container mt-5 p-3">
-      <div class="row border shadow p-3">
-        <div class="col-md-3">
-          <img :src="userProfile.image" class="border rounded-circle w-50" alt srcset />
-        </div>
-        <div class="col-md-9 d-flex flex-column justify-content-between">
-          <div>
-            <h4>{{userProfile.fullName}}</h4>
-          </div>
-          <div class="d-flex justify-content-between">
-            <div>
-              <div class="mt-2">
-                <div><i class="fa fa-phone"></i> Phone</div>
-                {{userProfile.phone}}
-              </div>
-              <div class="mt-2">
-                <div><i class="fa fa-map-marker"></i> Location</div>
-                {{userProfile.location}}
-              </div>
-            </div>
-            <div>
-              <div class="mt-2">
-                <div><i class="fa fa-envelope"></i> Email</div>
-                {{userProfile.email}}
-              </div>
-              <div class="mt-2">
-                <div><i class="fa fa-clock-o"></i> Age</div>
-                {{userProfile.birthDate}}
-              </div>
-            </div>
+  <div class="border-top">
+    <div v-if="isLoading">
+      <div class="container">
+        <div class="row">
+          <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
+            <PacmanLoader color="#5BC0EB" :size="50"></PacmanLoader>
           </div>
         </div>
       </div>
-      <div class="row mt-3 border shadow p-3">
-        <h4>Education</h4>
-        <div class="container mt-3">
-          <div>{{userProfile.education}}</div>
-        </div>
-      </div>
-      <div class="row mt-3 border shadow p-3">
-        <h4>Skills</h4>
-        <div class="container mt-3">
-          <div class="row d-flex justify-content-start">
-            <div
-              v-for="skill in userProfile.skills"
-              :key="skill"
-              class="border rounded px-4 py-2 mr-2 bg-dark text-white"
-            >
-              <div class>{{skill}}</div>
+    </div>
+    <div v-if="!isLoading" >
+      <AddUserDetail v-if="!userProfile"></AddUserDetail>
+      <CollapseTransition v-if="userProfile">
+        <div class="container mt-3 p-3" v-show="!isLoading">
+          <div class="row border shadow p-3">
+            <div class="col-md-3">
+              <img :src="userProfile.image" class="w-100 border rounded" alt srcset />
+            </div>
+            <div class="col-md-6 d-flex flex-column">
+              <div class="d-flex mb-2">
+                <h3 class="">{{userProfile.fullname.toUpperCase()}}</h3>
+                <div
+                  class="editProfile h3"
+                  v-b-tooltip.hover
+                  title="Edit your profile"
+                  @click.prevent="toEditPage(userProfile)"
+                >
+                  <i class="ml-2 fa fa-pencil"></i>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="mt-2">
+                    <div>
+                      <i class="fa fa-phone"></i> Phone
+                    </div>
+                    {{userProfile.phone}}
+                  </div>
+                  <div class="mt-2">
+                    <div>
+                      <i class="fa fa-map-marker"></i> Location
+                    </div>
+                    {{userProfile.location}}
+                  </div>
+                </div>
+                <div>
+                  <div class="mt-2">
+                    <div>
+                      <i class="fa fa-envelope"></i> Email
+                    </div>
+                    {{userProfile.email}}
+                  </div>
+                  <div class="mt-2">
+                    <div>
+                      <i class="fa fa-clock-o"></i> Age
+                    </div>
+                    {{moment().diff(userProfile.birthDate, 'years')}} years old
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3 border shadow p-3 card">
+            <h4>Description</h4>
+            <div class="container mt-3 ">
+              <div class="row">
+                <span class="container" v-html="userProfile.description"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3 border shadow p-3">
+            <h4>Education</h4>
+            <div class="container mt-3">
+              <div>{{userProfile.education}}</div>
+            </div>
+          </div>
+          <div class="row mt-3 border shadow p-3">
+            <h4>Skills</h4>
+            <div class="container mt-3">
+              <div class="row d-flex justify-content-start">
+                <div
+                  v-for="skill in userProfile.skills"
+                  :key="skill"
+                  class="border rounded px-4 py-2 mr-1 mt-1 bg-dark text-white"
+                >
+                  <div class>{{skill}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3 border shadow p-3">
+            <h4>Experience</h4>
+            <div class="container mt-3">
+              <div>{{userProfile.experience}} years</div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row mt-3 border shadow p-3">
-        <h4>Experience</h4>
-        <div class="container mt-3">
-          <div>{{userProfile.experience}} years</div>
-        </div>
-      </div>
+      </CollapseTransition>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { CollapseTransition } from "vue2-transitions";
+import AddUserDetail from "@/components/AddUserDetail.vue";
+import { PacmanLoader } from "@saeris/vue-spinners";
 
 export default {
+  components: {
+    CollapseTransition,
+    AddUserDetail,
+    PacmanLoader
+  },
   computed: {
     ...mapState(["userProfile", "isLoading"])
   },
@@ -74,15 +120,27 @@ export default {
     this.findUserProfile();
   },
   methods: {
+    toEditPage(userProfile) {
+      //this.commit('SET')
+    },
     async findUserProfile() {
       await this.$store.dispatch(
         "findUseProfile",
         this.$router.currentRoute.params.id
       );
+      await this.$store.dispatch("getLocation");
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
+.editProfile {
+  cursor: pointer;
+  color: blue;
+}
+
+.editProfile:hover {
+  color: rgb(18, 25, 119);
+}
 </style>

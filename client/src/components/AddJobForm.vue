@@ -57,7 +57,8 @@ export default {
       "userCompany"
     ])
   },
-  mounted() {},
+  created() {
+  },
   data() {
     return {
       minExp: null,
@@ -75,7 +76,7 @@ export default {
         { text: "3 years", value: 3 },
         { text: "4 years", value: 4 },
         { text: "5 years", value: 5 },
-        { text: "6 years or more", value: 6 },
+        { text: "6 years or more", value: 6 }
       ]
     };
   },
@@ -95,7 +96,7 @@ export default {
       }
     }
   },
-  methods: {
+  methods: {    
     async createJob() {
       let location = [];
       if (this.city) {

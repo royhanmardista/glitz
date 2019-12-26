@@ -44,16 +44,16 @@
                     :text="`Hello, ${loggedUser.username}`"
                     class="m-md-2"
                   >
-                    <b-dropdown-item @click.prevent="showProfile(loggedUser._id)">
-                      <div class="d-flex justify-content-between h6">
-                        <div>My Profile</div>
+                    <b-dropdown-item >
+                      <div class="d-flex justify-content-between">
+                        <router-link :to="`/profile/${loggedUser._id}`">My Profile</router-link>
                         <div>
                           <i class="fa fa-user"></i>
                         </div>
                       </div>
                     </b-dropdown-item>
                     <b-dropdown-item @click.prevent="logout">
-                      <div class="d-flex justify-content-between h6">
+                      <div class="d-flex justify-content-between">
                         <div>Signout</div>
                         <div>
                           <i class="fa fa-power-off"></i>
@@ -69,7 +69,7 @@
       </div>
     </div>
     <LoginModal></LoginModal>
-    <router-view />
+    <router-view></router-view>
   </div>
 </template>
 
@@ -85,11 +85,7 @@ export default {
   components: {
     LoginModal: LoginModal
   },
-  methods: {
-    showProfile(userId) {
-      //this.$store.dispatch("findUseProfile", userId);
-      this.$router.push(`/profile/${userId}`)
-    },
+  methods: {    
     toRegister() {
       this.$router.push("/register");
     },

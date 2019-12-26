@@ -11,6 +11,8 @@ import VueAlertify from 'vue-alertify'
 import GSignInButton from 'vue-google-signin-button'
 import { VueSpinners } from '@saeris/vue-spinners'
 import Vue2Editor from "vue2-editor";
+import Transitions from 'vue2-transitions'
+Vue.use(Transitions)
 
 Vue.use(Vue2Editor);
 Vue.use(VueSpinners)

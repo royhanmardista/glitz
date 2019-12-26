@@ -31,7 +31,12 @@ export default new Vuex.Store({
     jobDetail: null,
     internalJob: null,
     companyDetail: null,
-    isSearchingUser : false
+    isSearchingUser: false,
+    universities: [{
+      text: 'Select University',
+      value: null
+    }],
+    userProfile : null,
   },
   mutations: {
     SET_JOBDETAIL(state, job) {
@@ -105,13 +110,75 @@ export default new Vuex.Store({
       state.companyDetail.jobs = jobs
     },
     SET_USER_PROFILE(state, data) {
+      console.log(data, 'safdaaaaaaaaaffffffffffffffffffffff')
       state.userProfile = data
     },
     SET_SEARCHING_USER(state, payload) {
       state.isSearchingUser = payload
+    },
+    SET_UNIVERSITIES(state, payload) {
+      state.universities = payload
     }
   },
   actions: {
+    async createProfile({
+      commit,
+      dispatch
+    }, data) {
+      try {
+        commit('SET_ISLOADING', true)
+        let response = await server.post('/profile', data, {
+          headers: {
+            token: localStorage.getItem("token")
+          }
+        })
+        let {
+          user,
+          userDetail,
+          message
+        } = response.data
+        userDetail.email = user.email
+        userDetail.username = user.username
+        console.log(userDetail)
+        commit('SET_USER_PROFILE', userDetail)
+        this._vm.$alertify.success(message)
+      } catch (err) {
+        if (Array.isArray(err.response.data.message)) {
+          this._vm.$alertify.error(err.response.data.message.join(', '))
+        } else {
+          this._vm.$alertify.error(err.response.data.message)
+        }
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
+    async getUniversities({
+      commit
+    }, country) {
+      try {
+        commit('SET_UNIVERSITIES', [{
+          text: 'Loading ....',
+          value: null
+        }])
+        let {
+          data
+        } = await server.get('/profile/universities', {
+          headers: {
+            token: localStorage.getItem('token')
+          },
+          params: {
+            country
+          }
+        })
+        commit('SET_UNIVERSITIES', data)
+      } catch (err) {
+        this._vm.$alertify.error(err.response.data.message)
+        commit('SET_UNIVERSITIES', [{
+          text: 'No data found ..',
+          value: null
+        }])
+      } finally {}
+    },
     async findUseProfile({
       commit
     }, userId) {
@@ -334,8 +401,11 @@ export default new Vuex.Store({
         dispatch('searchUserCompany')
         router.push('/mycompany')
       } catch (err) {
-        console.log(err)
-        this._vm.$alertify.error(err.response.data.message)
+        if (Array.isArray(err.response.data.message)) {
+          this._vm.$alertify.error(err.response.data.message.join(', '))
+        } else {
+          this._vm.$alertify.error(err.response.data.message)
+        }
       } finally {
         commit('SET_ISLOADING', false)
       }
@@ -369,8 +439,11 @@ export default new Vuex.Store({
         commit('SET_USER_COMPANY', data.company)
         this._vm.$alertify.success(data.message)
       } catch (err) {
-        console.log(err)
-        this._vm.$alertify.error(err.response.data.message)
+        if (Array.isArray(err.response.data.message)) {
+          this._vm.$alertify.error(err.response.data.message.join(', '))
+        } else {
+          this._vm.$alertify.error(err.response.data.message)
+        }
       } finally {
         commit('SET_ISLOADING', false)
       }

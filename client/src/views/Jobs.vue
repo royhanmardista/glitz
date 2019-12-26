@@ -2,6 +2,11 @@
   <div class="border-top">
     <div class="container mt-5">
       <div class="row">
+        <!-- spinner -->
+        <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
+          <FadeLoader color="#5BC0EB" ></FadeLoader>
+        </div>
+        <!-- job page -->
         <div class="col-md-10 offset-md-1 border pb-2 bg-info rounded" v-if="!isLoading">
           <b-form @submit.prevent="searchJob">
             <b-input-group size="lg" class="mt-2" placeholder="search">
@@ -106,7 +111,14 @@
 
 <script>
 import { mapState } from "vuex";
+import { FadeLoader } from "@saeris/vue-spinners";
+
+
 export default {
+  name : "Jobs",
+  components : {
+    FadeLoader,
+  },
   computed: {
     ...mapState(["locations", "isLoading", "internalJob"]),
     pageRows() {
