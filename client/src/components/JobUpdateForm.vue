@@ -105,7 +105,7 @@ export default {
   watch: {
     inputCountry: function () {
       this.region = null
-      this.$store.dispatch('getRegions', this.country.split(',')[1])
+      this.$store.dispatch('getRegions', this.inputCountry.split(',')[1])
     },
     country: function () {
       this.region = null
@@ -143,13 +143,14 @@ export default {
       if (this.region) {
         location.push(this.region)
       }
-      location.push(this.inputCountry)
+      location.push(this.inputCountry || this.country)
       let skills = []
-      this.skills.split(',').forEach(skill => {
+      let skillArray = this.inputSkills || this.skills
+      skillArray.split(',').forEach(skill => {
         skills.push(skill.trim())
       })
       location = location.join(', ')
-      await this.$store.dispatch('updateJob', location)
+      await this.$store.dispatch('updateJob', {location, skills})
     }
   }
 }

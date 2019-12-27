@@ -74,7 +74,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.fullPath == '/register' || to.fullPath == '/') {
+  if (to.fullPath == '/register' || to.path == '/') {
     if (!localStorage.getItem('token')) {
       next()
     } else {

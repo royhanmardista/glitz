@@ -1,5 +1,5 @@
 <template>
-  <div  class="text-center wrapper" id="frontPage">
+  <div  class="text-center" id="frontPage">
     <div class="d-flex justify-content-center container-fluid">
       <div class="row mx-1">
         <div id="search" class="d-flex flex-column justify-content-center">
@@ -79,7 +79,7 @@
                     {{job.location}}
                   </p>
                 </div>
-                <div class="col-md-1 col-xs-1 col-sm-1">
+                <div class="col-md-1 col-xs-1 col-sm-1 p-0">
                   <div class>
                     <i class="fa fa-bookmark"></i>
                   </div>
@@ -140,7 +140,7 @@
                     {{job.locations[0].name}}
                   </p>
                 </div>
-                <div class="col-md-1 col-xs-1 col-sm-1">
+                <div class="col-md-1 col-xs-1 col-sm-1 p-0">
                   <div class>
                     <i class="fa fa-bookmark"></i>
                   </div>
@@ -233,17 +233,7 @@ export default {
 </script>
 
 <style >
-.wrapper {
-	height : calculate(100% + 100vh);
-	width : 100vw;
-	/* position : absolute; */
-	left : 0;
-	top : 0;
-	/* display : flex; */
-	/* align-items : center; */ 
-	justify-content : center;
-	color : #fff;
-	/* transition  : .5s; */
+body {
   background: rgb(22, 88, 223);
   background: linear-gradient(
     90deg,

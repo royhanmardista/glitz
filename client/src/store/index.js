@@ -327,16 +327,17 @@ export default new Vuex.Store({
       commit,
       dispatch,
       state
-    }, location) {
+    }, payload) {
       try {
         commit('SET_ISLOADING', true)
+        let { location, skills } = payload
         let {
           data
         } = await server.put(`/jobs/${state.jobDetail._id}`, {
           name: state.jobDetail.name,
           location,
           description: state.jobDetail.description,
-          skills: state.jobDetail.skills,
+          skills,
           minExp: state.jobDetail.minExp
         }, {
           headers: {
@@ -347,7 +348,11 @@ export default new Vuex.Store({
         dispatch('searchUserCompany')
         router.push('/mycompany')
       } catch (err) {
-        this._vm.$alertify.error(err.response.data.message)
+        if (Array.isArray(err.response.data.message)) {
+          this._vm.$alertify.error(err.response.data.message.join(', '))
+        } else {
+          this._vm.$alertify.error(err.response.data.message)
+        }
       } finally {
         commit('SET_ISLOADING', false)
       }
