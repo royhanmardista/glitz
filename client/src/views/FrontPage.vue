@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center" id="frontPage">
+  <div  class="text-center wrapper" id="frontPage">
     <div class="d-flex justify-content-center container-fluid">
       <div class="row mx-1">
         <div id="search" class="d-flex flex-column justify-content-center">
@@ -232,8 +232,18 @@ export default {
 }
 </script>
 
-<style>
-body {
+<style >
+.wrapper {
+	height : calculate(100% + 100vh);
+	width : 100vw;
+	/* position : absolute; */
+	left : 0;
+	top : 0;
+	/* display : flex; */
+	/* align-items : center; */ 
+	justify-content : center;
+	color : #fff;
+	/* transition  : .5s; */
   background: rgb(22, 88, 223);
   background: linear-gradient(
     90deg,
@@ -251,4 +261,9 @@ body {
     rgba(99, 135, 215, 1) 100%
   );
 }
+
+/* body {
+  
+  
+} */
 </style>

@@ -9,17 +9,25 @@
         </div>
       </div>
     </div>
-    <div v-if="!isLoading" >
+    <div v-if="!isLoading">
       <AddUserDetail v-if="!userProfile"></AddUserDetail>
       <CollapseTransition v-if="userProfile">
-        <div class="container mt-3 p-3" v-show="!isLoading">
+        <div class="container mt-2 p-3" v-show="!isLoading">
           <div class="row border shadow p-3">
             <div class="col-md-3">
-              <img :src="userProfile.image" class="w-100 border rounded" alt srcset />
+              <img
+                :src="userProfile.image"
+                class="border rounded"
+                alt
+                srcset
+                style=" width: 100%;
+                min-height: 12vw;
+                object-fit: cover;"
+              />
             </div>
             <div class="col-md-6 d-flex flex-column">
               <div class="d-flex mb-2">
-                <h3 class="">{{userProfile.fullname.toUpperCase()}}</h3>
+                <h3 class>{{userProfile.fullname.toUpperCase()}}</h3>
                 <div
                   class="editProfile h3"
                   v-b-tooltip.hover
@@ -63,9 +71,9 @@
           </div>
           <div class="row mt-3 border shadow p-3 card">
             <h4>Description</h4>
-            <div class="container mt-3 ">
+            <div class="container mt-3">
               <div class="row">
-                <span class="container" v-html="userProfile.description"></span>
+                <span class="container text-justify" v-html="userProfile.description"></span>
               </div>
             </div>
           </div>
@@ -102,15 +110,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { CollapseTransition } from 'vue2-transitions'
-import AddUserDetail from '@/components/AddUserDetail.vue'
-import { PacmanLoader } from '@saeris/vue-spinners'
+import { mapState } from "vuex";
+import { CollapseTransition } from "vue2-transitions";
+import AddUserDetail from "@/components/AddUserDetail.vue";
+import { PacmanLoader } from "@saeris/vue-spinners";
 
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
   components: {
     CollapseTransition,
@@ -118,24 +125,24 @@ export default {
     PacmanLoader
   },
   computed: {
-    ...mapState(['userProfile', 'isLoading'])
+    ...mapState(["userProfile", "isLoading"])
   },
-  created () {
-    this.findUserProfile()
+  created() {
+    this.findUserProfile();
   },
   methods: {
-    toEditPage (userProfile) {
-      this.$router.push(`/profile/update/${userProfile.userId}`)
+    toEditPage(userProfile) {
+      this.$router.push(`/profile/update/${userProfile.userId}`);
     },
-    async findUserProfile () {
+    async findUserProfile() {
       await this.$store.dispatch(
-        'findUseProfile',
+        "findUseProfile",
         this.$router.currentRoute.params.id
-      )
-      await this.$store.dispatch('getLocation')
+      );
+      await this.$store.dispatch("getLocation");
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -130,6 +130,49 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async updateProfile({ commit, state }, payload) {
+      let { education, skills, birthDate } = payload
+      let { fullname,
+        description,
+        phone,
+        location, experience } = state.userProfile
+      try {
+          commit('SET_ISLOADING', true)
+          console.log(location)
+        let { data } = await server.put(`/profile`, {
+          education,
+          skills,
+          birthDate,
+          fullname,
+          description,
+          phone,
+          location,
+          experience
+        }, {
+          headers : {
+            token : localStorage.getItem('token')
+          }
+        })
+        let {
+          user,
+          userDetail,
+          message
+        } = data
+        userDetail.email = user.email
+        userDetail.username = user.username
+        commit('SET_USER_PROFILE', userDetail)
+        this._vm.$alertify.success(message)
+        router.push(`/profile/${userDetail.userId}`)
+      }  catch(err) {
+        if (Array.isArray(err.response.data.message)) {
+          this._vm.$alertify.error(err.response.data.message.join(', '))
+        } else {
+          this._vm.$alertify.error(err.response.data.message)
+        }
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
     async createProfile ({
       commit,
       dispatch
