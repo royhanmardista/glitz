@@ -1,155 +1,92 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueAlertify from 'vue-alertify'
 
 Vue.use(VueRouter)
 
 const routes = [{
-  path: '/',
-  name: 'FrontPage',
-  // route level code-splitting
-  // this generates a separate chunk (about.[hash].js) for this route
-  // which is lazy-loaded when the route is visited.
-  component: () => import(/* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue'),
-  beforeEnter: (to, from, next) => {
-    if (localStorage.getItem('token')) {
-      next('/home')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/register',
-  name: 'register',
-  component: () => import(/* webpackChunkName: "Register" */ '../views/Register.vue'),
-  beforeEnter: (to, from, next) => {
-    if (localStorage.getItem('token')) {
-      next('/home')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/home',
-  name: 'home',
-  component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/jobs',
-  name: 'job',
-  component: () => import(/* webpackChunkName: "Job" */ '../views/Jobs.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/mycompany',
-  name: 'mycompany',
-  component: () => import(/* webpackChunkName: "mycompany" */ '../views/MyCompany.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
+    path: '/',
+    name: 'FrontPage',
+    component: () => import( /* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue'),
   },
-  children: [{
-    path: ':id',
-    name: 'Post',
-    component: () => import(/* webpackChunkName: "Post" */ '../components/AddJobForm.vue')
-  }]
-},
-{
-  path: '/company/update',
-  name: 'UpdateCompany',
-  component: () => import(/* webpackChunkName: "UpdateCompany" */ '../components/UpdateCompany.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/jobs/:id',
-  name: 'JobDetail',
-  component: () => import(/* webpackChunkName: "JobDetail" */ '../components/JobDetail.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/jobs/update/:id',
-  name: 'JobUpdate',
-  component: () => import(/* webpackChunkName: "JobUpdate" */ '../components/JobUpdateForm.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/company/:id',
-  name: 'CompanyDetail',
-  component: () => import(/* webpackChunkName: "CompanyDetail" */ '../components/CompanyDetail.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/profile/:id',
-  name: 'UserProfile',
-  component: () => import(/* webpackChunkName: "UserProfile" */ '../components/UserProfile.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
-  }
-},
-{
-  path: '/profile/update/:id',
-  name: 'UserUpdate',
-  component: () => import(/* webpackChunkName: "UpdateUserDetail" */ '../components/UpdateUserDetail.vue'),
-  beforeEnter: (to, from, next) => {
-    if (!localStorage.getItem('token')) {
-      next('/')
-    } else {
-      next()
-    }
-  }
-}
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import( /* webpackChunkName: "Register" */ '../views/Register.vue'),
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import( /* webpackChunkName: "Home" */ '../views/Home.vue'),
+  },
+  {
+    path: '/jobs',
+    name: 'job',
+    component: () => import( /* webpackChunkName: "Job" */ '../views/Jobs.vue'),
+  },
+  {
+    path: '/mycompany',
+    name: 'mycompany',
+    component: () => import( /* webpackChunkName: "mycompany" */ '../views/MyCompany.vue'),
+    children: [{
+      path: ':id',
+      name: 'Post',
+      component: () => import( /* webpackChunkName: "Post" */ '../components/AddJobForm.vue')
+    }]
+  },
+  {
+    path: '/company/update',
+    name: 'UpdateCompany',
+    component: () => import( /* webpackChunkName: "UpdateCompany" */ '../components/UpdateCompany.vue'),
+  },
+  {
+    path: '/jobs/:id',
+    name: 'JobDetail',
+    component: () => import( /* webpackChunkName: "JobDetail" */ '../components/JobDetail.vue'),
+  },
+  {
+    path: '/jobs/update/:id',
+    name: 'JobUpdate',
+    component: () => import( /* webpackChunkName: "JobUpdate" */ '../components/JobUpdateForm.vue'),
+  },
+  {
+    path: '/company/:id',
+    name: 'CompanyDetail',
+    component: () => import( /* webpackChunkName: "CompanyDetail" */ '../components/CompanyDetail.vue'),
+  },
+  {
+    path: '/profile/:id',
+    name: 'UserProfile',
+    component: () => import( /* webpackChunkName: "UserProfile" */ '../components/UserProfile.vue'),
 
+  },
+  {
+    path: '/profile/update/:id',
+    name: 'UserUpdate',
+    component: () => import( /* webpackChunkName: "UpdateUserDetail" */ '../components/UpdateUserDetail.vue'),
+  }
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.fullPath == '/register' || to.fullPath == '/') {
+    if (!localStorage.getItem('token')) {
+      next()
+    } else {
+      next(false)
+    }
+  } else {
+    if (localStorage.getItem('token')) {
+      next()
+    } else {       
+       next('/register')
+    }
+  }
 })
 
 export default router

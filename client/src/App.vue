@@ -4,17 +4,18 @@
       <div class="frontpage">
         <div class="sticky-top">
           <nav
-            class="navbarcolor navbar navbar-expand-md d-flex justify-content-between pt-1"
+            class="navbar navbar-expand-md d-flex justify-content-between pt-1"
             :class="{'navbarcolor' : !isLogin, 'bg-light' : isLogin}"
           >
             <div class="nav navbar d-flex justify-content-start ml-1">
-              <router-link to="/">
                 <a class="navbar-brand nav-bar-title">
-                  <router-link to="/">
+                  <router-link to='/' v-if="!isLogin">
+                    <i class="fa fa-star"></i> Glintzzz
+                  </router-link>
+                  <router-link to='/home' v-if="isLogin">
                     <i class="fa fa-star"></i> Glintzzz
                   </router-link>
                 </a>
-              </router-link>
             </div>
             <b-navbar-toggle class target="nav-collapse">
               <i class="fa fa-align-justify"></i>
