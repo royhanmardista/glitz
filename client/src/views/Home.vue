@@ -23,18 +23,18 @@
 <script>
 export default {
   components: {},
-  data() {
-    return {};
+  data () {
+    return {}
   },
   methods: {
-    toJobs() {
-      this.$router.push("/jobs");
+    toJobs () {
+      this.$router.push('/jobs')
     },
-    myCompany() {
-      this.$router.push("/mycompany");
+    myCompany () {
+      this.$router.push('/mycompany')
     }
   }
-};
+}
 </script>
 
 <style>

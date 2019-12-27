@@ -74,37 +74,38 @@
 </template>
 
 <script>
-import LoginModal from "@/components/LoginModal.vue";
-import { mapState } from "vuex";
+import LoginModal from '@/components/LoginModal.vue'
+import { mapState } from 'vuex'
 
 export default {
-  name: "App",
+  name: 'App',
   computed: {
-    ...mapState(["isLogin", "loggedUser"])
+    ...mapState(['isLogin', 'loggedUser'])
   },
   components: {
     LoginModal: LoginModal
   },
-  methods: {    
-    toRegister() {
-      this.$router.push("/register");
+  methods: {
+    toRegister () {
+      this.$router.push('/register')
     },
-    logout() {
-      localStorage.removeItem("token");
-      this.$store.commit("CHECK_LOGIN");
-      this.$router.push("/");
+    logout () {
+      localStorage.removeItem('token')
+      this.$store.commit('CHECK_LOGIN')
+      this.$store.commit('RESET')
+      this.$router.push('/')
     },
-    async checkLogin() {
-      await this.$store.commit("CHECK_LOGIN");
-      if (localStorage.getItem("token")) {
-        await this.$store.dispatch("findUser");
+    async checkLogin () {
+      await this.$store.commit('CHECK_LOGIN')
+      if (localStorage.getItem('token')) {
+        await this.$store.dispatch('findUser')
       }
     }
   },
-  created() {
-    this.checkLogin();
+  created () {
+    this.checkLogin()
   }
-};
+}
 </script>
 
 <style>

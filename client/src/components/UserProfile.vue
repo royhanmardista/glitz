@@ -102,36 +102,40 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { CollapseTransition } from "vue2-transitions";
-import AddUserDetail from "@/components/AddUserDetail.vue";
-import { PacmanLoader } from "@saeris/vue-spinners";
+import { mapState } from 'vuex'
+import { CollapseTransition } from 'vue2-transitions'
+import AddUserDetail from '@/components/AddUserDetail.vue'
+import { PacmanLoader } from '@saeris/vue-spinners'
 
 export default {
+  data () {
+    return {
+    }
+  },
   components: {
     CollapseTransition,
     AddUserDetail,
     PacmanLoader
   },
   computed: {
-    ...mapState(["userProfile", "isLoading"])
+    ...mapState(['userProfile', 'isLoading'])
   },
-  created() {
-    this.findUserProfile();
+  created () {
+    this.findUserProfile()
   },
   methods: {
-    toEditPage(userProfile) {
-      //this.commit('SET')
+    toEditPage (userProfile) {
+      this.$router.push(`/profile/update/${userProfile.userId}`)
     },
-    async findUserProfile() {
+    async findUserProfile () {
       await this.$store.dispatch(
-        "findUseProfile",
+        'findUseProfile',
         this.$router.currentRoute.params.id
-      );
-      await this.$store.dispatch("getLocation");
+      )
+      await this.$store.dispatch('getLocation')
     }
   }
-};
+}
 </script>
 
 <style scoped>

@@ -38,88 +38,88 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { VueEditor } from "vue2-editor";
+import { mapState } from 'vuex'
+import { VueEditor } from 'vue2-editor'
 
 export default {
   components: {
     VueEditor
   },
-  name: "addJobForm",
+  name: 'addJobForm',
   computed: {
     ...mapState([
-      "locations",
-      "isLoading",
-      "regions",
-      "searchingRegion",
-      "cities",
-      "searchingCity",
-      "userCompany"
+      'locations',
+      'isLoading',
+      'regions',
+      'searchingRegion',
+      'cities',
+      'searchingCity',
+      'userCompany'
     ])
   },
-  created() {
+  created () {
   },
-  data() {
+  data () {
     return {
       minExp: null,
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       country: null,
       region: null,
       city: null,
       skills: null,
       categories: [
-        { text: "Choose Experience", value: null },
-        { text: "no experience", value: 0 },
-        { text: "1 year", value: 1 },
-        { text: "2 years", value: 2 },
-        { text: "3 years", value: 3 },
-        { text: "4 years", value: 4 },
-        { text: "5 years", value: 5 },
-        { text: "6 years or more", value: 6 }
+        { text: 'Choose Experience', value: null },
+        { text: 'no experience', value: 0 },
+        { text: '1 year', value: 1 },
+        { text: '2 years', value: 2 },
+        { text: '3 years', value: 3 },
+        { text: '4 years', value: 4 },
+        { text: '5 years', value: 5 },
+        { text: '6 years or more', value: 6 }
       ]
-    };
+    }
   },
   watch: {
-    country: function() {
-      this.region = null;
-      this.$store.dispatch("getRegions", this.country.split(",")[1]);
+    country: function () {
+      this.region = null
+      this.$store.dispatch('getRegions', this.country.split(',')[1])
     },
-    region: function() {
-      this.city = null;
+    region: function () {
+      this.city = null
       let payload = {
-        country: this.country.split(",")[1],
+        country: this.country.split(',')[1],
         region: this.region
-      };
+      }
       if (this.region) {
-        this.$store.dispatch("getCities", payload);
+        this.$store.dispatch('getCities', payload)
       }
     }
   },
-  methods: {    
-    async createJob() {
-      let location = [];
+  methods: {
+    async createJob () {
+      let location = []
       if (this.city) {
-        location.push(this.city);
+        location.push(this.city)
       }
       if (this.region) {
-        location.push(this.region);
+        location.push(this.region)
       }
-      location.push(this.country);
-      let skills = [];
-      this.skills.split(",").forEach(skill => {
-        skills.push(skill.trim());
-      });
+      location.push(this.country)
+      let skills = []
+      this.skills.split(',').forEach(skill => {
+        skills.push(skill.trim())
+      })
       let form = {
         name: this.name,
         description: this.description,
         skills,
         minExp: this.minExp,
         companyId: this.userCompany._id,
-        location: location.join(", ")
-      };
-      await this.$store.dispatch("createJob", form);
+        location: location.join(', ')
+      }
+      await this.$store.dispatch('createJob', form)
     }
   }
-};
+}
 </script>

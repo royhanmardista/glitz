@@ -58,29 +58,29 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
-  name: "JobDetail",
+  name: 'JobDetail',
   computed: {
-    ...mapState(["jobDetail", "isLoading"])
+    ...mapState(['jobDetail', 'isLoading'])
   },
-  data() {
+  data () {
     return {
       descShow: true
-    };
-  },
-  methods: {
-    findJobDetail() {
-      this.$store.dispatch(
-        "findJobDetail",
-        this.$router.currentRoute.params.id
-      );
     }
   },
-  created() {
-    this.findJobDetail();
+  methods: {
+    findJobDetail () {
+      this.$store.dispatch(
+        'findJobDetail',
+        this.$router.currentRoute.params.id
+      )
+    }
+  },
+  created () {
+    this.findJobDetail()
   }
-};
+}
 </script>
 
 <style scoped>

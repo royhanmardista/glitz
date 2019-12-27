@@ -83,7 +83,7 @@
                   @click.prevent="showJobDetail(job)"
                 >
                   <i class="fa fa-search-plus"></i> Details
-                </b-button>                
+                </b-button>
               </div>
             </div>
           </div>
@@ -95,31 +95,31 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { HashLoader } from "@saeris/vue-spinners";
+import { mapState } from 'vuex'
+import { HashLoader } from '@saeris/vue-spinners'
 
 export default {
-  name: "CompanyDetail",
+  name: 'CompanyDetail',
   computed: {
-    ...mapState(["companyDetail", "isLoading"])
+    ...mapState(['companyDetail', 'isLoading'])
   },
   components: {
     HashLoader
   },
-  data() {
+  data () {
     return {
-    };
+    }
   },
-  methods: {    
-    showJobDetail(job) {
-      this.$router.push(`/jobs/${job._id}`);
-      this.$store.commit("SET_JOBDETAIL", job);
-    },        
+  methods: {
+    showJobDetail (job) {
+      this.$router.push(`/jobs/${job._id}`)
+      this.$store.commit('SET_JOBDETAIL', job)
+    }
   },
-  created() {
-      this.$store.dispatch('getCompanyDetail', this.$router.currentRoute.params.id)
+  created () {
+    this.$store.dispatch('getCompanyDetail', this.$router.currentRoute.params.id)
   }
-};
+}
 </script>
 
 <style scoped>

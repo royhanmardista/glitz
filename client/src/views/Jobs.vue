@@ -110,63 +110,61 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { FadeLoader } from "@saeris/vue-spinners";
-
+import { mapState } from 'vuex'
+import { FadeLoader } from '@saeris/vue-spinners'
 
 export default {
-  name : "Jobs",
-  components : {
-    FadeLoader,
+  name: 'Jobs',
+  components: {
+    FadeLoader
   },
   computed: {
-    ...mapState(["locations", "isLoading", "internalJob"]),
-    pageRows() {
-      return this.internalJob.length;
+    ...mapState(['locations', 'isLoading', 'internalJob']),
+    pageRows () {
+      return this.internalJob.length
     }
   },
-  data() {
+  data () {
     return {
-      currentPage: 1,
       perPage: 9,
       currentPage: 1,
-      description: "",
+      description: '',
       minExp: null,
       country: null,
       skills: null,
       minExperiences: [
-        { text: "Choose Experience", value: null },
-        { text: "no experience", value: 0 },
-        { text: "1 year", value: 1 },
-        { text: "2 years", value: 2 },
-        { text: "3 years", value: 3 },
-        { text: "4 years", value: 4 },
-        { text: "5 years", value: 5 },
-        { text: "6 years or more", value: 6 }
+        { text: 'Choose Experience', value: null },
+        { text: 'no experience', value: 0 },
+        { text: '1 year', value: 1 },
+        { text: '2 years', value: 2 },
+        { text: '3 years', value: 3 },
+        { text: '4 years', value: 4 },
+        { text: '5 years', value: 5 },
+        { text: '6 years or more', value: 6 }
       ]
-    };
+    }
   },
   methods: {
-    showJobDetail(job) {
-      this.$router.push(`jobs/${job._id}`);
-      this.$store.commit("SET_JOBDETAIL", job);
+    showJobDetail (job) {
+      this.$router.push(`jobs/${job._id}`)
+      this.$store.commit('SET_JOBDETAIL', job)
     },
-    showCompanyDetail(company) {
-      this.$router.push(`company/${company._id}`);
-      this.$store.dispatch("getCompanyDetail", company._id);
+    showCompanyDetail (company) {
+      this.$router.push(`company/${company._id}`)
+      this.$store.dispatch('getCompanyDetail', company._id)
     },
-    async reload() {
-      if (this.$router.currentRoute.fullPath !== "/jobs") {
+    async reload () {
+      if (this.$router.currentRoute.fullPath !== '/jobs') {
         this.$store.dispatch(
-          "searchInternalJob",
+          'searchInternalJob',
           this.$router.currentRoute.query
-        );
-        this.currentPage = this.$router.currentRoute.query.page;
+        )
+        this.currentPage = this.$router.currentRoute.query.page
       }
     },
-    async searchJob() {
+    async searchJob () {
       this.$router.push({
-        path: "/jobs",
+        path: '/jobs',
         query: {
           description: this.description,
           minExp: this.minExp,
@@ -174,21 +172,21 @@ export default {
           skills: this.skills,
           page: this.currentPage
         }
-      });
+      })
       let form = {
         description: this.description,
         minExp: this.minExp,
         country: this.country,
         skills: this.skills
-      };
-      await this.$store.dispatch("searchInternalJob", form);
+      }
+      await this.$store.dispatch('searchInternalJob', form)
     }
   },
-  created() {
-    this.$store.dispatch("getLocation");
-    this.reload();
+  created () {
+    this.$store.dispatch('getLocation')
+    this.reload()
   }
-};
+}
 </script>
 
 <style scoped>

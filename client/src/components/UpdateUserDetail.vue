@@ -1,12 +1,12 @@
 <template>
   <div class="container-fluid mt-3">
-    <div class="row mx-1">
+    <div class="row mx-1" v-if="!isLoading">
       <div class="col-md-8 offset-md-2 border rounded p-5 bg-light">
-        <h3 class="text-center">First, You Need To Complete This Form</h3>
+        <h3 class="text-center">Update Your Profile</h3>
         <b-form @submit.prevent="createProfile">
           <!-- full name -->
           <b-form-group label="Full Name">
-            <b-form-input v-model="fullName" type="text" required placeholder="Enter name"></b-form-input>
+            <b-form-input v-model="userProfile.fullname" type="text" required placeholder="Enter name"></b-form-input>
           </b-form-group>
           <!-- birth date -->
           <b-form-group label="Select your birth date">
@@ -15,7 +15,7 @@
           <!-- phone -->
           <b-form-group label="Phone">
             <b-form-input
-              v-model="phone"
+              v-model="userProfile.phone"
               required
               placeholder="Insert your phone number"
               type="text"
@@ -24,7 +24,7 @@
           <!-- skills -->
           <b-form-group label="Skills">
             <b-form-input
-              v-model="skills"
+              v-model="userProfile.skills"
               type="text"
               required
               placeholder="Please Separate Skills using Comma"
@@ -32,7 +32,7 @@
           </b-form-group>
           <!-- experience -->
           <b-form-group label="Please choose experience">
-            <b-form-select v-model="experience" :options="experiences" required></b-form-select>
+            <b-form-select v-model="userProfile.experience" :options="experiences" required></b-form-select>
           </b-form-group>
           <!-- Education -->
           <b-form-group label="Education">
@@ -43,20 +43,12 @@
 
           <!-- description -->
           <b-form-group label="Description">
-            <vue-editor v-model="description" />
+            <vue-editor v-model="userProfile.description" />
           </b-form-group>
           <!-- location -->
           <b-form-group label="Location">
-            <b-form-select v-model="location" :options="locations" required></b-form-select>
+            <b-form-select v-model="userProfile.location" :options="locations" required></b-form-select>
           </b-form-group>
-          <!-- image -->
-          <b-form-file
-            v-model="image"
-            :state="Boolean(image)"
-            placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here..."
-          ></b-form-file>
-          <div class="mt-3">Selected file: {{ image ? image.name : '' }}</div>
           <!-- submit -->
           <b-button type="submit" variant="primary mr-2">Submit</b-button>
           <b-button type="reset" variant="danger">Reset</b-button>
@@ -69,30 +61,35 @@
 <script>
 import { mapState } from 'vuex'
 import { VueEditor } from 'vue2-editor'
-import FormData from 'form-data'
+import moment from 'moment'
 
 export default {
-  name: 'AddUserDetail',
+  name: 'UpdateUserDetail',
   component: {
     VueEditor
   },
   computed: {
-    ...mapState(['locations', 'isLoading', 'universities'])
+    ...mapState(['locations', 'isLoading', 'universities', 'userProfile']),
+    birtDate: {
+      get () {
+        if (this.userProfile) {
+          return moment(this.userProfile.birthDate).format('YYYY-M-D')
+        }
+      },
+      set (newVal) {
+        return (this.birtDateInput = newVal)
+      }
+    }
   },
-  mounted () {},
+  created () {
+  },
   data () {
     return {
-      image: null,
-      fullName: null,
-      phone: null,
       education: null,
       skills: null,
-      experience: null,
-      birtDate: null,
+      birtDateInput: null,
       univLocation: null,
       universty: null,
-      description: null,
-      location: null,
       degree: null,
       degrees: [
         { text: 'Select Degree', value: null },
@@ -129,16 +126,6 @@ export default {
   methods: {
     createProfile () {
       let education = `${this.degree}, ${this.universty}, ${this.univLocation}`
-      let data = new FormData()
-      data.append('fullname', this.fullName)
-      data.append('phone', this.phone)
-      data.append('education', education)
-      data.append('location', this.location)
-      data.append('skills', this.skills)
-      data.append('image', this.image)
-      data.append('experience', this.experience)
-      data.append('description', this.description)
-      data.append('birthDate', this.birtDate)
       this.$store.dispatch('createProfile', data)
     }
   }

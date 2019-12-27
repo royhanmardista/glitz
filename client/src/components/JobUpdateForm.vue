@@ -49,108 +49,108 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { VueEditor } from "vue2-editor";
+import { mapState } from 'vuex'
+import { VueEditor } from 'vue2-editor'
 
 export default {
   components: {
     VueEditor
   },
-  name: "JobUpdateForm",
+  name: 'JobUpdateForm',
   computed: {
-    ...mapState(["locations", "isLoading", "regions", "cities", "jobDetail"]),
+    ...mapState(['locations', 'isLoading', 'regions', 'cities', 'jobDetail']),
     skills: {
-      get() {
+      get () {
         if (this.jobDetail) {
-          return this.jobDetail.skills.join(", ");
+          return this.jobDetail.skills.join(', ')
         }
       },
-      set(newVal) {
-        return (this.inputSkills = newVal);
+      set (newVal) {
+        return (this.inputSkills = newVal)
       }
     },
     country: {
-      get() {
+      get () {
         if (this.jobDetail) {
-          return this.jobDetail.country;
+          return this.jobDetail.country
         }
       },
-      set(newVal) {
-        return (this.inputCountry = newVal);
+      set (newVal) {
+        return (this.inputCountry = newVal)
       }
     }
   },
-  created() {
-    this.findJobDetail();
-    this.setCountry();
+  created () {
+    this.findJobDetail()
+    this.setCountry()
   },
-  data() {
+  data () {
     return {
       inputSkills: null,
       inputCountry: null,
       region: null,
       city: null,
       categories: [
-        { text: "Choose Experience", value: null },
-        { text: "no experience", value: 0 },
-        { text: "1 year", value: 1 },
-        { text: "2 years", value: 2 },
-        { text: "3 years", value: 3 },
-        { text: "4 years", value: 4 },
-        { text: "5 years", value: 5 },
-        { text: "6 years or more", value: 6 }
+        { text: 'Choose Experience', value: null },
+        { text: 'no experience', value: 0 },
+        { text: '1 year', value: 1 },
+        { text: '2 years', value: 2 },
+        { text: '3 years', value: 3 },
+        { text: '4 years', value: 4 },
+        { text: '5 years', value: 5 },
+        { text: '6 years or more', value: 6 }
       ]
-    };
+    }
   },
   watch: {
-    inputCountry : function() {
-      this.region = null;
-      this.$store.dispatch("getRegions", this.country.split(",")[1]);
+    inputCountry: function () {
+      this.region = null
+      this.$store.dispatch('getRegions', this.country.split(',')[1])
     },
-    country : function() {
-      this.region = null;
-      this.$store.dispatch("getRegions", this.country.split(",")[1]);
+    country: function () {
+      this.region = null
+      this.$store.dispatch('getRegions', this.country.split(',')[1])
     },
-    region: function() {
-      this.city = null;
+    region: function () {
+      this.city = null
       let payload = {
-        country: this.country.split(",")[1],
+        country: this.country.split(',')[1],
         region: this.region
-      };
+      }
       if (this.region) {
-        this.$store.dispatch("getCities", payload);
+        this.$store.dispatch('getCities', payload)
       }
     }
   },
   methods: {
-    async setCountry() {
+    async setCountry () {
       if (this.jobDetail) {
-        this.inputCountry = this.jobDetail.country;
+        this.inputCountry = this.jobDetail.country
       }
-      await this.$store.dispatch("getLocation");
+      await this.$store.dispatch('getLocation')
     },
-    findJobDetail() {
+    findJobDetail () {
       this.$store.dispatch(
-        "findJobDetail",
+        'findJobDetail',
         this.$router.currentRoute.params.id
-      );
+      )
     },
-    async updateJob() {
-      let location = [];
+    async updateJob () {
+      let location = []
       if (this.city) {
-        location.push(this.city);
+        location.push(this.city)
       }
       if (this.region) {
-        location.push(this.region);
+        location.push(this.region)
       }
-      location.push(this.inputCountry);
-      let skills = [];
-      this.skills.split(",").forEach(skill => {
-        skills.push(skill.trim());
-      });
-      location = location.join(", ");
-      await this.$store.dispatch("updateJob", location);
+      location.push(this.inputCountry)
+      let skills = []
+      this.skills.split(',').forEach(skill => {
+        skills.push(skill.trim())
+      })
+      location = location.join(', ')
+      await this.$store.dispatch('updateJob', location)
     }
   }
-};
+}
 </script>
