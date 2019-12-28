@@ -31,6 +31,10 @@ const userSchema = Schema({
     appliedJob: [{
         type: Schema.Types.ObjectId,
         ref: 'Job'
+    }],
+    favoriteJob : [{
+        type: Schema.Types.ObjectId,
+        ref: 'Job'
     }]
 }, {
     timestamps: true , runSettersOnQuery: true

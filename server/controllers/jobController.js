@@ -6,6 +6,7 @@ const Company = require('../models/company')
 const User = require('../models/user')
 const countryApi = require('../apis/getCountry')
 const Country = require('../models/country')
+const UserDetail = require('../models/userDetail')
 
 class jobController {
 
@@ -20,7 +21,7 @@ class jobController {
         console.log(country)
         if (!minExp) {
             minExp = 7
-        }        
+        }
         try {
             let jobs = await Job.find({
                 $or: [{
@@ -36,17 +37,17 @@ class jobController {
                 }],
                 skills: {
                     $regex: new RegExp(skills),
-                    $options : 'i'
-                }, 
-                minExp : {
-                    $lte : minExp,
+                    $options: 'i'
                 },
-                location : {
-                    $regex : new RegExp(country),
-                    $options : 'i'
+                minExp: {
+                    $lte: minExp,
                 },
-                userId : {
-                    $ne : req.user._id
+                location: {
+                    $regex: new RegExp(country),
+                    $options: 'i'
+                },
+                userId: {
+                    $ne: req.user._id
                 }
             }).populate('companyId')
             res.json(jobs)
@@ -177,6 +178,16 @@ class jobController {
 
     static async apply(req, res, next) {
         try {
+            let userDetail = await UserDetail.findOne({
+                userId: req.user._id
+            })
+            if (!userDetail) {
+                throw ({
+                    status: 405,
+                    message: "It seems that you haven't complete your profile, you must complete your profile before you can apply",
+                    name : "noProfile"
+                })
+            }
             let job = await Job.findById(req.params.id)
             if (job) {
                 if (String(job.userId) == req.user._id) {
@@ -218,7 +229,7 @@ class jobController {
                         console.log(err)
                         throw ({
                             status: 403,
-                            message: "you already applied to this job"
+                            message: "you already applied this job"
                         })
                     }
                 }

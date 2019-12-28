@@ -2,12 +2,14 @@
 const router = require('express').Router()
 const userDetailController = require('../controllers/userDetailController')
 const { authenticate, userDetailAuthorization, viewUserDetailAuthorization } = require('../middlewares/auth')
+const upload = require('../middlewares/gcsUpload')
 const { userValidator, validate } = require('../middlewares/expressValidator')
 
 router.use(authenticate)
-router.post('/',userDetailController.create)
+router.post('/', upload.single('image'), userDetailController.create)
+router.put('/', userDetailAuthorization, userDetailController.update)
+router.delete('/', userDetailAuthorization, userDetailController.delete)
+router.get('/universities', userDetailController.findUniversities)
 router.get('/:userId', viewUserDetailAuthorization, userDetailController.findOne)
-router.put('/:userId', userDetailAuthorization, userDetailController.update)
-router.delete('/:userId', userDetailAuthorization, userDetailController.delete)
 
 module.exports = router

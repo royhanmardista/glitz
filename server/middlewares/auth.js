@@ -36,7 +36,7 @@ module.exports = {
     userDetailAuthorization: async function (req, res, next) {
         try {
             let userDetail = await UserDetail.findOne({
-                userId: req.params.userId
+                userId: req.user._id
             })
             if (!userDetail) {
                 throw ({

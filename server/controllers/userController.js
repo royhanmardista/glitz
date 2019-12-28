@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Job = require('../models/job')
 const {
     comparePassword
 } = require('../helpers/bcrypt')
@@ -6,20 +7,96 @@ const {
     generateToken
 } = require('../helpers/jwt')
 
-class userController {    
+class userController {
 
+    static async addFavorite(req, res, next) {
+        try {
+            let {
+                jobId
+            } = req.body
+            let job = await Job.findById(jobId)
+            if (!job) {
+                throw ({
+                    status: 404,
+                    message: 'Job not found'
+                })
+            }
+            let user = await User.findOneAndUpdate({
+                _id: req.user._id,
+                favoriteJob: {
+                    $nin: jobId
+                }
+            }, {
+                $push: {
+                    favoriteJob: jobId
+                }
+            })
+            if (user) {
+                res.json({
+                    message: "Job has successfully added to favorites",
+                    user,
+                })
+            } else {
+                throw ({
+                    status: 403,
+                    message: "you already added this job in your favorite"
+                })
+            }
+        } catch (err) {
+            next(err)
+        }
+
+    }
+
+    static async removeFavorite(req, res, next) {
+        try {
+            let {
+                jobId
+            } = req.body
+            let job = await Job.findById(jobId)
+            if (!job) {
+                throw ({
+                    status: 404,
+                    message: 'Job not found'
+                })
+            }
+            let user = await User.findOneAndUpdate({
+                _id: req.user._id,
+                favoriteJob: {
+                    $in: jobId
+                }
+            }, {
+                $pull: {
+                    favoriteJob: jobId
+                }
+            })
+            if (user) {
+                res.json({
+                    message: "Job has successfully removed from favorites",
+                    user,
+                })
+            } else {
+                throw ({
+                    status: 403,
+                    message: "we cannont find this job in your favorite"
+                })
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
     static async findOne(req, res, next) {
         try {
-            let user = await User.findById(req.user._id, "-password").populate('appliedJob')
+            let user = await User.findById(req.user._id, "-password").populate('appliedJob').populate('favoriteJob')
             if (user) {
                 res.json(user)
             } else {
                 next({
-                    status : 404,
-                    message : 'user not found'
+                    status: 404,
+                    message: 'user not found'
                 })
             }
-        } catch(err) {
+        } catch (err) {
             next(err)
         }
     }

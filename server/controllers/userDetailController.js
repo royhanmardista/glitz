@@ -1,15 +1,41 @@
 const UserDetail = require('../models/userDetail')
+const User = require('../models/user')
 const moment = require('moment')
+const univApi = require('../apis/univesity')
 
 class userDetailController {
-
+    static async findUniversities(req, res, next) {
+        try {
+            let {
+                data
+            } = await univApi.get('/search', {
+                params: {
+                    country: req.query.country
+                }
+            })
+            let universities = [{
+                text: 'Select University',
+                value: null
+            }]
+            data.forEach(item => {
+                universities.push(item.name)
+            })
+            res.json(universities)
+        } catch (err) {
+            next(err)
+        }
+    }
     static async findOne(req, res, next) {
         try {
             let userDetail = await UserDetail.findOne({
                 userId: req.params.userId
             })
             if (userDetail) {
-                res.json(userDetail)
+                let user = await User.findById(req.params.userId, "-password").populate('appliedJob')
+                res.json({
+                    user,
+                    userDetail
+                })
             } else {
                 next({
                     status: 404,
@@ -22,33 +48,41 @@ class userDetailController {
     }
 
     static async create(req, res, next) {
-        console.log(moment().subtract(15, 'years').calendar())
+
+        let skills = []
+        req.body.skills.split(',').forEach(skill => {
+            skills.push(skill.trim())
+        })
+
         const {
-            fullName,
+            fullname,
             phone,
-            skills,
             experience,
             education,
             image,
             location,
-            birthDate
+            birthDate,
+            description
         } = req.body
         try {
             let userDetail = await UserDetail.
             create({
-                fullName,
-                phone,
                 skills,
+                fullname,
+                phone,
                 experience,
                 education,
                 image,
                 location,
                 birthDate,
-                userId: req.user._id
+                userId: req.user._id,
+                description
             })
+            let user = await User.findById(req.user._id, "-password").populate('appliedJob')
             res.status(201).json({
-                message: `you have completed your profile now you can apply to any company`,
+                message: `you have completed your profile, now you can apply to any company`,
                 userDetail,
+                user,
             })
         } catch (err) {
             next(err)
@@ -56,30 +90,32 @@ class userDetailController {
     }
 
     static async update(req, res, next) {
-        console.log(req.params.userId, req.user._id)
+        let skills = []
+        req.body.skills.split(',').forEach(skill => {
+            skills.push(skill.trim())
+        })
         const {
-            fullName,
+            fullname,
             phone,
-            skills,
             experience,
             education,
-            image,
+            description,
             location,
             birthDate
         } = req.body
         try {
             let userDetail = await UserDetail.findOneAndUpdate({
-                userId: req.params.userId
+                userId: req.user._id
             }, {
-                fullName,
+                fullname,
                 phone,
                 skills,
                 experience,
                 education,
-                image,
+                description,
                 location,
                 birthDate,
-                userId : req.params.userId
+                userId: req.user._id
             }, {
                 upsert: true,
                 new: true,
@@ -87,9 +123,11 @@ class userDetailController {
                 context: 'query'
             })
             if (userDetail) {
+                let user = await User.findById(req.user._id, "-password").populate('appliedJob')
                 res.json({
                     message: 'your profile has been updated',
-                    userDetail
+                    userDetail,
+                    user
                 })
             } else {
                 throw ({
@@ -104,19 +142,21 @@ class userDetailController {
 
     static async delete(req, res, next) {
         try {
-            let userDetail = await UserDetail.findOneAndDelete({userId : req.params.userId})
+            let userDetail = await UserDetail.findOneAndDelete({
+                userId: req.user._id
+            })
             if (userDetail) {
                 res.json({
-                    message : 'user detail has been deleted',
+                    message: 'user detail has been deleted',
                     userDetail,
                 })
             } else {
-                throw({
-                    status : 404,
-                    message : 'user detail not found'
+                throw ({
+                    status: 404,
+                    message: 'user detail not found'
                 })
             }
-        } catch(err) {
+        } catch (err) {
             next(err)
         }
     }
