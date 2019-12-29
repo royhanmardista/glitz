@@ -11,14 +11,12 @@ const UserDetail = require('../models/userDetail')
 class jobController {
 
     static async searchJob(req, res, next) {
-        console.log(req.query)
         let {
             country,
             description,
             minExp,
             skills
         } = req.query
-        console.log(country)
         if (!minExp) {
             minExp = 7
         }
@@ -147,14 +145,26 @@ class jobController {
                         new: true,
                     })
                     if (updatedJob) {
-                        await User.findByIdAndUpdate(req.user._id, {
+                        let user = await User.findByIdAndUpdate(req.user._id, {
                             $pull: {
                                 appliedJob: job._id
                             }
+                        }, {
+                            new: true,
+                        }).populate({
+                            path: 'appliedJob',
+                            populate: [{
+                                path: 'companyId',
+                            }]
+                        }).populate({
+                            path: 'favoriteJob',
+                            populate: [{
+                                path: 'companyId'
+                            }]
                         })
                         res.json({
-                            message: "misapplying job success",
-                            job: updatedJob
+                            message: "canceling application success",
+                            user
                         })
                     } else {
                         throw ({
@@ -207,20 +217,19 @@ class jobController {
                                 applicants: req.user._id
                             }
                         }, {
-                            upsert: true,
                             new: true,
-                            runValidators: true,
-                            context: 'query'
                         })
                         if (updatedJob) {
-                            await User.findByIdAndUpdate(req.user._id, {
+                            let user = await User.findByIdAndUpdate(req.user._id, {
                                 $push: {
                                     appliedJob: job._id
                                 }
+                            }, {
+                                new: true,
                             })
                             res.json({
                                 message: "applying job success",
-                                job: updatedJob
+                                user,
                             })
                         } else {
                             throw (err)

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light border-top" style="min-height:600px">
+  <div class="bg-light" style="min-height:600px">
     <div class="container-fluid mt-3">
       <div class="row" v-if="!isLoading">
         <div class="col-md-10 offset-md-1">
@@ -13,11 +13,11 @@
               <i class="fa fa-map-o"></i>
               {{jobDetail.location}}
             </p>
-            <p class="text-secondary">
+            <p class="text-secondary pb-1">
               <i class="fa fa-clock-o"></i>
               Last update {{moment(jobDetail.updatedAt).fromNow()}}
             </p>
-            <div class="d-flex justify-content-end my-3">
+            <div class="d-flex justify-content-end my-4" v-if="loggedUser._id != jobDetail.userId">
               <b-button size="lg" variant="warning" @click.prevent="applyJob(jobDetail._id)">
                 <h4>Apply</h4>
               </b-button>

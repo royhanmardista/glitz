@@ -12,12 +12,12 @@
       <div class="container-fluid">
         <div class="row">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border border-light d-flex flex-column justify-content-between bg-light"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-light"
           >
             <div>
               <h1>{{companyDetail.name}}</h1>
             </div>
-            <div class="d-flex justify-content-between text-secondary border-bottom">
+            <div class="d-flex justify-content-between text-secondary">
               <div class="d-flex justify-content-between flex-column">
                 <p>
                   <i class="fa fa-location-arrow"></i>
@@ -28,11 +28,13 @@
                   {{companyDetail.category}}
                 </p>
               </div>
-              <div>
-                <b-link :href="companyDetail.url" target="blank">
-                  <i class="fa fa-link"></i>
-                  {{companyDetail.url}}
-                </b-link>
+              <div class="d-flex justify-content-between flex-column">
+                <p>
+                  <b-link :href="companyDetail.url" target="blank">
+                    <i class="fa fa-link"></i>
+                    {{companyDetail.url}}
+                  </b-link>
+                </p>
                 <p>
                   <i class="fa fa-clock-o"></i>
                   last update {{moment(companyDetail.updatedAt).fromNow()}}
@@ -43,7 +45,7 @@
         </div>
         <div class="row mt-4">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border border-light d-flex flex-column justify-content-between bg-white"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
           >
             <h3>Description</h3>
             <p>{{companyDetail.description}}</p>
@@ -51,17 +53,15 @@
         </div>
         <div class="row mt-4">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border border-light d-flex flex-column justify-content-between bg-white"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
           >
             <h3>Jobs</h3>
-            <p
-              v-if="!companyDetail.jobs.length"
-            >This Company hasn't post any jobs</p>
+            <p v-if="!companyDetail.jobs.length">This Company hasn't post any jobs</p>
             <p
               class="border-bottom"
               v-if="companyDetail.jobs.length"
             >This Company has posted {{companyDetail.jobs.length}} jobs</p>
-            <div v-for="job in companyDetail.jobs" :key="job._id" class="border-bottom mt-3">
+            <div v-for="job in companyDetail.jobs" :key="job._id" class=" mt-3">
               <h5 class="mb-3 ml-3">{{job.name}}</h5>
               <p>
                 <i class="fa fa-map-signs"></i>
@@ -95,31 +95,33 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { HashLoader } from '@saeris/vue-spinners'
+import { mapState } from "vuex";
+import { HashLoader } from "@saeris/vue-spinners";
 
 export default {
-  name: 'CompanyDetail',
+  name: "CompanyDetail",
   computed: {
-    ...mapState(['companyDetail', 'isLoading'])
+    ...mapState(["companyDetail", "isLoading"])
   },
   components: {
     HashLoader
   },
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
   methods: {
-    showJobDetail (job) {
-      this.$router.push(`/jobs/${job._id}`)
-      this.$store.commit('SET_JOBDETAIL', job)
+    showJobDetail(job) {
+      this.$router.push(`/jobs/${job._id}`);
+      this.$store.commit("SET_JOBDETAIL", job);
     }
   },
-  created () {
-    this.$store.dispatch('getCompanyDetail', this.$router.currentRoute.params.id)
+  created() {
+    this.$store.dispatch(
+      "getCompanyDetail",
+      this.$router.currentRoute.params.id
+    );
   }
-}
+};
 </script>
 
 <style scoped>

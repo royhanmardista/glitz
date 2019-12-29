@@ -7,6 +7,7 @@ const {
 
 router.get('/', companyController.findAll)
 router.get('/user', authenticate, companyController.findUserCompany)
+router.get('/search', companyController.searchCompany)
 router.get('/:id', companyController.findOne)
 router.use(authenticate)
 router.post('/', companyController.create)

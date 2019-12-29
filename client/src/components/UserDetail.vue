@@ -1,5 +1,5 @@
 <template>
-  <div class="border-top">
+  <div>
     <div v-if="isLoading">
       <div class="container">
         <div class="row">
@@ -13,7 +13,7 @@
       <AddUserDetail v-if="!userProfile"></AddUserDetail>
       <CollapseTransition v-if="userProfile">
         <div class="container mt-2 p-3" v-show="!isLoading">
-          <div class="row border shadow p-3">
+          <div class="row border rounded shadow p-3">
             <div class="col-md-3">
               <img
                 :src="userProfile.image"
@@ -74,7 +74,7 @@
               </div>
             </div>
           </div>
-          <div class="row mt-3 border shadow p-3 card">
+          <div class="row mt-3 border rounded shadow p-3 card">
             <h4>Description</h4>
             <div class="container mt-3">
               <div class="row">
@@ -82,13 +82,13 @@
               </div>
             </div>
           </div>
-          <div class="row mt-3 border shadow p-3">
+          <div class="row mt-3 border rounded shadow p-3">
             <h4>Education</h4>
             <div class="container mt-3">
               <div>{{userProfile.education}}</div>
             </div>
           </div>
-          <div class="row mt-3 border shadow p-3">
+          <div class="row mt-3 border rounded shadow p-3">
             <h4>Skills</h4>
             <div class="container mt-3">
               <div class="row d-flex justify-content-start">
@@ -102,7 +102,7 @@
               </div>
             </div>
           </div>
-          <div class="row mt-3 border shadow p-3">
+          <div class="row mt-3 border rounded shadow p-3">
             <h4>Experience</h4>
             <div class="container mt-3">
               <div>{{userProfile.experience}} years</div>

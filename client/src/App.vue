@@ -1,21 +1,21 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <div id="nav" class="sticky-top">
       <div class="frontpage">
-        <div class="sticky-top">
+        <div class>
           <nav
             class="navbar navbar-expand-md d-flex justify-content-between pt-1"
-            :class="{'navbarcolor' : !isLogin, 'bg-light' : isLogin}"
+            :class="{'navbarcolor' : !isLogin, 'bg-light border-bottom' : isLogin}"
           >
             <div class="nav navbar d-flex justify-content-start ml-1">
-                <a class="navbar-brand nav-bar-title">
-                  <router-link to='/' v-if="!isLogin">
-                    <i class="fa fa-star"></i> Glintzzz
-                  </router-link>
-                  <router-link to='/home' v-if="isLogin">
-                    <i class="fa fa-star"></i> Glintzzz
-                  </router-link>
-                </a>
+              <a class="navbar-brand nav-bar-title">
+                <router-link to="/" v-if="!isLogin">
+                  <i class="fa fa-star"></i> Glintzzz
+                </router-link>
+                <router-link to="/home" v-if="isLogin">
+                  <i class="fa fa-star"></i> Glintzzz
+                </router-link>
+              </a>
             </div>
             <b-navbar-toggle class target="nav-collapse">
               <i class="fa fa-align-justify"></i>
@@ -45,7 +45,7 @@
                     :text="`Hello, ${loggedUser.username}`"
                     class="m-md-2"
                   >
-                    <b-dropdown-item >
+                    <b-dropdown-item>
                       <div class="d-flex justify-content-between">
                         <router-link :to="`/profile/${loggedUser._id}`">My Profile</router-link>
                         <div>
@@ -53,11 +53,20 @@
                         </div>
                       </div>
                     </b-dropdown-item>
-                    <b-dropdown-item >
+                    
+                    <b-dropdown-item>
                       <div class="d-flex justify-content-between">
                         <router-link :to="`/applications/${loggedUser._id}`">Applied Job</router-link>
                         <div>
                           <i class="fa fa-file-text"></i>
+                        </div>
+                      </div>
+                    </b-dropdown-item>
+                    <b-dropdown-item>
+                      <div class="d-flex justify-content-between">
+                        <router-link :to="`/mycompany`">My Company</router-link>
+                        <div>
+                          <i class="fa fa-building ml-2"></i>
                         </div>
                       </div>
                     </b-dropdown-item>
@@ -83,38 +92,38 @@
 </template>
 
 <script>
-import LoginModal from '@/components/LoginModal.vue'
-import { mapState } from 'vuex'
+import LoginModal from "@/components/LoginModal.vue";
+import { mapState } from "vuex";
 
 export default {
-  name: 'App',
+  name: "App",
   computed: {
-    ...mapState(['isLogin', 'loggedUser'])
+    ...mapState(["isLogin", "loggedUser"])
   },
   components: {
     LoginModal: LoginModal
   },
   methods: {
-    toRegister () {
-      this.$router.push('/register')
+    toRegister() {
+      this.$router.push("/register");
     },
-    logout () {
-      localStorage.removeItem('token')
-      this.$store.commit('CHECK_LOGIN')
-      this.$store.commit('RESET')
-      this.$router.push('/')
+    logout() {
+      localStorage.removeItem("token");
+      this.$store.commit("CHECK_LOGIN");
+      this.$store.commit("RESET");
+      this.$router.push("/");
     },
-    async checkLogin () {
-      await this.$store.commit('CHECK_LOGIN')
-      if (localStorage.getItem('token')) {
-        await this.$store.dispatch('findUser')
+    async checkLogin() {
+      await this.$store.commit("CHECK_LOGIN");
+      if (localStorage.getItem("token")) {
+        await this.$store.dispatch("findUser");
       }
     }
   },
-  created () {
-    this.checkLogin()
+  created() {
+    this.checkLogin();
   }
-}
+};
 </script>
 
 <style>
@@ -159,4 +168,41 @@ h5 {
   font-family: "Oswald", sans-serif;
 }
 
+body.home {
+  background: white;
+}
+body.intro {
+  background: rgb(22, 88, 223);
+  background: linear-gradient(
+    90deg,
+    rgba(22, 88, 223, 1) 0%,
+    rgba(234, 234, 226, 1) 0%,
+    rgba(211, 201, 194, 1) 0%,
+    rgba(215, 215, 215, 1) 0%,
+    rgba(170, 98, 57, 1) 0%,
+    rgba(197, 197, 42, 1) 0%,
+    rgba(226, 114, 46, 1) 0%,
+    rgba(35, 210, 225, 1) 0%,
+    rgba(29, 213, 229, 1) 18%,
+    rgba(7, 198, 201, 1) 49%,
+    rgba(14, 115, 138, 1) 100%,
+    rgba(99, 135, 215, 1) 100%
+  );
+}
+body.welcome {
+  background: rgb(22, 88, 223);
+  background: linear-gradient(
+    90deg,
+    rgba(22, 88, 223, 1) 0%,
+    rgba(234, 234, 226, 1) 0%,
+    rgba(211, 201, 194, 1) 0%,
+    rgba(215, 215, 215, 1) 0%,
+    rgba(170, 98, 57, 1) 0%,
+    rgba(151, 200, 227, 1) 0%,
+    rgba(123, 160, 227, 1) 26%,
+    rgba(81, 141, 208, 1) 51%,
+    rgba(39, 121, 216, 1) 78%,
+    rgba(7, 118, 199, 1) 96%
+  );
+}
 </style>

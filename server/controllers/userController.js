@@ -14,6 +14,7 @@ class userController {
             let {
                 jobId
             } = req.body
+            console.log(jobId)
             let job = await Job.findById(jobId)
             if (!job) {
                 throw ({
@@ -30,7 +31,7 @@ class userController {
                 $push: {
                     favoriteJob: jobId
                 }
-            })
+            }, { select : "-password", new : true})
             if (user) {
                 res.json({
                     message: "Job has successfully added to favorites",
@@ -69,6 +70,16 @@ class userController {
                 $pull: {
                     favoriteJob: jobId
                 }
+            },{ select : "-password", new : true}).populate({
+                path: 'appliedJob',
+                populate: [{
+                    path: 'companyId',
+                }]
+            }).populate({
+                path: 'favoriteJob',
+                populate: [{
+                    path: 'companyId'
+                }]
             })
             if (user) {
                 res.json({
@@ -87,7 +98,17 @@ class userController {
     }
     static async findOne(req, res, next) {
         try {
-            let user = await User.findById(req.user._id, "-password").populate('appliedJob').populate('favoriteJob')
+            let user = await User.findById(req.user._id, "-password").populate({
+                path: 'appliedJob',
+                populate: [{
+                    path: 'companyId',
+                }]
+            }).populate({
+                path: 'favoriteJob',
+                populate: [{
+                    path: 'companyId'
+                }]
+            })
             if (user) {
                 res.json(user)
             } else {

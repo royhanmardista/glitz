@@ -36,7 +36,8 @@ function initialState() {
       text: 'Select University',
       value: null
     }],
-    userProfile: null
+    userProfile: null,
+    companies: null,
   }
 }
 
@@ -127,9 +128,39 @@ export default new Vuex.Store({
     },
     SET_UNIVERSITIES(state, payload) {
       state.universities = payload
+    },
+    SET_COMPANIES(state, data) {
+      state.companies = data
     }
   },
   actions: {
+    async searchCompany({
+      commit
+    }, form) {
+      let {
+        description,
+        country,
+      } = form
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.get('/companies/search', {
+          params: {
+            description,
+            country,
+          },
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        commit('SET_COMPANIES', data)
+      } catch (err) {
+        this._vm.$alertify.error(err.response.data.message)
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
     async removeFromFavorite({
       commit
     }, jobId) {
@@ -423,7 +454,7 @@ export default new Vuex.Store({
         })
         commit('SET_INTERNALJOB', data)
       } catch (err) {
-        this._vm.$alertify(err.response.data.message)
+        this._vm.$alertify.error(err.response.data.message)
       } finally {
         commit('SET_ISLOADING', false)
       }

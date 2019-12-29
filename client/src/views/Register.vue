@@ -154,7 +154,10 @@ export default {
       this.username_register = ''
       this.password_register = ''
     }
-  }
+  },
+  beforeCreate: function() {
+        document.body.className = 'intro';
+    }
 }
 </script>
 

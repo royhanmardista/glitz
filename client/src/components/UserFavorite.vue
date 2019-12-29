@@ -1,5 +1,5 @@
 <template>
-  <div class="border-top">
+  <div class="">
     <div v-if="!isLoading && loggedUser.favoriteJob" class="container-fluid">
       <!-- job container -->
       <div class="row mt-5 mx-1">
@@ -10,9 +10,9 @@
           <h4
             class
             style="cursor: pointer"
-            v-b-toggle.job-collapse
+            v-b-toggle.fav-collapse
           >You Have Bookmarks {{loggedUser.favoriteJob.length}} Jobs</h4>
-          <b-collapse class id="job-collapse" :visible="true">
+          <b-collapse class id="fav-collapse" :visible="true">
             <p>Page: {{ currentPage }}</p>
             <b-pagination
               v-model="currentPage"
@@ -38,27 +38,35 @@
               >
                 <div
                   class="border rounded px-3 py-1 mb-3 d-flex flex-column justify-content-between"
-                  style="min-height:200px"
+                  style="min-height:230px"
                 >
                   <div class="text-left d-flex justify-content-between">
                     <div class="d-flex flex-column justify-content-between mr-0">
-                      <h5 class>
+                      <h5 class="mb-0">
                         <a class="text-dark" href @click.prevent="showJobDetail(job)">{{job.name}}</a>
                       </h5>
-                      <a href @click.prevent="showCompanyDetail(job.companyId)">
+                      <div style="font-size:0.7rem">
+                        <i class="fa fa-eye"></i>
+                        {{job.minExp}} years experience or more
+                      </div>
+                      <a href @click.prevent="showCompanyDetail(job.companyId)" class="mt-2">
                         <i class="fa fa-building-o"></i>
                         {{job.companyId.name}}
                       </a>
-                      <div class="d-flex mt-1">
-                        <i class="fa fa-users mr-2"></i>
-                        <p
-                          class="text-secondary"
-                          style="font-size:0.8rem"
-                        >{{job.applicants.length}} applicants</p>
-                      </div>
                       <div class="d-flex">
                         <i class="fa fa-map-marker mr-2" style></i>
                         <p class="text-secondary" style="font-size:0.8rem">{{job.location}}</p>
+                      </div>
+                      <div class="container mb-1">
+                        <div class="row">
+                          <div
+                            class="border ml-1 mb-1 p-1 bg-warning rounded"
+                            v-for="skill in job.skills"
+                            :key="skill"
+                          >
+                            <div style="font-size:0.8rem">{{skill}}</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="p-0 m-0">
@@ -105,19 +113,34 @@ export default {
     };
   },
   created() {
-      this.$store.dispatch('findUser')
+    this.$store.dispatch("findUser");
   },
-  methods : {
-      removeFromFavorite(jobId) {
-        this.$store.dispatch('removeFromFavorite', jobId)    
-      }
+  methods: {
+    showJobDetail(job) {
+      this.$router.push(`jobs/${job._id}`);
+      this.$store.commit("SET_JOBDETAIL", job);
+    },
+    showCompanyDetail(company) {
+      this.$router.push(`company/${company._id}`);
+      this.$store.dispatch("getCompanyDetail", company._id);
+    },
+    removeFromFavorite(jobId) {
+      this.$store.dispatch("removeFromFavorite", jobId);
+    }
   }
 };
 </script>
 
 <style scoped>
-
 #cancelApplication:hover {
   color: red;
+}
+
+a:hover {
+  color: rgb(37, 82, 189) !important;
+  text-decoration: none;
+}
+a {
+  color: blue !important;
 }
 </style>

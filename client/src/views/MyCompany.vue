@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light border-top" style="min-height:700px">
+  <div class>
     <div class="container">
       <div class="row">
         <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
@@ -12,7 +12,7 @@
       <div class="container-fluid" v-if="!showPostJob">
         <div class="row">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border border-light d-flex flex-column justify-content-between bg-light"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-light"
           >
             <div>
               <h1>{{userCompany.name}}</h1>
@@ -28,20 +28,22 @@
                   {{userCompany.category}}
                 </p>
               </div>
-              <div>
-                <b-link :href="userCompany.url" target="blank">
-                  <i class="fa fa-link"></i>
-                  {{userCompany.url}}
-                </b-link>
+              <div class="d-flex justify-content-between flex-column">
+                <p>
+                  <b-link :href="userCompany.url" target="blank">
+                    <i class="fa fa-link"></i>
+                    {{userCompany.url}}
+                  </b-link>
+                </p>
                 <p>
                   <i class="fa fa-clock-o"></i>
                   last update {{moment(userCompany.updatedAt).fromNow()}}
                 </p>
               </div>
             </div>
-            <div class="ml-auto mt-2">
+            <div class="ml-auto mt-3">
               <b-button class="mr-2" variant="info" size="lg" @click.prevent="updateCompany()">
-                <h4>Update Company</h4>
+                <h4 class="mb-0">Update Company</h4>
               </b-button>
               <b-button
                 class="mr-2"
@@ -49,17 +51,17 @@
                 size="lg"
                 @click.prevent="postJob(userCompany._id)"
               >
-                <h4>Post Job</h4>
+                <h4 class="mb-0">Post Job</h4>
               </b-button>
               <b-button variant="danger" size="lg" @click.prevent="deleteCompany()">
-                <h4>Delete Company</h4>
+                <h4 class="mb-0">Delete Company</h4>
               </b-button>
             </div>
           </div>
         </div>
         <div class="row mt-4">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border border-light d-flex flex-column justify-content-between bg-white"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
           >
             <h3>Description</h3>
             <p>{{userCompany.description}}</p>
@@ -67,7 +69,7 @@
         </div>
         <div class="row mt-4">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border border-light d-flex flex-column justify-content-between bg-white"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
           >
             <h3>Jobs</h3>
             <p
@@ -77,7 +79,7 @@
               class="border-bottom"
               v-if="userCompany.jobs.length"
             >You have posted {{userCompany.jobs.length}} jobs</p>
-            <div v-for="job in userCompany.jobs" :key="job._id" class="border-bottom mt-3">
+            <div v-for="job in userCompany.jobs" :key="job._id" class="mt-3">
               <h5 class="mb-3 ml-3">{{job.name}}</h5>
               <p>
                 <i class="fa fa-map-signs"></i>
@@ -123,37 +125,37 @@
 </template>
 
 <script>
-import AddCompanyForm from '@/components/AddCompanyForm.vue'
-import { mapState } from 'vuex'
-import { HashLoader } from '@saeris/vue-spinners'
+import AddCompanyForm from "@/components/AddCompanyForm.vue";
+import { mapState } from "vuex";
+import { HashLoader } from "@saeris/vue-spinners";
 
 export default {
   computed: {
-    ...mapState(['userCompany', 'isLoading'])
+    ...mapState(["userCompany", "isLoading"])
   },
   components: {
     AddCompanyForm,
     HashLoader
   },
-  data () {
+  data() {
     return {
       showPostJob: false
-    }
+    };
   },
   methods: {
-    showJobUpdate (job) {
-      this.$router.push(`jobs/update/${job._id}`)
-      this.$store.commit('SET_JOBDETAIL', job)
+    showJobUpdate(job) {
+      this.$router.push(`jobs/update/${job._id}`);
+      this.$store.commit("SET_JOBDETAIL", job);
     },
-    showJobDetail (job) {
-      this.$router.push(`jobs/${job._id}`)
-      this.$store.commit('SET_JOBDETAIL', job)
+    showJobDetail(job) {
+      this.$router.push(`jobs/${job._id}`);
+      this.$store.commit("SET_JOBDETAIL", job);
     },
-    async deleteJob (id) {
+    async deleteJob(id) {
       this.$alertify
         .confirm(
-          () => this.$alertify.success('ok'),
-          () => this.$store.dispatch('deleteJob', id)
+          () => this.$alertify.success("ok"),
+          () => this.$store.dispatch("deleteJob", id)
         )
         .setHeader(
           '<h1 class=" text-warning"> <i class="fa fa-question-circle"></i> Warning !!!</h1> '
@@ -161,45 +163,45 @@ export default {
         .setContent(
           '<h5 class="text-justify" style="min-height:100px"> Are you sure, you want to delete this job ? you cannot revert this !!! </h5>'
         )
-        .show()
+        .show();
     },
-    async updateCompany () {
-      this.$router.push('/company/update')
+    async updateCompany() {
+      this.$router.push("/company/update");
     },
-    async reload () {
-      if (this.$router.currentRoute.fullPath !== '/mycompany') {
-        this.showPostJob = true
+    async reload() {
+      if (this.$router.currentRoute.fullPath !== "/mycompany") {
+        this.showPostJob = true;
       } else {
-        this.showPostJob = false
+        this.showPostJob = false;
       }
     },
-    async postJob (companyId) {
-      this.showPostJob = true
-      this.$router.push(`/mycompany/${companyId}`)
+    async postJob(companyId) {
+      this.showPostJob = true;
+      this.$router.push(`/mycompany/${companyId}`);
     },
-    async searchCompany () {
-      await this.$store.dispatch('searchUserCompany')
-      await this.$store.dispatch('getLocation')
+    async searchCompany() {
+      await this.$store.dispatch("searchUserCompany");
+      await this.$store.dispatch("getLocation");
     }
   },
-  created () {
-    this.searchCompany()
-    this.reload()
+  created() {
+    this.searchCompany();
+    this.reload();
   },
-  beforeRouteUpdate (to, from, next) {
-    this.searchCompany()
-    if (to.fullPath !== '/mycompany') {
-      this.showPostJob = true
+  beforeRouteUpdate(to, from, next) {
+    this.searchCompany();
+    if (to.fullPath !== "/mycompany") {
+      this.showPostJob = true;
     } else {
-      this.showPostJob = false
+      this.showPostJob = false;
     }
-    next()
+    next();
   },
-  beforeRouteLeave (to, from, next) {
-    this.showPostJob = true
-    next()
+  beforeRouteLeave(to, from, next) {
+    this.showPostJob = true;
+    next();
   }
-}
+};
 </script>
 
 <style scoped>

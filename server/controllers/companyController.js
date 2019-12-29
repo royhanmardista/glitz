@@ -4,6 +4,27 @@ const Job = require('../models/job')
 
 class companyController {
 
+    static async searchCompany(req, res, next) {
+        let {
+            country,
+            description,
+        } = req.query
+        try {
+            let companies = await Company.find({
+                name: {
+                    $regex: new RegExp(description),
+                    $options: "i"
+                },                
+                location: {
+                    $regex: new RegExp(country),
+                    $options: 'i'
+                }                
+            })
+            res.json(companies)
+        } catch (err) {
+            next(err)
+        }
+    }
     static async findUserCompany(req, res, next) {
         try {
             let company = await Company.findOne({
@@ -15,7 +36,10 @@ class companyController {
                     companyId: company._id
                 })
             }
-            res.json({company, jobs})
+            res.json({
+                company,
+                jobs
+            })
         } catch (err) {
             next(err)
         }
