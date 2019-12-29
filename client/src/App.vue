@@ -53,6 +53,14 @@
                         </div>
                       </div>
                     </b-dropdown-item>
+                    <b-dropdown-item >
+                      <div class="d-flex justify-content-between">
+                        <router-link :to="`/applications/${loggedUser._id}`">Applied Job</router-link>
+                        <div>
+                          <i class="fa fa-file-text"></i>
+                        </div>
+                      </div>
+                    </b-dropdown-item>
                     <b-dropdown-item @click.prevent="logout">
                       <div class="d-flex justify-content-between">
                         <div>Signout</div>
@@ -150,6 +158,5 @@ h4,
 h5 {
   font-family: "Oswald", sans-serif;
 }
-
 
 </style>

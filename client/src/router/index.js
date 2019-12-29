@@ -7,22 +7,22 @@ Vue.use(VueRouter)
 const routes = [{
     path: '/',
     name: 'FrontPage',
-    component: () => import( /* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue'),
+    component: () => import( /* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue')
   },
   {
     path: '/register',
     name: 'register',
-    component: () => import( /* webpackChunkName: "Register" */ '../views/Register.vue'),
+    component: () => import( /* webpackChunkName: "Register" */ '../views/Register.vue')
   },
   {
     path: '/home',
     name: 'home',
-    component: () => import( /* webpackChunkName: "Home" */ '../views/Home.vue'),
+    component: () => import( /* webpackChunkName: "Home" */ '../views/Home.vue')
   },
   {
     path: '/jobs',
     name: 'job',
-    component: () => import( /* webpackChunkName: "Job" */ '../views/Jobs.vue'),
+    component: () => import( /* webpackChunkName: "Job" */ '../views/Jobs.vue')
   },
   {
     path: '/mycompany',
@@ -37,33 +37,43 @@ const routes = [{
   {
     path: '/company/update',
     name: 'UpdateCompany',
-    component: () => import( /* webpackChunkName: "UpdateCompany" */ '../components/UpdateCompany.vue'),
+    component: () => import( /* webpackChunkName: "UpdateCompany" */ '../components/UpdateCompany.vue')
   },
   {
     path: '/jobs/:id',
     name: 'JobDetail',
-    component: () => import( /* webpackChunkName: "JobDetail" */ '../components/JobDetail.vue'),
+    component: () => import( /* webpackChunkName: "JobDetail" */ '../components/JobDetail.vue')
   },
   {
     path: '/jobs/update/:id',
     name: 'JobUpdate',
-    component: () => import( /* webpackChunkName: "JobUpdate" */ '../components/JobUpdateForm.vue'),
+    component: () => import( /* webpackChunkName: "JobUpdate" */ '../components/UpdateJobForm.vue')
   },
   {
     path: '/company/:id',
     name: 'CompanyDetail',
-    component: () => import( /* webpackChunkName: "CompanyDetail" */ '../components/CompanyDetail.vue'),
+    component: () => import( /* webpackChunkName: "CompanyDetail" */ '../components/CompanyDetail.vue')
   },
   {
     path: '/profile/:id',
-    name: 'UserProfile',
-    component: () => import( /* webpackChunkName: "UserProfile" */ '../components/UserProfile.vue'),
+    name: 'UserDetail',
+    component: () => import( /* webpackChunkName: "UserDetail" */ '../components/UserDetail.vue')
 
   },
   {
     path: '/profile/update/:id',
     name: 'UserUpdate',
-    component: () => import( /* webpackChunkName: "UpdateUserDetail" */ '../components/UpdateUserDetail.vue'),
+    component: () => import( /* webpackChunkName: "UpdateUserDetail" */ '../components/UpdateUserDetail.vue')
+  },
+  {
+    path: '/applications/:id',
+    name: 'UserApplication',
+    component: () => import( /* webpackChunkName: "UserApplication" */ '../components/UserApplication.vue')
+  },
+  {
+    path: '/favorites',
+    name: 'UserFavorite',
+    component: () => import( /* webpackChunkName: "UserFavorite" */ '../components/UserFavorite.vue')
   }
 ]
 
@@ -83,8 +93,8 @@ router.beforeEach((to, from, next) => {
   } else {
     if (localStorage.getItem('token')) {
       next()
-    } else {       
-       next('/register')
+    } else {
+      next('/register')
     }
   }
 })

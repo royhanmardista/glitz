@@ -20,15 +20,15 @@
 
             <div class="mt-1 container-fluid pt-1">
               <b-form inline class="row d-flex justify-content-center">
-                  <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
-                    <b-form-select v-model="country" :options="locations"></b-form-select>
-                  </b-input-group>
-                  <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
-                    <b-form-select v-model="minExp" :options="minExperiences"></b-form-select>
-                  </b-input-group>
-                  <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
-                    <b-form-input v-model="skills" placeholder="Input Skills"></b-form-input>
-                  </b-input-group>
+                <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
+                  <b-form-select v-model="country" :options="locations"></b-form-select>
+                </b-input-group>
+                <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
+                  <b-form-select v-model="minExp" :options="minExperiences"></b-form-select>
+                </b-input-group>
+                <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
+                  <b-form-input v-model="skills" placeholder="Input Skills"></b-form-input>
+                </b-input-group>
               </b-form>
             </div>
           </b-form>
@@ -69,10 +69,8 @@
                 class="border rounded px-3 py-1 mb-3 d-flex flex-column justify-content-between"
                 style="min-height:180px"
               >
-                <div class="row text-left">
-                  <div
-                    class="col-md-11 col-xs-11 col-sm-11 d-flex flex-column justify-content-between"
-                  >
+                <div class="text-left d-flex justify-content-between">
+                  <div class="d-flex flex-column justify-content-between">
                     <h5>
                       <a class="text-dark" href @click.prevent="showJobDetail(job)">{{job.name}}</a>
                     </h5>
@@ -85,8 +83,14 @@
                       <p class="text-secondary" style="font-size:0.8rem">{{job.location}}</p>
                     </div>
                   </div>
-                  <div class="col-md-1 col-xs-1 col-sm-1 p-0">
-                    <div class>
+                  <div class="p-0">
+                    <div
+                      class
+                      style="cursor: pointer"
+                      v-b-tooltip.hover
+                      title="Add to favorite"
+                      @click.prevent="addFavorite(job._id)"
+                    >
                       <i class="fa fa-bookmark"></i>
                     </div>
                   </div>
@@ -101,7 +105,6 @@
           </div>
         </b-collapse>
       </div>
-      <!-- job container end -->
     </div>
     <!-- job container end -->
   </div>
@@ -143,6 +146,9 @@ export default {
     };
   },
   methods: {
+    addFavorite(jobId) {
+      this.$store.dispatch('addToFavorite', jobId)
+    },
     showJobDetail(job) {
       this.$router.push(`jobs/${job._id}`);
       this.$store.commit("SET_JOBDETAIL", job);

@@ -25,7 +25,7 @@
                 object-fit: cover;"
               />
             </div>
-            <div class="col-md-6 d-flex flex-column">
+            <div class="col-md-9 d-flex flex-column">
               <div class="d-flex mb-2">
                 <h3 class>{{userProfile.fullname.toUpperCase()}}</h3>
                 <div
@@ -40,13 +40,13 @@
               <div class="d-flex justify-content-between">
                 <div>
                   <div class="mt-2">
-                    <div>
+                    <div class="text-secondary font-weight-bold">
                       <i class="fa fa-phone"></i> Phone
                     </div>
                     {{userProfile.phone}}
                   </div>
                   <div class="mt-2">
-                    <div>
+                    <div class="text-secondary font-weight-bold">
                       <i class="fa fa-map-marker"></i> Location
                     </div>
                     {{userProfile.location}}
@@ -54,17 +54,22 @@
                 </div>
                 <div>
                   <div class="mt-2">
-                    <div>
+                    <div class="text-secondary font-weight-bold">
                       <i class="fa fa-envelope"></i> Email
                     </div>
                     {{userProfile.email}}
                   </div>
                   <div class="mt-2">
-                    <div>
+                    <div class="text-secondary font-weight-bold">
                       <i class="fa fa-clock-o"></i> Age
                     </div>
                     {{moment().diff(userProfile.birthDate, 'years')}} years old
                   </div>
+                </div>
+                <div>
+                  <h4 class="text-secondary">Statistic</h4>
+                  <h1>{{userProfile.appliedJob.length}} </h1>
+                  <p>Applications Sent</p>
                 </div>
               </div>
             </div>
@@ -110,14 +115,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { CollapseTransition } from "vue2-transitions";
-import AddUserDetail from "@/components/AddUserDetail.vue";
-import { PacmanLoader } from "@saeris/vue-spinners";
+import { mapState } from 'vuex'
+import { CollapseTransition } from 'vue2-transitions'
+import AddUserDetail from '@/components/AddUserDetail.vue'
+import { PacmanLoader } from '@saeris/vue-spinners'
 
 export default {
-  data() {
-    return {};
+  name : "UserProfile",
+  data () {
+    return {}
   },
   components: {
     CollapseTransition,
@@ -125,24 +131,24 @@ export default {
     PacmanLoader
   },
   computed: {
-    ...mapState(["userProfile", "isLoading"])
+    ...mapState(['userProfile', 'isLoading'])
   },
-  created() {
-    this.findUserProfile();
+  created () {
+    this.findUserProfile()
   },
   methods: {
-    toEditPage(userProfile) {
-      this.$router.push(`/profile/update/${userProfile.userId}`);
+    toEditPage (userProfile) {
+      this.$router.push(`/profile/update/${userProfile.userId}`)
     },
-    async findUserProfile() {
+    async findUserProfile () {
       await this.$store.dispatch(
-        "findUseProfile",
+        'findUseProfile',
         this.$router.currentRoute.params.id
-      );
-      await this.$store.dispatch("getLocation");
+      )
+      await this.$store.dispatch('getLocation')
     }
   }
-};
+}
 </script>
 
 <style scoped>

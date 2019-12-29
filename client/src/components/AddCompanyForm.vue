@@ -50,6 +50,7 @@
 import { mapState } from 'vuex'
 
 export default {
+  name : "AddCompanyForm",
   computed: {
     ...mapState([
       'locations',

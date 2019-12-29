@@ -56,7 +56,7 @@ export default {
   components: {
     VueEditor
   },
-  name: 'JobUpdateForm',
+  name: 'UpdateJobForm',
   computed: {
     ...mapState(['locations', 'isLoading', 'regions', 'cities', 'jobDetail']),
     skills: {
@@ -150,7 +150,7 @@ export default {
         skills.push(skill.trim())
       })
       location = location.join(', ')
-      await this.$store.dispatch('updateJob', {location, skills})
+      await this.$store.dispatch('updateJob', { location, skills })
     }
   }
 }

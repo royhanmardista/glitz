@@ -5,7 +5,7 @@ import router from '@/router'
 
 Vue.use(Vuex)
 
-function initialState () {
+function initialState() {
   return {
     github: null,
     themuse: null,
@@ -43,13 +43,13 @@ function initialState () {
 export default new Vuex.Store({
   state: initialState(),
   mutations: {
-    RESET (state) {
+    RESET(state) {
       const s = initialState()
       Object.keys(s).forEach(key => {
         state[key] = s[key]
       })
     },
-    SET_JOBDETAIL (state, job) {
+    SET_JOBDETAIL(state, job) {
       state.jobDetail = job
       if (state.jobDetail) {
         let locationArray = job.location.trim().split(',')
@@ -58,32 +58,32 @@ export default new Vuex.Store({
         state.jobDetail.city = locationArray[0]
       }
     },
-    SET_SEARCHING_CITY (state, payload) {
+    SET_SEARCHING_CITY(state, payload) {
       state.searchingCity = payload
     },
-    SET_SEARCHING_REGION (state, payload) {
+    SET_SEARCHING_REGION(state, payload) {
       state.searchingRegion = payload
     },
-    SET_LOCATION (state, locations) {
+    SET_LOCATION(state, locations) {
       state.locations = locations
     },
-    CHECK_LOGIN (state) {
+    CHECK_LOGIN(state) {
       if (localStorage.getItem('token')) {
         state.isLogin = true
       } else {
         state.isLogin = false
       }
     },
-    SET_ISLOGIN (state, payload) {
+    SET_ISLOGIN(state, payload) {
       state.isLogin = payload
     },
-    SET_LOGGED_USER (state, user) {
+    SET_LOGGED_USER(state, user) {
       state.loggedUser = user
     },
-    SET_ISLOADING (state, payload) {
+    SET_ISLOADING(state, payload) {
       state.isLoading = payload
     },
-    SET_EXTERNAL_JOBS (state, jobs) {
+    SET_EXTERNAL_JOBS(state, jobs) {
       let {
         github,
         themuse
@@ -92,7 +92,7 @@ export default new Vuex.Store({
       state.themuse = themuse || []
       state.isLoading = false
     },
-    SET_USER_COMPANY (state, data) {
+    SET_USER_COMPANY(state, data) {
       state.userCompany = data.company
       if (state.userCompany) {
         let locationArray = data.company.location.trim().split(',')
@@ -102,16 +102,16 @@ export default new Vuex.Store({
         state.userCompany.jobs = data.jobs
       }
     },
-    SET_REGIONS (state, regions) {
+    SET_REGIONS(state, regions) {
       state.regions = regions
     },
-    SET_CITIES (state, cities) {
+    SET_CITIES(state, cities) {
       state.cities = cities
     },
-    SET_INTERNALJOB (state, jobs) {
+    SET_INTERNALJOB(state, jobs) {
       state.internalJob = jobs
     },
-    SET_COMPANY_DETAIL (state, data) {
+    SET_COMPANY_DETAIL(state, data) {
       let {
         company,
         jobs
@@ -119,27 +119,129 @@ export default new Vuex.Store({
       state.companyDetail = company
       state.companyDetail.jobs = jobs
     },
-    SET_USER_PROFILE (state, data) {
+    SET_USER_PROFILE(state, data) {
       state.userProfile = data
     },
-    SET_SEARCHING_USER (state, payload) {
+    SET_SEARCHING_USER(state, payload) {
       state.isSearchingUser = payload
     },
-    SET_UNIVERSITIES (state, payload) {
+    SET_UNIVERSITIES(state, payload) {
       state.universities = payload
     }
   },
   actions: {
-    async updateProfile({ commit, state }, payload) {
-      let { education, skills, birthDate } = payload
-      let { fullname,
+    async removeFromFavorite({
+      commit
+    }, jobId) {
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.patch('/remove/favorite', {
+          jobId
+        }, {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        this._vm.$alertify.success(data.message)
+        commit('SET_LOGGED_USER', data.user)
+      } catch (err) {
+        console.log(err.response)
+        this._vm.$alertify.error(err.response.data.message)
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
+    async addToFavorite({
+      commit
+    }, jobId) {
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.patch('/favorite', {
+          jobId
+        }, {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        this._vm.$alertify.success(data.message)
+      } catch (err) {
+        this._vm.$alertify.error(err.response.data.message)
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
+    async cancelApplication({
+      commit
+    }, jobId) {
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.patch(`/jobs/${jobId}/misapply`, {}, {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        this._vm.$alertify.success(data.message)
+        commit('SET_LOGGED_USER', data.user)
+      } catch (err) {
+        this._vm.$alertify.error(err.response.data.message)
+        if (err.response.status === 405) {
+          router.push(`/profile/${state.loggedUser._id}`)
+        }
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
+    async applyJob({
+      commit,
+      state
+    }, jobId) {
+      try {
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.patch(`/jobs/${jobId}/apply`, {}, {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        this._vm.$alertify.success(data.message)
+      } catch (err) {
+        this._vm.$alertify.error(err.response.data.message)
+        if (err.response.status === 405) {
+          router.push(`/profile/${state.loggedUser._id}`)
+        }
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
+    async updateProfile({
+      commit,
+      state
+    }, payload) {
+      let {
+        education,
+        skills,
+        birthDate
+      } = payload
+      let {
+        fullname,
         description,
         phone,
-        location, experience } = state.userProfile
+        location,
+        experience
+      } = state.userProfile
       try {
-          commit('SET_ISLOADING', true)
-          console.log(location)
-        let { data } = await server.put(`/profile`, {
+        commit('SET_ISLOADING', true)
+        console.log(location)
+        let {
+          data
+        } = await server.put(`/profile`, {
           education,
           skills,
           birthDate,
@@ -149,8 +251,8 @@ export default new Vuex.Store({
           location,
           experience
         }, {
-          headers : {
-            token : localStorage.getItem('token')
+          headers: {
+            token: localStorage.getItem('token')
           }
         })
         let {
@@ -160,10 +262,11 @@ export default new Vuex.Store({
         } = data
         userDetail.email = user.email
         userDetail.username = user.username
+        userDetail.appliedJob = user.appliedJob
         commit('SET_USER_PROFILE', userDetail)
         this._vm.$alertify.success(message)
         router.push(`/profile/${userDetail.userId}`)
-      }  catch(err) {
+      } catch (err) {
         if (Array.isArray(err.response.data.message)) {
           this._vm.$alertify.error(err.response.data.message.join(', '))
         } else {
@@ -173,7 +276,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async createProfile ({
+    async createProfile({
       commit,
       dispatch
     }, data) {
@@ -191,6 +294,7 @@ export default new Vuex.Store({
         } = response.data
         userDetail.email = user.email
         userDetail.username = user.username
+        userDetail.appliedJob = user.appliedJob
         commit('SET_USER_PROFILE', userDetail)
         this._vm.$alertify.success(message)
       } catch (err) {
@@ -203,7 +307,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async getUniversities ({
+    async getUniversities({
       commit
     }, country) {
       try {
@@ -230,7 +334,7 @@ export default new Vuex.Store({
         }])
       } finally {}
     },
-    async findUseProfile ({
+    async findUseProfile({
       commit
     }, userId) {
       try {
@@ -248,6 +352,7 @@ export default new Vuex.Store({
         } = data
         userDetail.email = user.email
         userDetail.username = user.username
+        userDetail.appliedJob = user.appliedJob
         commit('SET_USER_PROFILE', userDetail)
       } catch (err) {
         this._vm.$alertify.error(err.response.data.message)
@@ -255,7 +360,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async findUser ({
+    async findUser({
       commit
     }) {
       commit('SET_SEARCHING_USER', true)
@@ -277,7 +382,7 @@ export default new Vuex.Store({
         commit('SET_SEARCHING_USER', false)
       }
     },
-    async getCompanyDetail ({
+    async getCompanyDetail({
       commit
     }, companyId) {
       try {
@@ -292,7 +397,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async searchInternalJob ({
+    async searchInternalJob({
       commit
     }, form) {
       let {
@@ -323,14 +428,17 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async updateJob ({
+    async updateJob({
       commit,
       dispatch,
       state
     }, payload) {
       try {
         commit('SET_ISLOADING', true)
-        let { location, skills } = payload
+        let {
+          location,
+          skills
+        } = payload
         let {
           data
         } = await server.put(`/jobs/${state.jobDetail._id}`, {
@@ -357,7 +465,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async findJobDetail ({
+    async findJobDetail({
       commit
     }, jobId) {
       try {
@@ -372,7 +480,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async updateCompany ({
+    async updateCompany({
       commit,
       dispatch,
       state
@@ -401,7 +509,7 @@ export default new Vuex.Store({
       }
     },
 
-    async deleteJob ({
+    async deleteJob({
       commit,
       dispatch
     }, jobId) {
@@ -421,7 +529,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async createJob ({
+    async createJob({
       commit,
       dispatch
     }, form) {
@@ -461,7 +569,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async createCompany ({
+    async createCompany({
       commit
     }, form) {
       try {
@@ -498,7 +606,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async getCities ({
+    async getCities({
       commit
     }, payload) {
       let {
@@ -531,7 +639,7 @@ export default new Vuex.Store({
       }
     },
 
-    async getRegions ({
+    async getRegions({
       commit
     }, country) {
       try {
@@ -558,7 +666,7 @@ export default new Vuex.Store({
         commit('SET_SEARCHING_REGION', false)
       }
     },
-    async searchUserCompany ({
+    async searchUserCompany({
       commit
     }) {
       try {
@@ -577,7 +685,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async getLocation ({
+    async getLocation({
       commit
     }) {
       try {
@@ -592,7 +700,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async searchJob ({
+    async searchJob({
       commit
     }, form) {
       commit('SET_EXTERNAL_JOBS', {

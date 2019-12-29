@@ -18,7 +18,7 @@
               Last update {{moment(jobDetail.updatedAt).fromNow()}}
             </p>
             <div class="d-flex justify-content-end my-3">
-              <b-button size="lg" variant="warning">
+              <b-button size="lg" variant="warning" @click.prevent="applyJob(jobDetail._id)">
                 <h4>Apply</h4>
               </b-button>
             </div>
@@ -26,12 +26,14 @@
           <div class="border p-3 rounded">
             <div class="d-flex justify-content-between">
               <h5
-              @click="descShow = !descShow"
-              :class="descShow ? null : 'collapsed'"
-              :aria-expanded="descShow ? 'true' : 'false'"
-              style="cursor:pointer"
-            >Job Description</h5>
-            <i :class="{'fa fa-caret-down fa-2x' : !descShow, 'fa fa-caret-up fa-2x' : descShow }"></i>
+                @click="descShow = !descShow"
+                :class="descShow ? null : 'collapsed'"
+                :aria-expanded="descShow ? 'true' : 'false'"
+                style="cursor:pointer"
+              >Job Description</h5>
+              <i
+                :class="{'fa fa-caret-down fa-2x' : !descShow, 'fa fa-caret-up fa-2x' : descShow }"
+              ></i>
             </div>
             <b-collapse id="description" v-model="descShow">
               <div class="ml-3 mt-4" v-html="jobDetail.description"></div>
@@ -62,7 +64,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'JobDetail',
   computed: {
-    ...mapState(['jobDetail', 'isLoading'])
+    ...mapState(['jobDetail', 'isLoading', 'userProfile', 'loggedUser'])
   },
   data () {
     return {
@@ -70,6 +72,9 @@ export default {
     }
   },
   methods: {
+    applyJob (jobId) {
+      this.$store.dispatch('applyJob', jobId)
+    },
     findJobDetail () {
       this.$store.dispatch(
         'findJobDetail',
