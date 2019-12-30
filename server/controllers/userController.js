@@ -31,7 +31,10 @@ class userController {
                 $push: {
                     favoriteJob: jobId
                 }
-            }, { select : "-password", new : true})
+            }, {
+                select: "-password",
+                new: true
+            })
             if (user) {
                 res.json({
                     message: "Job has successfully added to favorites",
@@ -70,7 +73,10 @@ class userController {
                 $pull: {
                     favoriteJob: jobId
                 }
-            },{ select : "-password", new : true}).populate({
+            }, {
+                select: "-password",
+                new: true
+            }).populate({
                 path: 'appliedJob',
                 populate: [{
                     path: 'companyId',
@@ -98,8 +104,9 @@ class userController {
     }
     static async findOne(req, res, next) {
         try {
+            
             let user = await User.findById(req.user._id, "-password").populate({
-                path: 'appliedJob',
+                path: 'appliedJob.jobId',
                 populate: [{
                     path: 'companyId',
                 }]

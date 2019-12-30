@@ -4,7 +4,6 @@ const jobApi = require('../apis/job')
 const axios = require('axios')
 const Company = require('../models/company')
 const User = require('../models/user')
-const countryApi = require('../apis/getCountry')
 const Country = require('../models/country')
 const UserDetail = require('../models/userDetail')
 
@@ -134,12 +133,14 @@ class jobController {
                 try {
                     let updatedJob = await Job.findOneAndUpdate({
                         _id: req.params.id,
-                        applicants: {
+                        "applicants.applicantId": {
                             $in: req.user._id
                         }
                     }, {
                         $pull: {
-                            applicants: req.user._id
+                            applicants: {
+                                "applicantId": req.user._id
+                            }
                         }
                     }, {
                         new: true,
@@ -147,12 +148,15 @@ class jobController {
                     if (updatedJob) {
                         let user = await User.findByIdAndUpdate(req.user._id, {
                             $pull: {
-                                appliedJob: job._id
+                                appliedJob: {
+                                    "jobId": job._id
+                                }
                             }
                         }, {
                             new: true,
+                            select : "-password"
                         }).populate({
-                            path: 'appliedJob',
+                            path: 'appliedJob.jobId',
                             populate: [{
                                 path: 'companyId',
                             }]
@@ -195,7 +199,6 @@ class jobController {
                 throw ({
                     status: 405,
                     message: "It seems that you haven't complete your profile, you must complete your profile before you can apply",
-                    name : "noProfile"
                 })
             }
             let job = await Job.findById(req.params.id)
@@ -209,23 +212,28 @@ class jobController {
                     try {
                         let updatedJob = await Job.findOneAndUpdate({
                             _id: req.params.id,
-                            applicants: {
-                                $nin: req.user._id
+                            "applicants.applicantId": {
+                                $ne: req.user._id
                             }
                         }, {
                             $push: {
-                                applicants: req.user._id
+                                applicants: {
+                                    applicantId: req.user._id
+                                }
                             }
                         }, {
-                            new: true,
+                            new: true,                       
                         })
                         if (updatedJob) {
                             let user = await User.findByIdAndUpdate(req.user._id, {
                                 $push: {
-                                    appliedJob: job._id
+                                    appliedJob: {
+                                        jobId: job._id
+                                    }
                                 }
                             }, {
                                 new: true,
+                                select:"-password"
                             })
                             res.json({
                                 message: "applying job success",
@@ -373,7 +381,7 @@ class jobController {
         try {
             let jobs = await Job.find({
                 status: true
-            }).populate('applicants', "-password")
+            }).populate({ path : 'applicants.applicantId', select : ["_id", "username", "email"]})
             res.json(jobs)
         } catch (err) {
             next(err)
@@ -383,7 +391,7 @@ class jobController {
     static async findOne(req, res, next) {
         try {
             let job = await Job.
-            findById(req.params.id).populate('applicants', "-password")
+            findById(req.params.id).populate({ path : 'applicants.applicantId', select : ["_id", "username", "email"]})
             if (job) {
                 res.json(job)
             } else {

@@ -16,28 +16,38 @@ const userSchema = Schema({
     },
     email: {
         type: String,
-        index : true,
+        index: true,
         required: [true, 'you must enter your email'],
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'please enter a valid email'],
         unique: true,
         trim: true,
-        lowercase : true,
+        lowercase: true,
     },
     password: {
         type: String,
         minlength: [6, "minimum password length is 6 characters"],
         required: [true, 'you must enter your password'],
     },
-    appliedJob: [{
+    favoriteJob: [{
         type: Schema.Types.ObjectId,
         ref: 'Job'
     }],
-    favoriteJob : [{
-        type: Schema.Types.ObjectId,
-        ref: 'Job'
+    appliedJob: [{
+        jobId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Job'
+        },
+        status: {
+            type: String,
+            enum: ["waiting evaluation", "accepted", "not suitable"],
+            trim: true,
+            lowercase: true,
+            default: "waiting evaluation"
+        }
     }]
 }, {
-    timestamps: true , runSettersOnQuery: true
+    timestamps: true,
+    runSettersOnQuery: true
 })
 
 userSchema.pre('save', function (next) {
