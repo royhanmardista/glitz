@@ -49,7 +49,7 @@
                       <div class="d-flex justify-content-between">
                         <router-link :to="`/profile/${loggedUser._id}`">My Profile</router-link>
                         <div>
-                          <i class="fa fa-user"></i>
+                          <i class="fa fa-user-o"></i>
                         </div>
                       </div>
                     </b-dropdown-item>
@@ -58,7 +58,7 @@
                       <div class="d-flex justify-content-between">
                         <router-link :to="`/applications/${loggedUser._id}`">Applied Job</router-link>
                         <div>
-                          <i class="fa fa-file-text"></i>
+                          <i class="fa fa-files-o"></i>
                         </div>
                       </div>
                     </b-dropdown-item>
@@ -66,7 +66,7 @@
                       <div class="d-flex justify-content-between">
                         <router-link :to="`/mycompany`">My Company</router-link>
                         <div>
-                          <i class="fa fa-building ml-2"></i>
+                          <i class="fa fa-building-o ml-2"></i>
                         </div>
                       </div>
                     </b-dropdown-item>

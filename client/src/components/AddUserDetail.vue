@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid mt-3">
     <div class="row mx-1">
-      <div class="col-md-8 offset-md-2 border rounded p-5 bg-light">
+      <div class="col-md-8 offset-md-2 p-5 bg-light shadow">
         <h3 class="text-center">First, You Need To Complete This Form</h3>
         <b-form @submit.prevent="createProfile">
           <!-- full name -->
@@ -53,10 +53,10 @@
           <b-form-file
             v-model="image"
             :state="Boolean(image)"
-            placeholder="Choose a file or drop it here..."
+            placeholder="Choose your profile picture or drop it here..."
             drop-placeholder="Drop file here..."
           ></b-form-file>
-          <div class="mt-3">Selected file: {{ image ? image.name : '' }}</div>
+          <div class="my-3">Selected file: {{ image ? image.name : '' }}</div>
           <!-- submit -->
           <b-button type="submit" variant="primary mr-2">Submit</b-button>
           <b-button type="reset" variant="danger">Reset</b-button>

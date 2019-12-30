@@ -68,7 +68,7 @@
                 </div>
                 <div>
                   <h4 class="text-secondary">Statistic</h4>
-                  <h1>{{userProfile.appliedJob.length}} </h1>
+                  <h1>{{userProfile.appliedJob.length}}</h1>
                   <p>Applications Sent</p>
                 </div>
               </div>
@@ -115,15 +115,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { CollapseTransition } from 'vue2-transitions'
-import AddUserDetail from '@/components/AddUserDetail.vue'
-import { PacmanLoader } from '@saeris/vue-spinners'
+import { mapState } from "vuex";
+import { CollapseTransition } from "vue2-transitions";
+import AddUserDetail from "@/components/AddUserDetail.vue";
+import { PacmanLoader } from "@saeris/vue-spinners";
 
 export default {
-  name : "UserProfile",
-  data () {
-    return {}
+  name: "UserProfile",
+  data() {
+    return {};
   },
   components: {
     CollapseTransition,
@@ -131,24 +131,28 @@ export default {
     PacmanLoader
   },
   computed: {
-    ...mapState(['userProfile', 'isLoading'])
+    ...mapState(["userProfile", "isLoading"])
   },
-  created () {
-    this.findUserProfile()
+  created() {
+    this.findUserProfile();
   },
   methods: {
-    toEditPage (userProfile) {
-      this.$router.push(`/profile/update/${userProfile.userId}`)
+    toEditPage(userProfile) {
+      this.$router.push(`/profile/update/${userProfile.userId}`);
     },
-    async findUserProfile () {
+    async findUserProfile() {
       await this.$store.dispatch(
-        'findUseProfile',
+        "findUseProfile",
         this.$router.currentRoute.params.id
-      )
-      await this.$store.dispatch('getLocation')
+      );
+      await this.$store.dispatch("getLocation");
     }
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.$store.dispatch("findUseProfile", to.params.id);
+    next();
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
 `use strict`
-const Job = require('./user')
+const Job = require('./job')
 
 const {
     Schema,
@@ -45,7 +45,8 @@ const companySchema = new Schema({
             'Marketing & PR',
             'Manufacturing',
             'Creative & Design', null
-        ]
+        ],
+        required : [true, "you must fill your company category "]
     }
 }, {
     timestamps: true,
@@ -57,8 +58,9 @@ companySchema.plugin(uniqueValidator, {
     message: '{VALUE} already exist , please pick other {PATH}'
 });
 companySchema.post('findOneAndDelete', async function (doc, next) {
+    console.log(doc._id)
     await Job.deleteMany({
-        companyId: doc._id
+        "companyId" : doc._id
     })
     next()
 })

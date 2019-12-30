@@ -57,6 +57,9 @@ export default {
   },
   beforeCreate: function() {
     document.body.className = "home";
+  },
+  created() {
+    this.$store.dispatch("findUser");
   }
 };
 </script>

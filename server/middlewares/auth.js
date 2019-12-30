@@ -119,9 +119,7 @@ module.exports = {
                         userId: {
                             $eq: req.user._id
                         },
-                        applicants: {
-                            $in: [req.params.id]
-                        }
+                        "applicants.applicantId" : req.params.userId     
                     })
                     if (employer) {
                         next()

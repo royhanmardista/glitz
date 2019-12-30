@@ -37,7 +37,7 @@
                 :key="job._id"
               >
                 <div
-                  class="border rounded px-3 py-1 mb-3 d-flex flex-column justify-content-between"
+                  class="border rounded px-3 py-2 mb-3 d-flex flex-column justify-content-between"
                   style="min-height:230px"
                 >
                   <div class="text-left d-flex justify-content-between">
@@ -69,7 +69,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="p-0 m-0">
+                    <div class="pl-2">
                       <div
                         id="cancelApplication"
                         v-b-tooltip.hover

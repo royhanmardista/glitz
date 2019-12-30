@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light" style="min-height:600px">
+  <div>
     <div class="container-fluid mt-3">
       <div class="row" v-if="!isLoading">
         <div class="col-md-10 offset-md-1">
@@ -53,6 +53,59 @@
               </div>
             </div>
           </div>
+          <div class="border p-3 rounded mt-3" v-if="loggedUser._id == jobDetail.userId">
+            <div class="d-flex justify-content-between">
+              <h5
+                @click="applicantsShow = !applicantsShow"
+                :class="applicantsShow ? null : 'collapsed'"
+                :aria-expanded="applicantsShow ? 'true' : 'false'"
+                style="cursor:pointer"
+              >Applicants</h5>
+              <i
+                :class="{'fa fa-caret-down fa-2x' : !applicantsShow, 'fa fa-caret-up fa-2x' : applicantsShow }"
+              ></i>
+            </div>
+            <div>
+              <p>{{jobDetail.applicants.length}} users has applied this job</p>
+            </div>
+            <b-collapse id="applicants" v-model="applicantsShow">
+              <div class="ml-3 mt-4">
+                <div class="row mt-4">
+                  <table class="table table-hover mr-3" v-if="jobDetail.applicants.length">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="applicant in jobDetail.applicants"
+                        :key="applicant._id"
+                        class="border-bottom"
+                      >
+                        <td>{{applicant.applicantId.username}}</td>
+                        <td>{{applicant.applicantId.email}}</td>
+                        <td>{{applicant.status}}</td>
+                        <td class style="cursor:pointer">
+                          <b-button
+                            variant="outline-info"
+                            v-b-tooltip.hover
+                            title="See applicants profile"
+                            @click.prevent="seeApplicantDetail(applicant.applicantId._id)"
+                          >
+                            <i class="fa fa-folder-open"></i>
+                          </b-button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </b-collapse>
+          </div>
         </div>
       </div>
     </div>
@@ -60,37 +113,50 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
-  name: 'JobDetail',
+  name: "JobDetail",
   computed: {
-    ...mapState(['jobDetail', 'isLoading', 'userProfile', 'loggedUser'])
+    ...mapState(["jobDetail", "isLoading", "userProfile", "loggedUser"])
   },
-  data () {
+  data() {
     return {
-      descShow: true
-    }
+      descShow: true,
+      applicantsShow: true
+    };
   },
   methods: {
-    applyJob (jobId) {
-      this.$store.dispatch('applyJob', jobId)
+    seeApplicantDetail(applicantId) {
+      this.$router.push(`/profile/${applicantId}`)
     },
-    findJobDetail () {
+    applyJob(jobId) {
+      this.$store.dispatch("applyJob", jobId);
+    },
+    findJobDetail() {
       this.$store.dispatch(
-        'findJobDetail',
+        "findJobDetail",
         this.$router.currentRoute.params.id
-      )
+      );
     }
   },
-  created () {
-    this.findJobDetail()
+  created() {
+    this.findJobDetail();
   }
-}
+};
 </script>
 
 <style scoped>
 p {
   margin: 0.5rem 1rem;
   font-family: "Gothic A1", sans-serif;
+}
+
+td {
+  font-family: "Lateef", cursive;
+  font-size: 1.2rem;
+}
+
+th {
+  font-family: "Oswald", sans-serif;
 }
 </style>

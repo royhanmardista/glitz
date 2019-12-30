@@ -343,10 +343,11 @@ class jobController {
         try {
             let company = await Company.findById(companyId)
             if (company) {
-                let valid = await Job.findOne({
-                    name
+                let exist = await Job.findOne({
+                    companyId,
+                    name 
                 })
-                if (!valid) {
+                if (!exist) {
                     let job = await Job.create({
                         name,
                         location,

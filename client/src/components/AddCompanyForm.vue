@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid mt-5">
     <div class="row mx-1">
-      <div class="col-md-8 offset-md-2 border rounded p-5 bg-light" v-if="!isLoading">
+      <div class="col-md-8 offset-md-2 shadow p-5 bg-light" v-if="!isLoading">
         <h3 class="text-center">Let's Start by Filling this Form</h3>
         <b-form @submit.prevent="createCompany">
           <b-form-group id="input-group-1" label="Company Name" label-for="input-1">

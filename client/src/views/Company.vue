@@ -61,12 +61,12 @@
               :key="company._id"
             >
               <div
-                class="border rounded px-3 py-1 mb-3 d-flex flex-column justify-content-between"
+                class="border rounded px-2 py-2 mb-3 d-flex flex-column justify-content-between"
                 style="min-height:170px"
               >
                 <div class="text-left d-flex justify-content-between">
                   <div class="d-flex flex-column justify-content-between">
-                    <div class="">
+                    <div class>
                       <h5 class="mb-1">
                         <a
                           class="text-dark"
@@ -112,7 +112,9 @@ export default {
   computed: {
     ...mapState(["locations", "isLoading", "companies"]),
     pageRows() {
-      return this.companies.length;
+      if (this.country) {
+        return this.companies.length;
+      }
     }
   },
   data() {
@@ -129,9 +131,9 @@ export default {
       this.$store.dispatch("getCompanyDetail", company._id);
     },
     async reload() {
-      if (this.$router.currentRoute.fullPath !== "/jobs") {
+      if (this.$router.currentRoute.fullPath !== "/company") {
         this.$store.dispatch("searchCompany", this.$router.currentRoute.query);
-        this.currentPage = this.$router.currentRoute.query.page;
+        this.currentPage = this.$router.currentRoute.query.page || 0;
       }
     },
     async searchCompany() {

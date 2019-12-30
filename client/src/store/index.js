@@ -79,7 +79,7 @@ export default new Vuex.Store({
       state.isLogin = payload
     },
     SET_LOGGED_USER(state, user) {
-      state.loggedUser = user
+      state.loggedUser = user      
     },
     SET_ISLOADING(state, payload) {
       state.isLoading = payload
@@ -386,6 +386,7 @@ export default new Vuex.Store({
         userDetail.appliedJob = user.appliedJob
         commit('SET_USER_PROFILE', userDetail)
       } catch (err) {
+        commit('SET_USER_PROFILE', null)
         this._vm.$alertify.error(err.response.data.message)
       } finally {
         commit('SET_ISLOADING', false)
@@ -408,6 +409,10 @@ export default new Vuex.Store({
           commit('SET_LOGGED_USER', data)
         }
       } catch (err) {
+        localStorage.removeItem("token");
+        commit("CHECK_LOGIN");
+        commit("RESET");
+        router.push("/");
         this._vm.$alertify.error(err.response.data.message)
       } finally {
         commit('SET_SEARCHING_USER', false)

@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid" v-if="!isLoading">
     <div class="row mx-1">
-      <div class="col-md-8 offset-md-2 border rounded p-5 bg-light" v-if="!isLoading">
+      <div class="col-md-8 offset-md-2 shadow p-5 bg-light" v-if="!isLoading">
         <h3 class="text-center mb-5">Please Fill This Form to Post a Job</h3>
         <b-form @submit.prevent="createJob">
           <b-form-group id="input-group-1" label="Position Name" label-for="input-1">

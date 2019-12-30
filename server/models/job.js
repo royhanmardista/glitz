@@ -70,8 +70,24 @@ jobSchema.post('findOneAndDelete', async function (doc, next) {
                     "jobId": doc._id
                 },
                 favoriteJob: doc._id
-            }            
+            }
         })
+    }
+    next()
+})
+
+jobSchema.post('deleteMany', async function (doc, next) {
+    if (doc.applicantId) {
+        for (let i = 0; i < doc.applicants.length; i++) {
+            await User.findByIdAndUpdate(doc.applicants[i].applicantId, {
+                $pull: {
+                    appliedJob: {
+                        "jobId": doc._id
+                    },
+                    favoriteJob: doc._id
+                }
+            })
+        }
     }
     next()
 })

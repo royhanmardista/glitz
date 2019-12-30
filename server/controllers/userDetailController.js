@@ -1,6 +1,5 @@
 const UserDetail = require('../models/userDetail')
 const User = require('../models/user')
-const moment = require('moment')
 const univApi = require('../apis/univesity')
 
 class userDetailController {
