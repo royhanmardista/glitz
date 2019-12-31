@@ -1,10 +1,14 @@
 <template>
-  <div class="">
-    <div v-if="!isLoading && loggedUser.favoriteJob" class="container-fluid">
-      <!-- job container -->
+  <div class>
+    <div class="container-fluid">
       <div class="row mt-5 mx-1">
+        <!-- spinner -->
+        <div v-if="isSearchingUser" style="position:fixed;top:50%;left:45%">
+          <FadeLoader color="#5BC0EB"></FadeLoader>
+        </div>
+        <!-- job page -->
         <!-- job container start -->
-        <div class="col-md-10 offset-md-1">
+        <div class="col-md-10 offset-md-1" v-if="!isSearchingUser && loggedUser.favoriteJob">
           <h1 class="text-center">My Favorite Jobs</h1>
           <!-- loggedUser.favoriteJob container start -->
           <h4
@@ -12,7 +16,7 @@
             style="cursor: pointer"
             v-b-toggle.fav-collapse
           >You Have Bookmarks {{loggedUser.favoriteJob.length}} Jobs</h4>
-          <b-collapse class id="fav-collapse" :visible="true">
+          <b-collapse class id="fav-collapse" :visible="true" v-if="loggedUser.favoriteJob.length">
             <p>Page: {{ currentPage }}</p>
             <b-pagination
               v-model="currentPage"
@@ -20,20 +24,13 @@
               :per-page="perPage"
               aria-controls="loggedUser.favoriteJob"
             ></b-pagination>
-            <!-- spinner start -->
-            <div v-if="isLoading">
-              <div class="text-center d-flex justify-content-center">
-                <b-spinner type="grow" label="Loading..."></b-spinner>
-              </div>
-            </div>
-            <!-- spinner end -->
-            <div class="row" v-if="!isLoading">
+            <div class="row">
               <div
                 id="loggedUser.favoriteJob"
                 :per-page="perPage"
                 :current-page="currentPage"
                 class="col-md-4 col-xs-12 col-sm-12"
-                v-for="job in loggedUser.favoriteJob"
+                v-for="job in favoriteJobs"
                 :key="job._id"
               >
                 <div
@@ -98,12 +95,36 @@
 
 <script>
 import { mapState } from "vuex";
+import { FadeLoader } from "@saeris/vue-spinners";
+
 export default {
   name: "UserFavorite",
+  components: {
+    FadeLoader
+  },
   computed: {
-    ...mapState(["loggedUser", "isLoading"]),
+    ...mapState(["loggedUser", "isSearchingUser"]),
     pageRows() {
       return this.loggedUser.favoriteJob.length;
+    },
+    favoriteJobs() {
+      if (this.loggedUser) {
+        return this.loggedUser.favoriteJob.slice(
+          (this.currentPage - 1) * this.perPage,
+          this.currentPage * this.perPage
+        );
+      }
+    }
+  },
+  watch: {
+    currentPage: function() {
+      this.$router
+        .push({
+          query: {
+            page: this.currentPage
+          }
+        })
+        .catch(err => {});
     }
   },
   data() {
@@ -114,6 +135,9 @@ export default {
   },
   created() {
     this.$store.dispatch("findUser");
+    if (this.$router.currentRoute.fullPath !== "/favorites") {
+      this.currentPage = this.$router.currentRoute.query.page;
+    }
   },
   methods: {
     showJobDetail(job) {

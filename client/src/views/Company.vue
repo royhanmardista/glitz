@@ -7,7 +7,7 @@
           <FadeLoader color="#5BC0EB"></FadeLoader>
         </div>
         <!-- company page -->
-        <div class="col-md-10 offset-md-1 border pb-2 bg-info rounded" v-if="!isLoading">
+        <div class="col-md-10 offset-md-1 border pb-2 bg-info rounded">
           <b-form @submit.prevent="searchCompany">
             <b-input-group size="lg" class="mt-2" placeholder="search">
               <b-form-input v-model="description" placeholder="Search Company ..."></b-form-input>
@@ -44,14 +44,8 @@
             :per-page="perPage"
             aria-controls="companies"
           ></b-pagination>
-          <!-- spinner start -->
-          <div v-if="isLoading">
-            <div class="text-center d-flex justify-content-center">
-              <b-spinner type="grow" label="Loading..."></b-spinner>
-            </div>
-          </div>
-          <!-- spinner end -->
-          <div class="row" v-if="!isLoading">
+          
+          <div class="row">
             <div
               id="companies"
               :per-page="perPage"
@@ -61,7 +55,7 @@
               :key="company._id"
             >
               <div
-                class="border rounded px-2 py-2 mb-3 d-flex flex-column justify-content-between"
+                class="border rounded p-3 mb-3 d-flex flex-column justify-content-between"
                 style="min-height:170px"
               >
                 <div class="text-left d-flex justify-content-between">
@@ -75,7 +69,11 @@
                         >{{company.name}}</a>
                       </h5>
                     </div>
-                    <div class="d-flex mt-2">
+                    <a :href="company.url" target="blank" class="d-flex mt-1">
+                      <i class="fa fa-chain-broken mr-2"></i>
+                      <p style="font-size:0.8rem">{{company.url}}</p>
+                    </a>
+                    <div class="d-flex">
                       <i class="fa fa-industry mr-2"></i>
                       <p class="text-secondary" style="font-size:0.8rem">{{company.category}}</p>
                     </div>
@@ -116,7 +114,7 @@ export default {
         return this.companies.length;
       }
     }
-  },
+  },  
   data() {
     return {
       perPage: 9,

@@ -3,9 +3,9 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4 offset-md-4 col-sm-10 offset-sm-1 col-xs-10 offset-xs-1">
-          <h5 class="text-center text-dark">
+          <h5 class="text-center text-light">
             First, create your
-            <span class="text-danger">Glintzzz.com</span> account.
+            <span class="text-dark">Glintzzz.com</span> account.
           </h5>
           <form
             id="register"

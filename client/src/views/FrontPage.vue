@@ -1,5 +1,5 @@
 <template>
-  <div  class="text-center" id="frontPage">
+  <div class="text-center" id="frontPage">
     <div class="d-flex justify-content-center container-fluid">
       <div class="row mx-1">
         <div id="search" class="d-flex flex-column justify-content-center">
@@ -32,7 +32,7 @@
     <!-- job container start -->
     <div class="container-fluid" v-if="github && themuse">
       <!-- github container start -->
-      <h2 class="mt-5" v-b-toggle.github-collapse>Github</h2>
+      <h2 class="mt-5" v-b-toggle.github-collapse style="cursor:pointer">Github</h2>
 
       <h4>{{github.length}} jobs found in github</h4>
       <b-collapse id="github-collapse" :visible="true">
@@ -64,9 +64,7 @@
               style="min-height:180px"
             >
               <div class="row text-left">
-                <div
-                  class="col-md-11 col-xs-11 col-sm-11 d-flex flex-column justify-content-between"
-                >
+                <div class="d-flex flex-column justify-content-between p-2">
                   <h5>
                     <a class="text-dark" :href="job.company_url" target="_blank">{{job.title}}</a>
                   </h5>
@@ -79,11 +77,6 @@
                     {{job.location}}
                   </p>
                 </div>
-                <div class="col-md-1 col-xs-1 col-sm-1 p-0">
-                  <div class>
-                    <i class="fa fa-bookmark"></i>
-                  </div>
-                </div>
               </div>
               <div class="text-center border-top pt-1">
                 <i class="fa fa-clock-o"></i>
@@ -94,7 +87,7 @@
         </div>
       </b-collapse>
       <!-- themuse container start -->
-      <h2 class="mt-3" v-b-toggle.themuse-collapse>TheMuse</h2>
+      <h2 class="mt-3" v-b-toggle.themuse-collapse style="cursor:pointer">TheMuse</h2>
       <h4>{{themuse.length}} jobs found in themuse</h4>
       <b-collapse class id="themuse-collapse" :visible="true">
         <p>Page: {{ themuseCurrentPage }}</p>
@@ -126,7 +119,7 @@
             >
               <div class="row text-left">
                 <div
-                  class="col-md-11 col-xs-11 col-sm-11 d-flex flex-column justify-content-between"
+                  class="d-flex flex-column justify-content-between p-2"
                 >
                   <h5>
                     <a class="text-dark" :href="job.refs.landing_page" target="_blank">{{job.name}}</a>
@@ -139,12 +132,7 @@
                     <i class="fa fa-map-marker"></i>
                     {{job.locations[0].name}}
                   </p>
-                </div>
-                <div class="col-md-1 col-xs-1 col-sm-1 p-0">
-                  <div class>
-                    <i class="fa fa-bookmark"></i>
-                  </div>
-                </div>
+                </div>                
               </div>
               <div class="text-center border-top pt-1">
                 <i class="fa fa-clock-o"></i>
@@ -161,80 +149,79 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-  created () {
-    this.reload()
+  created() {
+    this.reload();
   },
   computed: {
-    ...mapState(['jobs', 'isLoading', 'github', 'themuse', 'locations']),
-    rows () {
-      return this.github.length
+    ...mapState(["jobs", "isLoading", "github", "themuse", "locations"]),
+    rows() {
+      return this.github.length;
     },
-    themuseRows () {
-      return this.themuse.length
+    themuseRows() {
+      return this.themuse.length;
     },
-    themuseJobs () {
+    themuseJobs() {
       return this.themuse.slice(
         (this.themuseCurrentPage - 1) * this.perPage,
         this.themuseCurrentPage * this.perPage
-      )
+      );
     },
-    jobs () {
+    jobs() {
       return this.github.slice(
         (this.currentPage - 1) * this.perPage,
         this.currentPage * this.perPage
-      )
+      );
     }
   },
-  data () {
+  data() {
     return {
       themuseCurrentPage: 1,
       perPage: 9,
       currentPage: 1,
       form: {
-        description: '',
+        description: "",
         category: null,
         location: null
       },
       categories: [
-        { text: 'Select One', value: null },
-        'Sales',
-        'Engineering',
-        'Data Science',
-        'Retail',
-        'Education',
-        'Marketing & PR',
-        'Manufacturing',
-        'Creative & Design'
+        { text: "Select One", value: null },
+        "Sales",
+        "Engineering",
+        "Data Science",
+        "Retail",
+        "Education",
+        "Marketing & PR",
+        "Manufacturing",
+        "Creative & Design"
       ]
-    }
+    };
   },
   methods: {
-    async reload () {
-      if (this.$router.currentRoute.fullPath !== '/') {
-        this.$store.dispatch('searchJob', this.$router.currentRoute.query)
+    async reload() {
+      if (this.$router.currentRoute.fullPath !== "/") {
+        this.$store.dispatch("searchJob", this.$router.currentRoute.query);
       }
     },
-    async searchJob () {
+    async searchJob() {
       this.$router.push({
-        path: '/',
+        path: "/",
         query: {
           description: this.form.description,
           location: this.form.location
         }
-      })
-      this.isSearch = true
-      await this.$store.dispatch('searchJob', this.form)
+      });
+      this.isSearch = true;
+      await this.$store.dispatch("searchJob", this.form);
     }
   },
   beforeCreate: function() {
-        document.body.className = 'intro';
-    }
-}
+    document.body.className = "intro";
+  }
+};
 </script>
 
 <style >
-
 </style>

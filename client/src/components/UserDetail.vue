@@ -14,21 +14,22 @@
       <CollapseTransition v-if="userProfile">
         <div class="container mt-2 p-3" v-show="!isLoading">
           <div class="row border rounded shadow p-3">
-            <div class="col-md-3">
-              <img
+            <div class="col-md-2 p-0 m-0">
+              <b-img
                 :src="userProfile.image"
-                class="border rounded"
                 alt
                 srcset
                 style=" width: 100%;
                 min-height: 12vw;
                 object-fit: cover;"
+                class="rounded"
               />
             </div>
             <div class="col-md-9 d-flex flex-column">
-              <div class="d-flex mb-2">
+              <div class="d-flex">
                 <h3 class>{{userProfile.fullname.toUpperCase()}}</h3>
                 <div
+                  v-if="userProfile.userId == loggedUser._id"
                   class="editProfile h3"
                   v-b-tooltip.hover
                   title="Edit your profile"
@@ -131,7 +132,7 @@ export default {
     PacmanLoader
   },
   computed: {
-    ...mapState(["userProfile", "isLoading"])
+    ...mapState(["userProfile", "isLoading", "loggedUser"])
   },
   created() {
     this.findUserProfile();
@@ -158,10 +159,10 @@ export default {
 <style scoped>
 .editProfile {
   cursor: pointer;
-  color: blue;
+  color: rgb(104, 104, 110);
 }
 
 .editProfile:hover {
-  color: rgb(18, 25, 119);
+  color: rgb(45, 55, 197);
 }
 </style>

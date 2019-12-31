@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class>
     <div class="container mt-5">
       <div class="row">
         <!-- spinner -->
@@ -7,11 +7,11 @@
           <FadeLoader color="#5BC0EB"></FadeLoader>
         </div>
         <!-- job page -->
-        <div class="col-md-10 offset-md-1 border pb-2 bg-info rounded" v-if="!isLoading">
+        <div class="col-md-10 offset-md-1 border pb-2 bg-info rounded">
           <b-form @submit.prevent="searchJob">
-            <b-input-group size="lg" class="mt-2" placeholder="search">
+            <b-input-group size="lg" class="mt-2 ml-1 pt-1" placeholder="search">
               <b-form-input v-model="description" placeholder="Search Jobs..."></b-form-input>
-              <b-input-group-append>
+              <b-input-group-append class="mr-1">
                 <b-button size="lg" text="Button" variant="primary" type="submit">
                   <i class="fa fa-search"></i>
                 </b-button>
@@ -20,10 +20,10 @@
 
             <div class="mt-1 container-fluid pt-1">
               <b-form inline class="row d-flex justify-content-start">
-                <b-input-group class=" mt-1 col-md-4 p-1">
+                <b-input-group class="mt-1 col-md-4 p-1">
                   <b-form-select v-model="country" :options="locations"></b-form-select>
                 </b-input-group>
-                <b-input-group class=" mt-1 col-md-4 p-1">
+                <b-input-group class="mt-1 col-md-4 p-1">
                   <b-form-select v-model="minExp" :options="minExperiences"></b-form-select>
                 </b-input-group>
                 <b-input-group class="mt-1 col-md-4 p-1">
@@ -38,7 +38,7 @@
     <!-- job container -->
     <div class="row mt-5 mx-1" v-if="!isLoading">
       <!-- job container start -->
-      <div class="col-md-10 offset-md-1" v-if="internalJob">
+      <div class="col-md-10 offset-md-1" v-if="jobs">
         <!-- internalJob container start -->
         <h4 class style="cursor: pointer" v-b-toggle.job-collapse>{{internalJob.length}} jobs found</h4>
         <b-collapse class id="job-collapse" :visible="true">
@@ -49,20 +49,13 @@
             :per-page="perPage"
             aria-controls="internalJob"
           ></b-pagination>
-          <!-- spinner start -->
-          <div v-if="isLoading">
-            <div class="text-center d-flex justify-content-center">
-              <b-spinner type="grow" label="Loading..."></b-spinner>
-            </div>
-          </div>
-          <!-- spinner end -->
-          <div class="row" v-if="!isLoading">
+          <div class="row">
             <div
               id="internalJob"
               :per-page="perPage"
               :current-page="currentPage"
               class="col-md-4 col-xs-12 col-sm-12"
-              v-for="job in internalJob"
+              v-for="job in jobs"
               :key="job._id"
             >
               <div
@@ -122,22 +115,69 @@
       </div>
     </div>
     <!-- job container end -->
+    <!-- modal start -->
+    <b-modal
+      v-model="addToFavoriteLoading"
+      centered
+      hide-header
+      content-class="shadow"
+      hide-footer
+      size="sm"
+    >
+      <div class="d-flex flex-column justify-content-between">
+        <div class="text-center">
+          <h5 class="text-center text-info">Adding job to favorite ...</h5>
+        </div>
+        <div class="mx-auto my-5">
+          <RotateLoader color="#5BC0EB"></RotateLoader>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import { FadeLoader } from "@saeris/vue-spinners";
+import { FadeLoader, RotateLoader } from "@saeris/vue-spinners";
 
 export default {
   name: "Jobs",
   components: {
-    FadeLoader
+    FadeLoader,
+    RotateLoader
   },
   computed: {
-    ...mapState(["locations", "isLoading", "internalJob"]),
+    ...mapState([
+      "locations",
+      "isLoading",
+      "internalJob",
+      "addToFavoriteLoading"
+    ]),
     pageRows() {
       return this.internalJob.length;
+    },
+    jobs() {
+      if (this.internalJob) {
+        return this.internalJob.slice(
+          (this.currentPage - 1) * this.perPage,
+          this.currentPage * this.perPage
+        );
+      }
+    }
+  },
+  watch: {
+    currentPage: function() {
+      this.$router
+        .push({
+          query: {
+            description: this.description,
+            minExp: this.minExp,
+            country: this.country,
+            skills: this.skills,
+            page: this.currentPage
+          }
+        })
+        .catch(err => {});
     }
   },
   data() {
@@ -174,23 +214,26 @@ export default {
     },
     async reload() {
       if (this.$router.currentRoute.fullPath !== "/jobs") {
-        this.$store.dispatch(
+        await this.$store.dispatch(
           "searchInternalJob",
           this.$router.currentRoute.query
         );
         this.currentPage = this.$router.currentRoute.query.page;
       }
+      await this.$store.dispatch("getLocation");
     },
-    async searchJob() {      
-      this.$router.push({
-        query: {
-          description: this.description,
-          minExp: this.minExp,
-          country: this.country,
-          skills: this.skills,
-          page: this.currentPage
-        }
-      }).catch(err => {});
+    async searchJob() {
+      this.$router
+        .push({
+          query: {
+            description: this.description,
+            minExp: this.minExp,
+            country: this.country,
+            skills: this.skills,
+            page: this.currentPage
+          }
+        })
+        .catch(err => {});
       let form = {
         description: this.description,
         minExp: this.minExp,
@@ -201,9 +244,8 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getLocation");
     this.reload();
-  },  
+  }
 };
 </script>
 

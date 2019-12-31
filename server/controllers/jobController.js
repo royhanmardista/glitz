@@ -9,6 +9,43 @@ const UserDetail = require('../models/userDetail')
 
 class jobController {
 
+    static async updateApplicationStatus(req, res, next) {
+        let {
+            applicant,
+            status
+        } = req.body
+        try {
+            let updatedJob = await Job.findOneAndUpdate({
+                _id: req.params.id,
+                "applicants.applicantId": applicant
+            }, {
+                $set: {
+                    "applicants.$.status": status
+                }
+            }, {
+                new: true,
+            }).populate({
+                path: 'applicants.applicantId',
+                select: ["_id", "username", "email"]
+            })
+            await User.findOneAndUpdate({
+                _id: applicant,
+                "appliedJob.jobId": req.params.id
+            }, {
+                $set: {
+                    "appliedJob.$.status": status
+                }
+
+            })
+            res.json({
+                job: updatedJob,
+                message: 'applicant status has been updated'
+            })
+        } catch (err) {
+            next(err)
+        }
+    }
+
     static async searchJob(req, res, next) {
         let {
             country,
@@ -62,7 +99,7 @@ class jobController {
             })
             .catch(next)
     }
-
+  
     static async getCities(req, res, next) {
         try {
             let {
@@ -75,7 +112,6 @@ class jobController {
                     key: "09d41e9800bdfa6510cae705a6706a18"
                 }
             })
-            console.log(data)
             let cities = [{
                 text: "Select City",
                 value: null
@@ -154,7 +190,7 @@ class jobController {
                             }
                         }, {
                             new: true,
-                            select : "-password"
+                            select: "-password"
                         }).populate({
                             path: 'appliedJob.jobId',
                             populate: [{
@@ -222,7 +258,7 @@ class jobController {
                                 }
                             }
                         }, {
-                            new: true,                       
+                            new: true,
                         })
                         if (updatedJob) {
                             let user = await User.findByIdAndUpdate(req.user._id, {
@@ -233,7 +269,7 @@ class jobController {
                                 }
                             }, {
                                 new: true,
-                                select:"-password"
+                                select: "-password"
                             })
                             res.json({
                                 message: "applying job success",
@@ -243,7 +279,6 @@ class jobController {
                             throw (err)
                         }
                     } catch (err) {
-                        console.log(err)
                         throw ({
                             status: 403,
                             message: "you already applied this job"
@@ -299,7 +334,6 @@ class jobController {
             })
             let page = 2
             while (result.length < 10 && (page <= Math.floor(jobs.total / jobs.items_per_page))) {
-                console.log(page)
                 let temp = []
                 let jobs2 = await axios({
                     method: 'get',
@@ -331,6 +365,52 @@ class jobController {
         }
 
     }
+
+    static async randomJob(req, res, next) {
+        let {
+            location,
+            description,
+        } = req.query
+        if (location) {
+            location = location.trim().toLowerCase()
+        }
+        if (description) {
+            description = description.trim().toLowerCase()
+        }
+        try {
+            let {
+                data
+            } = await jobApi.get('/', {
+                params: {
+                    description,
+                    location,
+                }
+            })
+            let array = []
+        for (let i = 0; i < data.length; i++) {
+            let temp = {}
+            temp.name = data[i].title
+            temp.location = "indonesia, id"
+            temp.description = data[i].description
+            temp.skills = ["nodejs", "javascript", "python", "aws" ,"mongoDB"]
+            temp.minExp = Math.round(Math.random()*6)
+            temp.userId = req.user._id
+            temp.companyId = req.params.id
+            array.push(temp)
+        }
+            
+        Job.insertMany(array)
+            .then(() => {
+                res.json({
+                    message: 'data saved'
+                })
+            })
+            .catch(next)
+        } catch(err) {
+            next(err)
+        }
+    }
+
     static async create(req, res, next) {
         let companyId = req.params.companyId
         let {
@@ -345,7 +425,7 @@ class jobController {
             if (company) {
                 let exist = await Job.findOne({
                     companyId,
-                    name 
+                    name
                 })
                 if (!exist) {
                     let job = await Job.create({
@@ -353,8 +433,8 @@ class jobController {
                         location,
                         userId: req.user._id,
                         companyId,
-                        skills,
-                        minExp,
+                        skills ,
+                        minExp : Math.round(minExp),
                         description: description
                     })
                     res.status(201).json({
@@ -382,7 +462,10 @@ class jobController {
         try {
             let jobs = await Job.find({
                 status: true
-            }).populate({ path : 'applicants.applicantId', select : ["_id", "username", "email"]})
+            }).populate({
+                path: 'applicants.applicantId',
+                select: ["_id", "username", "email"]
+            })
             res.json(jobs)
         } catch (err) {
             next(err)
@@ -392,7 +475,10 @@ class jobController {
     static async findOne(req, res, next) {
         try {
             let job = await Job.
-            findById(req.params.id).populate({ path : 'applicants.applicantId', select : ["_id", "username", "email"]})
+            findById(req.params.id).populate({
+                path: 'applicants.applicantId',
+                select: ["_id", "username", "email"]
+            })
             if (job) {
                 res.json(job)
             } else {

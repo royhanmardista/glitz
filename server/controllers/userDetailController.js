@@ -30,7 +30,12 @@ class userDetailController {
                 userId: req.params.userId
             })
             if (userDetail) {
-                let user = await User.findById(req.params.userId, "-password").populate('appliedJob')
+                let user = await User.findById(req.params.userId, "-password").populate({
+                    path: 'appliedJob.jobId',
+                    populate: [{
+                        path: 'companyId',
+                    }]
+                })
                 res.json({
                     user,
                     userDetail
@@ -77,7 +82,12 @@ class userDetailController {
                 userId: req.user._id,
                 description
             })
-            let user = await User.findById(req.user._id, "-password").populate('appliedJob')
+            let user = await User.findById(req.user._id, "-password").populate({
+                path: 'appliedJob.jobId',
+                populate: [{
+                    path: 'companyId',
+                }]
+            })
             res.status(201).json({
                 message: `you have completed your profile, now you can apply to any company`,
                 userDetail,
@@ -122,7 +132,12 @@ class userDetailController {
                 context: 'query'
             })
             if (userDetail) {
-                let user = await User.findById(req.user._id, "-password").populate('appliedJob')
+                let user = await User.findById(req.user._id, "-password").populate({
+                    path: 'appliedJob.jobId',
+                    populate: [{
+                        path: 'companyId',
+                    }]
+                })
                 res.json({
                     message: 'your profile has been updated',
                     userDetail,

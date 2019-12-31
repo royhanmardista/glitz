@@ -38,6 +38,8 @@ function initialState() {
     }],
     userProfile: null,
     companies: null,
+    addToFavoriteLoading: false,
+    applyingJob: false,
   }
 }
 
@@ -49,6 +51,9 @@ export default new Vuex.Store({
       Object.keys(s).forEach(key => {
         state[key] = s[key]
       })
+    },
+    SET_APPLYING_JOB(state, payload) {
+      state.applyingJob = payload
     },
     SET_JOBDETAIL(state, job) {
       state.jobDetail = job
@@ -79,7 +84,7 @@ export default new Vuex.Store({
       state.isLogin = payload
     },
     SET_LOGGED_USER(state, user) {
-      state.loggedUser = user      
+      state.loggedUser = user
     },
     SET_ISLOADING(state, payload) {
       state.isLoading = payload
@@ -97,7 +102,7 @@ export default new Vuex.Store({
       state.userCompany = data.company
       if (state.userCompany) {
         let locationArray = data.company.location.trim().split(',')
-        state.userCompany.country = `${locationArray[2]},${locationArray[3]}`
+        state.userCompany.country = `${locationArray[locationArray.length - 2].trim()},${locationArray[locationArray.length - 1]}`
         state.userCompany.region = locationArray[1]
         state.userCompany.city = locationArray[0]
         state.userCompany.jobs = data.jobs
@@ -131,9 +136,43 @@ export default new Vuex.Store({
     },
     SET_COMPANIES(state, data) {
       state.companies = data
+    },
+    SET_ADD_TO_FAVORITE_LOADING(state, payload) {
+      state.addToFavoriteLoading = payload
     }
   },
   actions: {
+    async updateApplicantStatus({
+      commit
+    }, applicant) {
+
+      try {
+        let {
+          jobId,
+          applicantId,
+          status
+        } = applicant
+        commit('SET_ISLOADING', true)
+        let {
+          data
+        } = await server.patch(`/jobs/${jobId}/applicant`, {
+          applicant: applicantId._id,
+          status,
+        }, {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        commit('SET_JOBDETAIL', data.job)
+        console.log(data)
+        this._vm.$alertify.success(data.message)
+      } catch (err) {
+        console.log(err)
+        this._vm.$alertify.error(err.response.data.message)
+      } finally {
+        commit('SET_ISLOADING', false)
+      }
+    },
     async searchCompany({
       commit
     }, form) {
@@ -188,7 +227,7 @@ export default new Vuex.Store({
       commit
     }, jobId) {
       try {
-        commit('SET_ISLOADING', true)
+        commit('SET_ADD_TO_FAVORITE_LOADING', true)
         let {
           data
         } = await server.patch('/favorite', {
@@ -202,7 +241,7 @@ export default new Vuex.Store({
       } catch (err) {
         this._vm.$alertify.error(err.response.data.message)
       } finally {
-        commit('SET_ISLOADING', false)
+        commit('SET_ADD_TO_FAVORITE_LOADING', false)
       }
     },
     async cancelApplication({
@@ -233,7 +272,7 @@ export default new Vuex.Store({
       state
     }, jobId) {
       try {
-        commit('SET_ISLOADING', true)
+        commit('SET_APPLYING_JOB', true)
         let {
           data
         } = await server.patch(`/jobs/${jobId}/apply`, {}, {
@@ -248,7 +287,7 @@ export default new Vuex.Store({
           router.push(`/profile/${state.loggedUser._id}`)
         }
       } finally {
-        commit('SET_ISLOADING', false)
+        commit('SET_APPLYING_JOB', false)
       }
     },
     async updateProfile({

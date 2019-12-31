@@ -1,8 +1,12 @@
 <template>
   <div>
     <div class="container-fluid mt-3">
-      <div class="row" v-if="!isLoading">
-        <div class="col-md-10 offset-md-1">
+      <div class="row">
+        <!-- spinner -->
+        <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
+          <DotLoader color="#5BC0EB"></DotLoader>
+        </div>
+        <div class="col-md-10 offset-md-1" v-if="!isLoading">
           <h3 class="mb-3">{{jobDetail.name}}</h3>
           <div class="ml-3">
             <p>
@@ -46,7 +50,7 @@
                 <div
                   v-for="skill in jobDetail.skills"
                   :key="skill"
-                  class="border rounded px-4 py-2 mr-2 bg-dark text-white"
+                  class="border rounded px-4 py-2 mr-1 mt-1 bg-dark text-white"
                 >
                   <div class>{{skill}}</div>
                 </div>
@@ -74,6 +78,7 @@
                   <table class="table table-hover mr-3" v-if="jobDetail.applicants.length">
                     <thead class="thead-light">
                       <tr>
+                        <th>No</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Status</th>
@@ -82,15 +87,41 @@
                     </thead>
                     <tbody>
                       <tr
-                        v-for="applicant in jobDetail.applicants"
+                        v-for="(applicant, index) in jobDetail.applicants"
                         :key="applicant._id"
                         class="border-bottom"
                       >
+                        <td>{{index + 1}}</td>
                         <td>{{applicant.applicantId.username}}</td>
                         <td>{{applicant.applicantId.email}}</td>
-                        <td>{{applicant.status}}</td>
+                        <td>
+                          <div class="d-flex">
+                            <form action>
+                              <b-form-select
+                                v-model="applicant.status"
+                                :options="statusOption"
+                                required
+                              ></b-form-select>
+                            </form>
+                            <b-button
+                              class="ml-2"
+                              size="sm"
+                              variant="outline-info"
+                              v-b-tooltip.hover
+                              title="Change Status"
+                              @click="updateApplicantStatus({applicant, jobId : jobDetail} )"
+                            >
+                              <i class="fa fa-check"></i>
+                            </b-button>
+                          </div>
+                        </td>
+
                         <td class style="cursor:pointer">
+                          
+                          
                           <b-button
+                            class="mt-1 ml-1"
+                            size="sm"
                             variant="outline-info"
                             v-b-tooltip.hover
                             title="See applicants profile"
@@ -109,25 +140,64 @@
         </div>
       </div>
     </div>
+    <UpdateApplicantStatusModal></UpdateApplicantStatusModal>
+    <!-- modal start -->
+    <b-modal
+      v-model="applyingJob"
+      centered
+      hide-header
+      content-class="shadow"
+      hide-footer
+      size="sm"
+    >
+      <div class="d-flex flex-column justify-content-between">
+        <div class="text-center">
+          <h5 class="text-center text-info">Applying Job ...</h5>
+        </div>
+        <div class="mx-auto my-5">
+          <RotateLoader color="#5BC0EB"></RotateLoader>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import UpdateApplicantStatusModal from "@/components/UpdateApplicantStatusModal";
+import { DotLoader, RotateLoader } from "@saeris/vue-spinners";
+
+
 export default {
   name: "JobDetail",
+  components : {
+    DotLoader,
+    RotateLoader
+  },
   computed: {
-    ...mapState(["jobDetail", "isLoading", "userProfile", "loggedUser"])
+    ...mapState(["jobDetail", "isLoading", "userProfile", "loggedUser", "applyingJob"])
   },
   data() {
     return {
       descShow: true,
-      applicantsShow: true
+      applicantsShow: true,
+      applicant: null,
+      statusOption: ["waiting evaluation", "accepted", "not suitable"]
     };
   },
+  components: {
+    UpdateApplicantStatusModal
+  },
   methods: {
+    updateApplicantStatus(data) {
+      let { applicant, jobId } = data;
+      let applicatUpdate = {};
+      applicant.jobId = jobId._id;
+      this.$store.dispatch('updateApplicantStatus', applicant)
+      console.log(applicant);
+    },
     seeApplicantDetail(applicantId) {
-      this.$router.push(`/profile/${applicantId}`)
+      this.$router.push(`/profile/${applicantId}`);
     },
     applyJob(jobId) {
       this.$store.dispatch("applyJob", jobId);

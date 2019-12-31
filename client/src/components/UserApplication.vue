@@ -1,10 +1,13 @@
 <template>
   <div class>
-    <div v-if="!isLoading  && loggedUser.appliedJob" class="container-fluid">
-      <!-- job container -->
+    <div  class="container-fluid">
       <div class="row mt-5 mx-1">
+        <!-- spinner -->
+        <div v-if="isSearchingUser" style="position:fixed;top:50%;left:45%">
+          <FadeLoader color="#5BC0EB"></FadeLoader>
+        </div>
         <!-- job container start -->
-        <div class="col-md-10 offset-md-1">
+        <div class="col-md-10 offset-md-1" v-if="!isSearchingUser  && loggedUser.appliedJob">
           <h1 class="text-center">My Applications</h1>
           <!-- loggedUser.appliedJob container start -->
           <h4
@@ -12,18 +15,12 @@
             style="cursor: pointer"
             v-b-toggle.application-collapse
           >You Have Applied {{loggedUser.appliedJob.length}} Jobs</h4>
-          <b-collapse class="container-fluid" id="application-collapse" :visible="true">
-            <!-- spinner start -->
-            <div v-if="isLoading">
-              <div class="text-center d-flex justify-content-center">
-                <b-spinner type="grow" label="Loading..."></b-spinner>
-              </div>
-            </div>
-            <!-- spinner end -->
-            <div class="row table-responsive-xs mt-4">
+          <b-collapse class="container-fluid" id="application-collapse" :visible="true">            
+            <div class="row table-responsive-xs mt-4" v-if="loggedUser.appliedJob.length">
               <table class="table table-hover">
                 <thead class="thead-light">
                   <tr>
+                    <th>No</th>
                     <th>Job Name</th>
                     <th>Company Name</th>
                     <th>Applicants</th>
@@ -32,10 +29,11 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="job in loggedUser.appliedJob"
+                    v-for="(job, index) in loggedUser.appliedJob"
                     :key="job.jobId._id"
                     class="border-bottom"
                   >
+                  <td>{{index + 1}}</td>
                     <td style="cursor:pointer">
                       <a @click.prevent="showJobDetail(job.jobId)">{{job.jobId.name}}</a>
                     </td>
@@ -61,10 +59,15 @@
 
 <script>
 import { mapState } from "vuex";
+import { FadeLoader } from "@saeris/vue-spinners";
+
 export default {
   name: "UserApplication",
+  components: {
+    FadeLoader
+  },
   computed: {
-    ...mapState(["loggedUser", "isLoading"])
+    ...mapState(["loggedUser", "isSearchingUser"])
   },
   data() {
     return {};
@@ -103,7 +106,7 @@ a {
 
 td {
   font-family: "Lateef", cursive;
-  font-size: 1.2rem
+  font-size: 1.4rem
 }
 
 th {

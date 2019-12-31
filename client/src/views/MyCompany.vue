@@ -93,7 +93,7 @@
                 <i class="fa fa-clock-o"></i>
                 last update {{moment(job.updatedAt).fromNow()}}
               </p>
-              <div class="d-flex justify-content-end py-3 border-top">
+              <div class="d-flex justify-content-end py-3 border-top border-bottom">
                 <b-button
                   class="mr-2"
                   variant="primary"

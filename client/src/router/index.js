@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VueAlertify from 'vue-alertify'
 
 Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
     name: 'FrontPage',
-    component: () => import( /* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue')
+    component: () => import( /* webpackChunkName: "FrontPage" */ '../views/FrontPage.vue'),    
   },
   {
     path: '/register',
@@ -93,7 +92,7 @@ router.beforeEach((to, from, next) => {
     if (!localStorage.getItem('token')) {
       next()
     } else {
-      next(false)
+      next('/home')
     }
   } else {
     if (localStorage.getItem('token')) {
