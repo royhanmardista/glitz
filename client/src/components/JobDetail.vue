@@ -159,6 +159,24 @@
         </div>
       </div>
     </b-modal>
+    <!-- modal updating applicant status -->
+    <b-modal
+      v-model="updatingApplicantStatus"
+      centered
+      hide-header
+      content-class="shadow"
+      hide-footer
+      size="sm"
+    >
+      <div class="d-flex flex-column justify-content-between">
+        <div class="text-center">
+          <h5 class="text-center text-secondary">{{message}}</h5>
+        </div>
+        <div class="mx-auto my-5">
+          <RotateLoader color="#5BC0EB"></RotateLoader>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -175,14 +193,15 @@ export default {
     RotateLoader
   },
   computed: {
-    ...mapState(["jobDetail", "isLoading", "userProfile", "loggedUser", "applyingJob"])
+    ...mapState(["jobDetail", "isLoading", "userProfile", "loggedUser", "applyingJob", "updatingApplicantStatus"])
   },
   data() {
     return {
       descShow: true,
       applicantsShow: true,
       applicant: null,
-      statusOption: ["waiting evaluation", "accepted", "not suitable"]
+      statusOption: ["waiting evaluation", "accepted", "not suitable"],
+      message : ""
     };
   },
   components: {
@@ -193,8 +212,8 @@ export default {
       let { applicant, jobId } = data;
       let applicatUpdate = {};
       applicant.jobId = jobId._id;
+      this.message = `updating ${applicant.applicantId.username}s status ...`
       this.$store.dispatch('updateApplicantStatus', applicant)
-      console.log(applicant);
     },
     seeApplicantDetail(applicantId) {
       this.$router.push(`/profile/${applicantId}`);

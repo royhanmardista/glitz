@@ -1,6 +1,11 @@
 <template>
   <div class="container-fluid border-top">
-    <div class="row mx-1  mt-3 " v-if="!isLoading">
+    <div class="row mt-3">
+      <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
+        <PacmanLoader color="#5BC0EB" :size="50"></PacmanLoader>
+      </div>
+    </div>
+    <div class="row mx-1 mt-3" v-if="!isLoading">
       <div class="col-md-8 offset-md-2 border rounded p-5 bg-light">
         <h3 class="text-center">Update Your Profile</h3>
         <b-form @submit.prevent="updateProfile()">
@@ -64,58 +69,60 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { VueEditor } from 'vue2-editor'
-import moment from 'moment'
+import { mapState } from "vuex";
+import { VueEditor } from "vue2-editor";
+import moment from "moment";
+import { PacmanLoader } from "@saeris/vue-spinners";
 
 export default {
-  name: 'UpdateUserDetail',
+  name: "UpdateUserDetail",
   component: {
-    VueEditor
+    VueEditor,
+    PacmanLoader
   },
   computed: {
-    ...mapState(['locations', 'isLoading', 'universities', 'userProfile']),
+    ...mapState(["locations", "isLoading", "universities", "userProfile"]),
     birthDate: {
-      get () {
+      get() {
         if (this.userProfile) {
-          return moment(this.userProfile.birthDate).format('YYYY-M-D')
+          return moment(this.userProfile.birthDate).format("YYYY-M-D");
         }
       },
-      set (newVal) {
-        return (this.birthDateInput = newVal)
+      set(newVal) {
+        return (this.birthDateInput = newVal);
       }
     },
     skills: {
-      get () {
+      get() {
         if (this.userProfile) {
-          return this.userProfile.skills.join(', ')
+          return this.userProfile.skills.join(", ");
         }
       },
-      set (newVal) {
+      set(newVal) {
         if (newVal) {
-          return (this.skillInput = newVal)
+          return (this.skillInput = newVal);
         }
       }
     },
     univLocation: {
-      get () {
+      get() {
         if (this.userProfile) {
           return `${this.userProfile.education
-            .split(',')[2]
-            .trim()}, ${this.userProfile.education.split(',')[3].trim()}`
+            .split(",")[2]
+            .trim()}, ${this.userProfile.education.split(",")[3].trim()}`;
         }
       },
-      set (newVal) {
+      set(newVal) {
         if (newVal) {
-          return (this.univLocationInput = newVal)
+          return (this.univLocationInput = newVal);
         }
       }
     }
   },
-  created () {
-    this.findUserProfile()
+  created() {
+    this.findUserProfile();
   },
-  data () {
+  data() {
     return {
       education: null,
       skillInput: null,
@@ -124,61 +131,59 @@ export default {
       university: null,
       degree: null,
       degrees: [
-        { text: 'Select Degree', value: null },
-        'High School',
-        'Undergraduate',
-        'Bachelor Degree',
-        'Master Degree',
-        'Doctoral Degree',
-        'Post Doctoral'
+        { text: "Select Degree", value: null },
+        "High School",
+        "Undergraduate",
+        "Bachelor Degree",
+        "Master Degree",
+        "Doctoral Degree",
+        "Post Doctoral"
       ],
       experiences: [
-        { text: 'Choose Experience', value: null },
-        { text: 'no experience', value: 0 },
-        { text: '1 year', value: 1 },
-        { text: '2 years', value: 2 },
-        { text: '3 years', value: 3 },
-        { text: '4 years', value: 4 },
-        { text: '5 years', value: 5 },
-        { text: '6 years or more', value: 6 }
+        { text: "Choose Experience", value: null },
+        { text: "no experience", value: 0 },
+        { text: "1 year", value: 1 },
+        { text: "2 years", value: 2 },
+        { text: "3 years", value: 3 },
+        { text: "4 years", value: 4 },
+        { text: "5 years", value: 5 },
+        { text: "6 years or more", value: 6 }
       ]
-    }
+    };
   },
 
   watch: {
-    univLocationInput: function () {
-      console.log('ketrigger')
+    univLocationInput: function() {
+      console.log("ketrigger");
       if (this.univLocation) {
         this.$store.dispatch(
-          'getUniversities',
-          this.univLocationInput.split(',')[0].trim()
-        )
+          "getUniversities",
+          this.univLocationInput.split(",")[0].trim()
+        );
       }
     }
   },
   methods: {
-    async findUserProfile () {
+    async findUserProfile() {
       await this.$store.dispatch(
-        'findUseProfile',
+        "findUseProfile",
         this.$router.currentRoute.params.id
-      )
-      await this.$store.dispatch('getLocation')
+      );
+      await this.$store.dispatch("getLocation");
       await this.$store.dispatch(
-        'getUniversities',
-        `${this.userProfile.education
-          .split(',')[2]
-          .trim()}`
-      )
+        "getUniversities",
+        `${this.userProfile.education.split(",")[2].trim()}`
+      );
     },
-    updateProfile () {
-      let education = `${this.degree}, ${this.university}, ${this.univLocation}`
+    updateProfile() {
+      let education = `${this.degree}, ${this.university}, ${this.univLocation}`;
       let data = {
         education,
         birthDate: this.birthDateInput || this.birthDate,
         skills: this.skillInput || this.skills
-      }
-      this.$store.dispatch('updateProfile', data)
+      };
+      this.$store.dispatch("updateProfile", data);
     }
   }
-}
+};
 </script>

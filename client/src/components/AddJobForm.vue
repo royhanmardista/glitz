@@ -1,7 +1,7 @@
 <template>
-  <div class="container-fluid" v-if="!isLoading">
+  <div class="container-fluid">
     <div class="row mx-1">
-      <div class="col-md-8 offset-md-2 shadow p-5 bg-light" v-if="!isLoading">
+      <div class="col-md-8 offset-md-2 shadow p-5 bg-light">
         <h3 class="text-center mb-5">Please Fill This Form to Post a Job</h3>
         <b-form @submit.prevent="createJob">
           <b-form-group id="input-group-1" label="Position Name" label-for="input-1">
@@ -34,6 +34,24 @@
         </b-form>
       </div>
     </div>
+    <!-- modal start -->
+    <b-modal
+      v-model="creatingJob"
+      centered
+      hide-header
+      content-class="shadow"
+      hide-footer
+      size="sm"
+    >
+      <div class="d-flex flex-column justify-content-between">
+        <div class="text-center">
+          <h5 class="text-center text-info">Creating Job ...</h5>
+        </div>
+        <div class="mx-auto my-5">
+          <RotateLoader color="#5BC0EB"></RotateLoader>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -51,10 +69,9 @@ export default {
       'locations',
       'isLoading',
       'regions',
-      'searchingRegion',
       'cities',
-      'searchingCity',
-      'userCompany'
+      'userCompany',
+      'creatingJob'
     ])
   },
   created () {

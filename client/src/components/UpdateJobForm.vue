@@ -1,7 +1,7 @@
 <template>
-  <div class="container-fluid" v-if="!isLoading && jobDetail">
+  <div class="container-fluid" >
     <div class="row mx-1">
-      <div class="col-md-8 offset-md-2 border rounded p-5 bg-light" v-if="!isLoading">
+      <div class="col-md-8 offset-md-2 border rounded p-5 bg-light" v-if="jobDetail">
         <h3 class="text-center mb-5">Please Fill This Form to Update Job</h3>
         <b-form @submit.prevent="updateJob">
           <b-form-group id="input-group-1" label="Position Name" label-for="input-1">
@@ -45,6 +45,24 @@
         </b-form>
       </div>
     </div>
+    <!-- modal start -->
+    <b-modal
+      v-model="updatingJob"
+      centered
+      hide-header
+      content-class="shadow"
+      hide-footer
+      size="sm"
+    >
+      <div class="d-flex flex-column justify-content-between">
+        <div class="text-center">
+          <h5 class="text-center text-info">Updating Job ...</h5>
+        </div>
+        <div class="mx-auto my-5">
+          <RotateLoader color="#5BC0EB"></RotateLoader>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -58,7 +76,7 @@ export default {
   },
   name: 'UpdateJobForm',
   computed: {
-    ...mapState(['locations', 'isLoading', 'regions', 'cities', 'jobDetail']),
+    ...mapState(['locations', 'isLoading', 'regions', 'cities', 'jobDetail', 'updatingJob']),
     skills: {
       get () {
         if (this.jobDetail) {

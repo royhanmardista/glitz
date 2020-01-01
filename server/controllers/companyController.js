@@ -14,11 +14,11 @@ class companyController {
                 name: {
                     $regex: new RegExp(description),
                     $options: "i"
-                },                
+                },
                 location: {
                     $regex: new RegExp(country),
                     $options: 'i'
-                }                
+                }
             })
             res.json(companies)
         } catch (err) {
@@ -46,7 +46,6 @@ class companyController {
     }
 
     static async create(req, res, next) {
-        console.log('masuk crate company', req.body)
         let {
             name,
             location,
@@ -63,9 +62,13 @@ class companyController {
                 description: description,
                 url,
                 category
+            })            
+            let jobs = await Job.find({
+                companyId: company._id
             })
             res.status(201).json({
                 company: company,
+                jobs,
                 message: 'Your Company data has been saved'
             })
         } catch (err) {
@@ -83,7 +86,6 @@ class companyController {
     }
 
     static async findOne(req, res, next) {
-        console.log('masuk sini')
         try {
             let company = await Company.findById(req.params.id)
             if (company) {
@@ -148,8 +150,15 @@ class companyController {
                 context: 'query'
             })
             if (company) {
+                let jobs = []
+                if (company) {
+                    jobs = await Job.find({
+                        companyId: company._id
+                    })
+                }
                 res.json({
                     company: company,
+                    jobs,
                     message: 'company succesfully updated'
                 })
             } else {

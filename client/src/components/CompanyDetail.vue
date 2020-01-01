@@ -2,8 +2,8 @@
   <div class="bg-light border-top" style="min-height:700px">
     <div class="container">
       <div class="row">
-        <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
-          <HashLoader color="#182825" :size="100"></HashLoader>
+        <div v-if="isLoading" style="position:fixed;top:50%;left:48%">
+          <HashLoader color="#182825" :size="50"></HashLoader>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@
             class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
           >
             <h3>Description</h3>
-            <p>{{companyDetail.description}}</p>
+            <p v-html="companyDetail.description"></p>
           </div>
         </div>
         <div class="row mt-4">
@@ -75,7 +75,7 @@
                 <i class="fa fa-clock-o"></i>
                 last update {{moment(job.updatedAt).fromNow()}}
               </p>
-              <div class="d-flex justify-content-end py-3 border-top">
+              <div class="d-flex justify-content-end pb-2 border-bottom">
                 <b-button
                   class="mr-2"
                   variant="primary"

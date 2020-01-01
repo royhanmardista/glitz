@@ -99,7 +99,7 @@ class jobController {
             })
             .catch(next)
     }
-  
+
     static async getCities(req, res, next) {
         try {
             let {
@@ -387,26 +387,26 @@ class jobController {
                 }
             })
             let array = []
-        for (let i = 0; i < data.length; i++) {
-            let temp = {}
-            temp.name = data[i].title
-            temp.location = "indonesia, id"
-            temp.description = data[i].description
-            temp.skills = ["nodejs", "javascript", "python", "aws" ,"mongoDB"]
-            temp.minExp = Math.round(Math.random()*6)
-            temp.userId = req.user._id
-            temp.companyId = req.params.id
-            array.push(temp)
-        }
-            
-        Job.insertMany(array)
-            .then(() => {
-                res.json({
-                    message: 'data saved'
+            for (let i = 0; i < data.length; i++) {
+                let temp = {}
+                temp.name = data[i].title
+                temp.location = "indonesia, id"
+                temp.description = data[i].description
+                temp.skills = ["nodejs", "javascript", "python", "aws", "mongoDB"]
+                temp.minExp = Math.round(Math.random() * 6)
+                temp.userId = req.user._id
+                temp.companyId = req.params.id
+                array.push(temp)
+            }
+
+            Job.insertMany(array)
+                .then(() => {
+                    res.json({
+                        message: 'data saved'
+                    })
                 })
-            })
-            .catch(next)
-        } catch(err) {
+                .catch(next)
+        } catch (err) {
             next(err)
         }
     }
@@ -433,14 +433,25 @@ class jobController {
                         location,
                         userId: req.user._id,
                         companyId,
-                        skills ,
-                        minExp : Math.round(minExp),
+                        skills,
+                        minExp: Math.round(minExp),
                         description: description
                     })
-                    res.status(201).json({
-                        job: job,
-                        message: 'job succesfully save'
+                    let company = await Company.findOne({
+                        user: req.user._id
                     })
+                    let jobs = []
+                    if (company) {
+                        jobs = await Job.find({
+                            companyId: company._id
+                        })
+                    }
+                    res.json({
+                        company,
+                        jobs,
+                        message: 'job succesfully save',
+                        job
+                    })                    
                 } else {
                     throw ({
                         status: 400,
@@ -498,9 +509,20 @@ class jobController {
             Job.
             findByIdAndDelete(req.params.id)
             if (job) {
+                let company = await Company.findOne({
+                    user: req.user._id
+                })
+                let jobs = []
+                if (company) {
+                    jobs = await Job.find({
+                        companyId: company._id
+                    })
+                }
                 res.json({
-                    job: job,
-                    message: "job succesfully deleted"
+                    company,
+                    jobs,
+                    message: "job succesfully deleted",
+                    job
                 })
             } else {
                 next({
@@ -540,9 +562,20 @@ class jobController {
                 context: 'query'
             })
             if (job) {
+                let company = await Company.findOne({
+                    user: req.user._id
+                })
+                let jobs = []
+                if (company) {
+                    jobs = await Job.find({
+                        companyId: company._id
+                    })
+                }
                 res.json({
-                    job: job,
-                    message: 'job succesfully updated'
+                    company,
+                    jobs,
+                    message: "job succesfully updated",
+                    job
                 })
             } else {
                 next({
