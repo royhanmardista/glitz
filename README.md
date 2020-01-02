@@ -1,5 +1,5 @@
 # glitz
-glintz like web, that helps searching for jobs
+glintz like web, that helps searching for jobs. The server and client is deployed in gcp http://glintzzz.royhan-mardista.online/home
 
 ## Description
 
@@ -23,6 +23,7 @@ https://documenter.getpostman.com/view/9288133/SW14UGTA?version=latest
 - authenticated users can only apply to all jobs except his own, but only after completing his profile first. this profile includes fullname, phone, location, university, experience, skills  and description. I use third party apis to get location and university
 - when user apply to any company the employer will now allowed to view the users detail profile.
 - after applying application will be save in applied jobs page, in this page you can check the company name, number of applicants in your applied job and your application status.
+- user can also cancel his application in this page
 - when first apply your application will have status of 'waiting evaluation'
 - the employer can view the applicant data in job details page, he can view the each applicants detail profile then change the application status to 'not suitable' or 'accepted'
 
@@ -36,6 +37,8 @@ https://documenter.getpostman.com/view/9288133/SW14UGTA?version=latest
 - alertify
 - axios
 - quill editor
+- google oauth
+- vue router
 
 ### BackEnd(node.js)
 
