@@ -58,9 +58,9 @@
               </button>
             </div>
           </form>
-          <p class="text-center text-white mt-2">or you can register using:</p>
+          <p class="text-center text-white mt-2 mb-2">or you can register using:</p>
           <!-- google button -->
-          <div class="row mt-2">
+          <div class="row">
             <template>
               <g-signin-button
                 class="btn btn-block btn-primary mx-3"
@@ -155,9 +155,9 @@ export default {
       this.password_register = ''
     }
   },
-  beforeCreate: function() {
-        document.body.className = 'intro';
-    }
+  beforeCreate: function () {
+    document.body.className = 'intro'
+  }
 }
 </script>
 

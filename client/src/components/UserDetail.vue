@@ -13,8 +13,8 @@
       <AddUserDetail v-if="!userProfile"></AddUserDetail>
       <CollapseTransition v-if="userProfile">
         <div class="container mt-2 p-3" v-show="!isLoading">
-          <div class="row border rounded shadow p-3">
-            <div class="col-md-2 p-0 m-0">
+          <div class="row shadow p-3 ">
+            <div class="col-md-2 p-0 mx-2">
               <b-img
                 :src="userProfile.image"
                 alt
@@ -25,9 +25,9 @@
                 class="rounded"
               />
             </div>
-            <div class="col-md-9 d-flex flex-column">
+            <div class="col-md-9 d-flex flex-column p-0 m-0 container-fluid">
               <div class="d-flex">
-                <h3 class>{{userProfile.fullname.toUpperCase()}}</h3>
+                <h3 class="">{{userProfile.fullname.toUpperCase()}}</h3>
                 <div
                   v-if="userProfile.userId == loggedUser._id"
                   class="editProfile h3"
@@ -38,8 +38,8 @@
                   <i class="ml-2 fa fa-pencil"></i>
                 </div>
               </div>
-              <div class="d-flex justify-content-between">
-                <div>
+              <div class="d-flex justify-content-between row">
+                <div class="col-md-4">
                   <div class="mt-2">
                     <div class="text-secondary font-weight-bold">
                       <i class="fa fa-phone"></i> Phone
@@ -53,7 +53,7 @@
                     {{userProfile.location}}
                   </div>
                 </div>
-                <div>
+                <div class="col-md-4 mb-2">
                   <div class="mt-2">
                     <div class="text-secondary font-weight-bold">
                       <i class="fa fa-envelope"></i> Email
@@ -67,7 +67,7 @@
                     {{moment().diff(userProfile.birthDate, 'years')}} years old
                   </div>
                 </div>
-                <div>
+                <div class="col-md-4">
                   <h4 class="text-secondary">Statistic</h4>
                   <h1>{{userProfile.appliedJob.length}}</h1>
                   <p>Applications Sent</p>
@@ -75,7 +75,7 @@
               </div>
             </div>
           </div>
-          <div class="row mt-3 border rounded shadow p-3 card">
+          <div class="row mt-3 shadow p-3">
             <h4>Description</h4>
             <div class="container mt-3">
               <div class="row">
@@ -83,13 +83,13 @@
               </div>
             </div>
           </div>
-          <div class="row mt-3 border rounded shadow p-3">
+          <div class="row mt-3 shadow p-3">
             <h4>Education</h4>
             <div class="container mt-3">
               <div>{{userProfile.education}}</div>
             </div>
           </div>
-          <div class="row mt-3 border rounded shadow p-3">
+          <div class="row mt-3 shadow p-3">
             <h4>Skills</h4>
             <div class="container mt-3">
               <div class="row d-flex justify-content-start">
@@ -103,7 +103,7 @@
               </div>
             </div>
           </div>
-          <div class="row mt-3 border rounded shadow p-3">
+          <div class="row mt-3 shadow p-3">
             <h4>Experience</h4>
             <div class="container mt-3">
               <div>{{userProfile.experience}} years</div>
@@ -116,15 +116,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { CollapseTransition } from "vue2-transitions";
-import AddUserDetail from "@/components/AddUserDetail.vue";
-import { PacmanLoader } from "@saeris/vue-spinners";
+import { mapState } from 'vuex'
+import { CollapseTransition } from 'vue2-transitions'
+import AddUserDetail from '@/components/AddUserDetail.vue'
+import { PacmanLoader } from '@saeris/vue-spinners'
 
 export default {
-  name: "UserProfile",
-  data() {
-    return {};
+  name: 'UserProfile',
+  data () {
+    return {}
   },
   components: {
     CollapseTransition,
@@ -132,28 +132,28 @@ export default {
     PacmanLoader
   },
   computed: {
-    ...mapState(["userProfile", "isLoading", "loggedUser"])
+    ...mapState(['userProfile', 'isLoading', 'loggedUser'])
   },
-  created() {
-    this.findUserProfile();
+  created () {
+    this.findUserProfile()
   },
   methods: {
-    toEditPage(userProfile) {
-      this.$router.push(`/profile/update/${userProfile.userId}`);
+    toEditPage (userProfile) {
+      this.$router.push(`/profile/update/${userProfile.userId}`)
     },
-    async findUserProfile() {
+    async findUserProfile () {
       await this.$store.dispatch(
-        "findUseProfile",
+        'findUseProfile',
         this.$router.currentRoute.params.id
-      );
-      await this.$store.dispatch("getLocation");
+      )
+      await this.$store.dispatch('getLocation')
     }
   },
-  beforeRouteUpdate(to, from, next) {
-    this.$store.dispatch("findUseProfile", to.params.id);
-    next();
+  beforeRouteUpdate (to, from, next) {
+    this.$store.dispatch('findUseProfile', to.params.id)
+    next()
   }
-};
+}
 </script>
 
 <style scoped>

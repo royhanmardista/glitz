@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid" >
-    <div class="row mx-1">
-      <div class="col-md-8 offset-md-2 border rounded p-5 bg-light" v-if="jobDetail">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 shadow rounded p-3 bg-light" v-if="jobDetail">
         <h3 class="text-center mb-5">Please Fill This Form to Update Job</h3>
         <b-form @submit.prevent="updateJob">
           <b-form-group id="input-group-1" label="Position Name" label-for="input-1">

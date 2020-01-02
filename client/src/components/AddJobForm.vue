@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
-    <div class="row mx-1">
-      <div class="col-md-8 offset-md-2 shadow p-5 bg-light">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 shadow p-3 bg-light">
         <h3 class="text-center mb-5">Please Fill This Form to Post a Job</h3>
         <b-form @submit.prevent="createJob">
           <b-form-group id="input-group-1" label="Position Name" label-for="input-1">

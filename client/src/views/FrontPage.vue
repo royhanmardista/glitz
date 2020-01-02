@@ -5,7 +5,7 @@
         <div id="search" class="d-flex flex-column justify-content-center">
           <div class="text-white">
             <h1>
-              <i class="fa fa-star"></i> Glintz
+              <i class="fa fa-star"></i> Glintzzz
             </h1>
             <p>Helps you search job</p>
             <div>
@@ -118,9 +118,7 @@
               style="min-height:180px"
             >
               <div class="row text-left">
-                <div
-                  class="d-flex flex-column justify-content-between p-2"
-                >
+                <div class="d-flex flex-column justify-content-between p-2">
                   <h5>
                     <a class="text-dark" :href="job.refs.landing_page" target="_blank">{{job.name}}</a>
                   </h5>
@@ -132,7 +130,7 @@
                     <i class="fa fa-map-marker"></i>
                     {{job.locations[0].name}}
                   </p>
-                </div>                
+                </div>
               </div>
               <div class="text-center border-top pt-1">
                 <i class="fa fa-clock-o"></i>
@@ -152,7 +150,8 @@
 import { mapState } from "vuex";
 
 export default {
-  created() {
+  name : "FrontPage",
+  mounted() {
     this.reload();
   },
   computed: {
@@ -202,7 +201,9 @@ export default {
   methods: {
     async reload() {
       if (this.$router.currentRoute.fullPath !== "/") {
-        this.$store.dispatch("searchJob", this.$router.currentRoute.query);
+        await this.$store.dispatch("searchJob", this.$router.currentRoute.query);
+        this.currentPage = this.$router.currentRoute.query.githubpage;
+        this.themuseCurrentPage = this.$router.currentRoute.query.themusepage;
       }
     },
     async searchJob() {
@@ -210,11 +211,39 @@ export default {
         path: "/",
         query: {
           description: this.form.description,
-          location: this.form.location
+          location: this.form.location,
+          githubpage: this.currentPage,
+          themusepage: this.themuseCurrentPage
         }
       });
       this.isSearch = true;
       await this.$store.dispatch("searchJob", this.form);
+    }
+  },
+  watch: {
+    currentPage: function() {
+      this.$router
+        .push({
+          query: {
+            description: this.form.description,
+            location: this.form.location,
+            githubpage: this.currentPage,
+            themusepage: this.themuseCurrentPage
+          }
+        })
+        .catch(err => {});
+    },
+    themuseCurrentPage: function() {
+      this.$router
+        .push({
+          query: {
+            description: this.form.description,
+            location: this.form.location,
+            githubpage: this.currentPage,
+            themusepage: this.themuseCurrentPage
+          }
+        })
+        .catch(err => {});
     }
   },
   beforeCreate: function() {

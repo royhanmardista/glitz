@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid mt-3">
-    <div class="row mx-1">
-      <div class="col-md-8 offset-md-2 p-5 bg-light shadow">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 p-3 bg-light shadow">
         <h3 class="text-center">First, You Need To Complete This Form</h3>
         <b-form @submit.prevent="createProfile">
           <!-- full name -->

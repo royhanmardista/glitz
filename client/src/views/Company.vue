@@ -2,12 +2,8 @@
   <div class>
     <div class="container mt-5">
       <div class="row">
-        <!-- spinner -->
-        <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
-          <FadeLoader color="#5BC0EB"></FadeLoader>
-        </div>
         <!-- company page -->
-        <div class="col-md-10 offset-md-1 border pb-2 bg-info rounded">
+        <div class="col-md-12 border pb-2 bg-info rounded mx-1">
           <b-form @submit.prevent="searchCompany">
             <b-input-group size="lg" class="mt-2" placeholder="search">
               <b-form-input v-model="description" placeholder="Search Company ..."></b-form-input>
@@ -24,6 +20,10 @@
             </div>
           </b-form>
         </div>
+      </div>
+      <!-- spinner -->
+      <div v-if="isLoading" class="d-flex justify-content-center mt-5">
+        <FadeLoader color="#5BC0EB"></FadeLoader>
       </div>
     </div>
     <!-- company container -->
@@ -44,7 +44,7 @@
             :per-page="perPage"
             aria-controls="companies"
           ></b-pagination>
-          
+
           <div class="row">
             <div
               id="companies"
@@ -114,7 +114,7 @@ export default {
         return this.companies.length;
       }
     }
-  },  
+  },
   data() {
     return {
       perPage: 9,

@@ -122,4 +122,7 @@ export default {
 </script>
 
 <style scoped>
+h4 {
+  color: cornflowerblue
+}
 </style>

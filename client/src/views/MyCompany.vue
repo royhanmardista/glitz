@@ -2,43 +2,46 @@
   <div class>
     <div class="container">
       <div class="row">
-        <div v-if="searchingUserCompany" style="position:fixed;top:50%;left:48%">
+        <div v-if="searchingUserCompany" style="position:fixed;top:50%;left:45%">
           <HashLoader color="#182825" :size="50"></HashLoader>
         </div>
       </div>
     </div>
 
-    <div v-if="userCompany" class="mt-5 mx-1">
+    <div v-if="userCompany" class="mt-3">
       <div class="container-fluid" v-if="!showPostJob">
         <div class="row">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-light"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow d-flex flex-column justify-content-between bg-light"
           >
             <div>
               <h1>{{userCompany.name}}</h1>
             </div>
-            <div class="d-flex justify-content-between text-secondary border-bottom">
-              <div class="d-flex justify-content-between flex-column">
-                <p>
-                  <i class="fa fa-location-arrow"></i>
-                  {{userCompany.location}}
-                </p>
-                <p>
-                  <i class="fa fa-industry"></i>
-                  {{userCompany.category}}
-                </p>
-              </div>
-              <div class="d-flex justify-content-between flex-column">
-                <p>
-                  <b-link :href="userCompany.url" target="blank">
-                    <i class="fa fa-link"></i>
-                    {{userCompany.url}}
-                  </b-link>
-                </p>
-                <p>
-                  <i class="fa fa-clock-o"></i>
-                  last update {{moment(userCompany.updatedAt).fromNow()}}
-                </p>
+            <div
+              class="d-flex justify-content-between text-secondary border-bottom container-fluid"
+            >
+              <div class="row d-flex justify-content-between pb-2 mt-2">
+                <div class="d-flex justify-content-between flex-column">
+                  <div>
+                    <i class="fa fa-location-arrow mr-1"></i>
+                    {{userCompany.location}}
+                  </div>
+                  <div>
+                    <i class="fa fa-industry"></i>
+                    {{userCompany.category}}
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between flex-column">
+                  <div>
+                    <b-link :href="userCompany.url" target="blank">
+                      <div>{{userCompany.url}}</div>
+                    </b-link>
+                  </div>
+                  <div>
+                    <i class="fa fa-clock-o"></i>
+                    last update {{moment(userCompany.updatedAt).fromNow()}}
+                  </div>
+                </div>
               </div>
             </div>
             <div class="ml-auto mt-3">
@@ -66,7 +69,7 @@
         </div>
         <div class="row mt-4">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow d-flex flex-column justify-content-between bg-white"
           >
             <h3>Description</h3>
             <p v-html="userCompany.description"></p>
@@ -74,7 +77,7 @@
         </div>
         <div class="row mt-4">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow d-flex flex-column justify-content-between bg-white"
           >
             <div class="d-flex">
               <h3>Jobs</h3>

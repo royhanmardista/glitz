@@ -7,7 +7,7 @@
             class="navbar navbar-expand-md d-flex justify-content-between pt-1"
             :class="{'navbarcolor' : !isLogin, 'bg-light border-bottom' : isLogin}"
           >
-            <div class="nav navbar d-flex justify-content-start ml-1">
+            <div class="nav navbar d-flex justify-content-start m-0 p-0">
               <a class="navbar-brand nav-bar-title">
                 <router-link to="/" v-if="!isLogin">
                   <i class="fa fa-star"></i> Glintzzz
@@ -22,7 +22,7 @@
             </b-navbar-toggle>
             <!-- <b-collapse id="nav-collapse" is-nav></b-collapse> -->
             <b-collapse id="nav-collapse" is-nav>
-              <b-navbar-nav>
+              <b-navbar-nav class>
                 <b-nav-item v-if="isLogin" class="nav-item">
                   <router-link to="/jobs">Jobs</router-link>
                 </b-nav-item>
@@ -39,11 +39,12 @@
                   <router-link to="/register">Register</router-link>
                 </b-nav-item>
 
-                <b-nav-item v-if="isLogin && loggedUser.username" class="nav-item">
+                <b-nav-item v-if="isLogin && loggedUser.username" class="nav-item mx-auto ">
                   <b-dropdown
+                    id="profile"
                     variant="light"
                     :text="`Hello, ${loggedUser.username}`"
-                    class="m-md-2"
+                    class="m-md-2 "
                   >
                     <b-dropdown-item>
                       <div class="d-flex justify-content-between">
@@ -53,7 +54,7 @@
                         </div>
                       </div>
                     </b-dropdown-item>
-                    
+
                     <b-dropdown-item>
                       <div class="d-flex justify-content-between">
                         <router-link :to="`/applications/${loggedUser._id}`">Applied Job</router-link>
@@ -131,6 +132,7 @@ export default {
   margin: 0px;
   padding: 0px;
 }
+
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;

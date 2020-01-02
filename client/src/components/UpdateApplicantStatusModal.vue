@@ -39,33 +39,33 @@
 </template>
 
 <script>
-import server from "@/api/server";
-import { mapState } from "vuex";
+import server from '@/api/server'
+import { mapState } from 'vuex'
 
 export default {
-  name: "UpdateApplicantStatusModal",
+  name: 'UpdateApplicantStatusModal',
   computed: {
-    ...mapState(["isLoading", "applicant"])
+    ...mapState(['isLoading', 'applicant'])
   },
-  data() {
+  data () {
     return {
       statusOption: [
-        "waiting evaluation",
-        "accepted",
-        "not suitable"
+        'waiting evaluation',
+        'accepted',
+        'not suitable'
       ]
-    };
+    }
   },
   methods: {
-    resetModal() {
-      console.log("ketrigger -------------");
+    resetModal () {
+      console.log('ketrigger -------------')
       this.$store.dispatch(
-        "findJobDetail",
+        'findJobDetail',
         this.applicant.jobId
-      );
+      )
     }
   }
-};
+}
 </script>
 
 <style scoped>

@@ -73,8 +73,8 @@
               <p>{{jobDetail.applicants.length}} users has applied this job</p>
             </div>
             <b-collapse id="applicants" v-model="applicantsShow">
-              <div class="ml-3 mt-4">
-                <div class="row mt-4">
+              <div class="mt-4">
+                <div class="table-responsive">
                   <table class="table table-hover mr-3" v-if="jobDetail.applicants.length">
                     <thead class="thead-light">
                       <tr>
@@ -94,7 +94,7 @@
                         <td>{{index + 1}}</td>
                         <td>{{applicant.applicantId.username}}</td>
                         <td>{{applicant.applicantId.email}}</td>
-                        <td>
+                        <td style="min-width:250px">
                           <div class="d-flex">
                             <form action>
                               <b-form-select
@@ -103,22 +103,21 @@
                                 required
                               ></b-form-select>
                             </form>
-                            <b-button
-                              class="ml-2"
+                            <a
+                              href
+                              class="ml-2 mt-1"
                               size="sm"
                               variant="outline-info"
                               v-b-tooltip.hover
                               title="Change Status"
-                              @click="updateApplicantStatus({applicant, jobId : jobDetail} )"
+                              @click.prevent="updateApplicantStatus({applicant, jobId : jobDetail} )"
                             >
                               <i class="fa fa-check"></i>
-                            </b-button>
+                            </a>
                           </div>
                         </td>
 
                         <td class style="cursor:pointer">
-                          
-                          
                           <b-button
                             class="mt-1 ml-1"
                             size="sm"
@@ -185,15 +184,21 @@ import { mapState } from "vuex";
 import UpdateApplicantStatusModal from "@/components/UpdateApplicantStatusModal";
 import { DotLoader, RotateLoader } from "@saeris/vue-spinners";
 
-
 export default {
   name: "JobDetail",
-  components : {
+  components: {
     DotLoader,
     RotateLoader
   },
   computed: {
-    ...mapState(["jobDetail", "isLoading", "userProfile", "loggedUser", "applyingJob", "updatingApplicantStatus"])
+    ...mapState([
+      "jobDetail",
+      "isLoading",
+      "userProfile",
+      "loggedUser",
+      "applyingJob",
+      "updatingApplicantStatus"
+    ])
   },
   data() {
     return {
@@ -201,7 +206,7 @@ export default {
       applicantsShow: true,
       applicant: null,
       statusOption: ["waiting evaluation", "accepted", "not suitable"],
-      message : ""
+      message: ""
     };
   },
   components: {
@@ -212,8 +217,8 @@ export default {
       let { applicant, jobId } = data;
       let applicatUpdate = {};
       applicant.jobId = jobId._id;
-      this.message = `updating ${applicant.applicantId.username}s status ...`
-      this.$store.dispatch('updateApplicantStatus', applicant)
+      this.message = `updating ${applicant.applicantId.username}s status ...`;
+      this.$store.dispatch("updateApplicantStatus", applicant);
     },
     seeApplicantDetail(applicantId) {
       this.$router.push(`/profile/${applicantId}`);

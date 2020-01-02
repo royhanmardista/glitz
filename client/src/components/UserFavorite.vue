@@ -10,11 +10,11 @@
             <BeatLoader :size="10" color="#0A81D1"></BeatLoader>
           </div>
           <div v-if="loggedUser.favoriteJob">
-            <h4
+            <h5
               class
               style="cursor: pointer"
               v-b-toggle.fav-collapse
-            >You Have Bookmarks {{loggedUser.favoriteJob.length}} Jobs</h4>
+            >You Have Bookmarks {{loggedUser.favoriteJob.length}} Jobs</h5>
             <b-collapse
               class
               id="fav-collapse"
@@ -117,65 +117,65 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { BeatLoader } from "@saeris/vue-spinners";
+import { mapState } from 'vuex'
+import { BeatLoader } from '@saeris/vue-spinners'
 
 export default {
-  name: "UserFavorite",
+  name: 'UserFavorite',
   components: {
     BeatLoader
   },
   computed: {
-    ...mapState(["loggedUser", "isSearchingUser", "isLoading"]),
-    pageRows() {
-      return this.loggedUser.favoriteJob.length;
+    ...mapState(['loggedUser', 'isSearchingUser', 'isLoading']),
+    pageRows () {
+      return this.loggedUser.favoriteJob.length
     },
-    favoriteJobs() {
+    favoriteJobs () {
       if (this.loggedUser) {
         return this.loggedUser.favoriteJob.slice(
           (this.currentPage - 1) * this.perPage,
           this.currentPage * this.perPage
-        );
+        )
       }
     }
   },
   watch: {
-    currentPage: function() {
+    currentPage: function () {
       this.$router
         .push({
           query: {
             page: this.currentPage
           }
         })
-        .catch(err => {});
+        .catch(err => {})
     }
   },
-  data() {
+  data () {
     return {
       perPage: 9,
       currentPage: 1
-    };
+    }
   },
-  created() {
-    this.$store.dispatch("findUser");
-    if (this.$router.currentRoute.fullPath !== "/favorites") {
-      this.currentPage = this.$router.currentRoute.query.page;
+  created () {
+    this.$store.dispatch('findUser')
+    if (this.$router.currentRoute.fullPath !== '/favorites') {
+      this.currentPage = this.$router.currentRoute.query.page
     }
   },
   methods: {
-    showJobDetail(job) {
-      this.$router.push(`jobs/${job._id}`);
-      this.$store.commit("SET_JOBDETAIL", job);
+    showJobDetail (job) {
+      this.$router.push(`jobs/${job._id}`)
+      this.$store.commit('SET_JOBDETAIL', job)
     },
-    showCompanyDetail(company) {
-      this.$router.push(`company/${company._id}`);
-      this.$store.dispatch("getCompanyDetail", company._id);
+    showCompanyDetail (company) {
+      this.$router.push(`company/${company._id}`)
+      this.$store.dispatch('getCompanyDetail', company._id)
     },
-    removeFromFavorite(jobId) {
-      this.$store.dispatch("removeFromFavorite", jobId);
+    removeFromFavorite (jobId) {
+      this.$store.dispatch('removeFromFavorite', jobId)
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -190,4 +190,8 @@ a:hover {
 a {
   color: blue !important;
 }
+
+/* h5 {
+  color: black
+} */
 </style>

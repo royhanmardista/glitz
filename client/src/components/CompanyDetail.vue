@@ -2,13 +2,13 @@
   <div class="bg-light border-top" style="min-height:700px">
     <div class="container">
       <div class="row">
-        <div v-if="isLoading" style="position:fixed;top:50%;left:48%">
+        <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
           <HashLoader color="#182825" :size="50"></HashLoader>
         </div>
       </div>
     </div>
 
-    <div v-if="!isLoading && companyDetail" class="mt-5 mx-1">
+    <div v-if="!isLoading && companyDetail" class="mt-3">
       <div class="container-fluid">
         <div class="row">
           <div
@@ -17,28 +17,29 @@
             <div>
               <h1>{{companyDetail.name}}</h1>
             </div>
-            <div class="d-flex justify-content-between text-secondary">
-              <div class="d-flex justify-content-between flex-column">
-                <p>
-                  <i class="fa fa-location-arrow"></i>
-                  {{companyDetail.location}}
-                </p>
-                <p>
-                  <i class="fa fa-industry"></i>
-                  {{companyDetail.category}}
-                </p>
-              </div>
-              <div class="d-flex justify-content-between flex-column">
-                <p>
-                  <b-link :href="companyDetail.url" target="blank">
-                    <i class="fa fa-link"></i>
-                    {{companyDetail.url}}
-                  </b-link>
-                </p>
-                <p>
-                  <i class="fa fa-clock-o"></i>
-                  last update {{moment(companyDetail.updatedAt).fromNow()}}
-                </p>
+            <div
+              class="d-flex justify-content-between text-secondary border-bottom container-fluid"
+            >
+              <div class="row d-flex justify-content-between pb-2 mt-2">
+                <div class="d-flex justify-content-between flex-column">
+                  <div>
+                    <i class="fa fa-location-arrow mr-1"></i>
+                    {{companyDetail.location}}
+                  </div>
+                  <div>
+                    <i class="fa fa-industry"></i>
+                    {{companyDetail.category}}
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between flex-column">
+                  <div>
+                    <b-link :href="companyDetail.url" target="blank">{{companyDetail.url}}</b-link>
+                  </div>
+                  <div>
+                    <i class="fa fa-clock-o"></i>
+                    last update {{moment(companyDetail.updatedAt).fromNow()}}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -61,7 +62,7 @@
               class="border-bottom"
               v-if="companyDetail.jobs.length"
             >This Company has posted {{companyDetail.jobs.length}} jobs</p>
-            <div v-for="job in companyDetail.jobs" :key="job._id" class=" mt-3">
+            <div v-for="job in companyDetail.jobs" :key="job._id" class="mt-3">
               <h5 class="mb-3 ml-3">{{job.name}}</h5>
               <p>
                 <i class="fa fa-map-signs"></i>

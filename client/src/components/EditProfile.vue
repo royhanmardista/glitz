@@ -1,11 +1,11 @@
 <template>
-  <div class="container-fluid mt-5">
-    <div class="row mx-1">
+  <div class="container-fluid mt-3">
+    <div class="row">
       <div v-if="isLoading" style="position:fixed;top:50%;left:45%">
         <PacmanLoader color="#5BC0EB" :size="50"></PacmanLoader>
       </div>
       <div
-        class="col-md-8 offset-md-2 border rounded p-5 bg-light"
+        class="col-md-8 offset-md-2 border shadow p-3 bg-light"
         v-if="!isLoading && userProfile"
       >
         <h3 class="text-center">Edit Your Profile</h3>
@@ -64,76 +64,76 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { PacmanLoader } from "@saeris/vue-spinners";
+import { mapState } from 'vuex'
+import { PacmanLoader } from '@saeris/vue-spinners'
 
 export default {
-  name: "UpdateProfile",
+  name: 'UpdateProfile',
   computed: {
     ...mapState([
-      "locations",
-      "isLoading",
-      "regions",
-      "searchingRegion",
-      "cities",
-      "searchingCity",
-      "userProfile"
+      'locations',
+      'isLoading',
+      'regions',
+      'searchingRegion',
+      'cities',
+      'searchingCity',
+      'userProfile'
     ])
   },
   components: {
     PacmanLoader
   },
-  mounted() {
-    this.searchCompany();
-    this.setCountry();
+  mounted () {
+    this.searchCompany()
+    this.setCountry()
   },
-  data() {
+  data () {
     return {
-      country: "",
+      country: '',
       region: null,
       city: null
-    };
+    }
   },
 
   watch: {
-    country: function() {
-      this.region = null;
+    country: function () {
+      this.region = null
       if (this.country) {
-        this.$store.dispatch("getRegions", this.country.split(",")[1]);
+        this.$store.dispatch('getRegions', this.country.split(',')[1])
       }
     },
-    region: function() {
-      this.city = null;
+    region: function () {
+      this.city = null
       let payload = {
-        country: this.country.split(",")[1],
+        country: this.country.split(',')[1],
         region: this.region
-      };
+      }
       if (this.region) {
-        this.$store.dispatch("getCities", payload);
+        this.$store.dispatch('getCities', payload)
       }
     }
   },
   methods: {
-    async setCountry() {
+    async setCountry () {
       if (this.userProfile) {
-        this.country = this.userProfile.country.trim();
+        this.country = this.userProfile.country.trim()
       }
     },
-    async searchCompany() {
-      await this.$store.dispatch("searchUserCompany");
-      await this.$store.dispatch("getLocation");
+    async searchCompany () {
+      await this.$store.dispatch('searchUserCompany')
+      await this.$store.dispatch('getLocation')
     },
-    async updateCompany() {
-      let location = [];
+    async updateCompany () {
+      let location = []
       if (this.city) {
-        location.push(this.city);
+        location.push(this.city)
       }
       if (this.region) {
-        location.push(this.region);
+        location.push(this.region)
       }
-      location.push(this.country);
-      await this.$store.dispatch("updateCompany", location.join(", "));
+      location.push(this.country)
+      await this.$store.dispatch('updateCompany', location.join(', '))
     }
   }
-};
+}
 </script>

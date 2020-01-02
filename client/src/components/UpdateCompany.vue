@@ -1,11 +1,11 @@
 <template>
-  <div class="container-fluid mt-5">
-    <div class="row mx-1">
-      <div v-if="searchingUserCompany" style="position:fixed;top:50%;left:48%">
+  <div class="container-fluid mt-3">
+    <div class="row">
+      <div v-if="searchingUserCompany" style="position:fixed;top:50%;left:45%">
           <HashLoader color="#182825" :size="50"></HashLoader>
         </div>
       <div
-        class="col-md-8 offset-md-2 border rounded p-5 bg-light"
+        class="col-md-8 offset-md-2 shadow p-3 bg-light"
         v-if="userCompany"
       >
         <h3 class="text-center">Update Your Company</h3>
@@ -31,7 +31,7 @@
               :options="categories"
               required
             ></b-form-select>
-          </b-form-group>          
+          </b-form-group>
 
           <b-form-group id="input-group-2" label="Description" >
             <vue-editor v-model="userCompany.description" />
@@ -69,91 +69,91 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 
 export default {
-  name: "updateCompany",
+  name: 'updateCompany',
   computed: {
-    ...mapState(["locations", "searchingUserCompany", "regions", "cities", "userCompany", "updatingCompany"]),
+    ...mapState(['locations', 'searchingUserCompany', 'regions', 'cities', 'userCompany', 'updatingCompany']),
     country: {
-      get() {
+      get () {
         if (this.userCompany) {
-          return this.userCompany.country.trim();
+          return this.userCompany.country.trim()
         }
       },
-      set(newVal) {
-        return (this.inputCountry = newVal);
+      set (newVal) {
+        return (this.inputCountry = newVal)
       }
     }
   },
-  mounted() {
-    this.searchCompany();
-    this.setCountry();
+  mounted () {
+    this.searchCompany()
+    this.setCountry()
   },
-  data() {
+  data () {
     return {
       inputCountry: null,
       region: null,
       city: null,
       categories: [
-        { text: "Select Category", value: null },
-        "Sales",
-        "Engineering",
-        "Data Science",
-        "Retail",
-        "Education",
-        "Marketing & PR",
-        "Manufacturing",
-        "Creative & Design",
-        "userCompany"
+        { text: 'Select Category', value: null },
+        'Sales',
+        'Engineering',
+        'Data Science',
+        'Retail',
+        'Education',
+        'Marketing & PR',
+        'Manufacturing',
+        'Creative & Design',
+        'userCompany'
       ]
-    };
+    }
   },
 
   watch: {
-    inputCountry: function() {
-      this.region = null;
+    inputCountry: function () {
+      this.region = null
       if (this.inputCountry) {
-        this.$store.dispatch("getRegions", this.inputCountry.split(",")[1]);
+        this.$store.dispatch('getRegions', this.inputCountry.split(',')[1])
       }
     },
-    country: function() {
-      this.region = null;
-      this.$store.dispatch("getRegions", this.country.split(",")[1]);
+    country: function () {
+      this.region = null
+      this.$store.dispatch('getRegions', this.country.split(',')[1])
     },
-    region: function() {
-      this.city = null;
+    region: function () {
+      this.city = null
       let payload = {
-        country: this.country.split(",")[1],
+        country: this.country.split(',')[1],
         region: this.region
-      };
+      }
       if (this.region) {
-        this.$store.dispatch("getCities", payload);
+        this.$store.dispatch('getCities', payload)
       }
     }
   },
   methods: {
-    async setCountry() {
+    async setCountry () {
       if (this.userCompany) {
-        this.country = this.userCompany.country.trim();
+        this.country = this.userCompany.country.trim()
       }
-      await this.$store.dispatch("getLocation");
+      await this.$store.dispatch('getLocation')
     },
-    async searchCompany() {
-      await this.$store.dispatch("searchUserCompany");
-      await this.$store.dispatch("getLocation");
+    async searchCompany () {
+      await this.$store.dispatch('searchUserCompany')
+      await this.$store.dispatch('getLocation')
     },
-    async updateCompany() {
-      let location = [];
+    async updateCompany () {
+      let location = []
       if (this.city) {
-        location.push(this.city);
+        location.push(this.city)
       }
       if (this.region) {
-        location.push(this.region);
+        location.push(this.region)
       }
-      location.push(this.inputCountry || this.country);
-      await this.$store.dispatch("updateCompany", location.join(", "));
+      location.push(this.inputCountry || this.country)
+      await this.$store.dispatch('updateCompany', location.join(', '))
     }
   }
-};
+}
 </script>

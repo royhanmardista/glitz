@@ -5,7 +5,7 @@ import router from '@/router'
 
 Vue.use(Vuex)
 
-function initialState() {
+function initialState () {
   return {
     github: null,
     themuse: null,
@@ -47,41 +47,41 @@ function initialState() {
     creatingJob: false,
     updatingCompany: false,
     deletingCompany: false,
-    creatingCompany: false,
+    creatingCompany: false
   }
 }
 
 export default new Vuex.Store({
   state: initialState(),
   mutations: {
-    RESET(state) {
+    RESET (state) {
       const s = initialState()
       Object.keys(s).forEach(key => {
         state[key] = s[key]
       })
     },
-    SET_CREATING_COMPANY(state, payload) {
+    SET_CREATING_COMPANY (state, payload) {
       state.creatingCompany = payload
     },
-    SET_UPDATING_COMPANY(state, payload) {
+    SET_UPDATING_COMPANY (state, payload) {
       state.updatingCompany = payload
     },
-    SET_CREATING_JOB(state, payload) {
+    SET_CREATING_JOB (state, payload) {
       state.creatingJob = payload
     },
-    SET_UPDATING_JOB(state, payload) {
+    SET_UPDATING_JOB (state, payload) {
       state.updatingJob = payload
     },
-    SET_DELETING_JOB(state, payload) {
+    SET_DELETING_JOB (state, payload) {
       state.deletingJob = payload
     },
-    SET_SEARCHING_USER_COMPANY(state, payload) {
+    SET_SEARCHING_USER_COMPANY (state, payload) {
       state.searchingUserCompany = payload
     },
-    SET_APPLYING_JOB(state, payload) {
+    SET_APPLYING_JOB (state, payload) {
       state.applyingJob = payload
     },
-    SET_JOBDETAIL(state, job) {
+    SET_JOBDETAIL (state, job) {
       state.jobDetail = job
       if (state.jobDetail) {
         let locationArray = job.location.trim().split(',')
@@ -90,32 +90,32 @@ export default new Vuex.Store({
         state.jobDetail.city = locationArray[0]
       }
     },
-    SET_SEARCHING_CITY(state, payload) {
+    SET_SEARCHING_CITY (state, payload) {
       state.searchingCity = payload
     },
-    SET_SEARCHING_REGION(state, payload) {
+    SET_SEARCHING_REGION (state, payload) {
       state.searchingRegion = payload
     },
-    SET_LOCATION(state, locations) {
+    SET_LOCATION (state, locations) {
       state.locations = locations
     },
-    CHECK_LOGIN(state) {
+    CHECK_LOGIN (state) {
       if (localStorage.getItem('token')) {
         state.isLogin = true
       } else {
         state.isLogin = false
       }
     },
-    SET_ISLOGIN(state, payload) {
+    SET_ISLOGIN (state, payload) {
       state.isLogin = payload
     },
-    SET_LOGGED_USER(state, user) {
+    SET_LOGGED_USER (state, user) {
       state.loggedUser = user
     },
-    SET_ISLOADING(state, payload) {
+    SET_ISLOADING (state, payload) {
       state.isLoading = payload
     },
-    SET_EXTERNAL_JOBS(state, jobs) {
+    SET_EXTERNAL_JOBS (state, jobs) {
       let {
         github,
         themuse
@@ -124,7 +124,7 @@ export default new Vuex.Store({
       state.themuse = themuse || []
       state.isLoading = false
     },
-    SET_USER_COMPANY(state, data) {
+    SET_USER_COMPANY (state, data) {
       state.userCompany = data.company
       if (state.userCompany) {
         let locationArray = data.company.location.trim().split(',')
@@ -134,16 +134,16 @@ export default new Vuex.Store({
         state.userCompany.jobs = data.jobs
       }
     },
-    SET_REGIONS(state, regions) {
+    SET_REGIONS (state, regions) {
       state.regions = regions
     },
-    SET_CITIES(state, cities) {
+    SET_CITIES (state, cities) {
       state.cities = cities
     },
-    SET_INTERNALJOB(state, jobs) {
+    SET_INTERNALJOB (state, jobs) {
       state.internalJob = jobs
     },
-    SET_COMPANY_DETAIL(state, data) {
+    SET_COMPANY_DETAIL (state, data) {
       let {
         company,
         jobs
@@ -151,36 +151,35 @@ export default new Vuex.Store({
       state.companyDetail = company
       state.companyDetail.jobs = jobs
     },
-    SET_USER_PROFILE(state, data) {
+    SET_USER_PROFILE (state, data) {
       state.userProfile = data
     },
-    SET_SEARCHING_USER(state, payload) {
+    SET_SEARCHING_USER (state, payload) {
       state.isSearchingUser = payload
     },
-    SET_UNIVERSITIES(state, payload) {
+    SET_UNIVERSITIES (state, payload) {
       state.universities = payload
     },
-    SET_COMPANIES(state, data) {
+    SET_COMPANIES (state, data) {
       state.companies = data
     },
-    SET_ADD_TO_FAVORITE_LOADING(state, payload) {
+    SET_ADD_TO_FAVORITE_LOADING (state, payload) {
       state.addToFavoriteLoading = payload
     },
-    SET_UPDATING_APPLICANT_STATUS(state, payload) {
+    SET_UPDATING_APPLICANT_STATUS (state, payload) {
       state.updatingApplicantStatus = payload
     },
-    SET_DELETING_COMPANY(state, payload) {
+    SET_DELETING_COMPANY (state, payload) {
       state.deletingCompany = payload
     },
-    SET_EMPTY_USER_COMPANY(state) {
+    SET_EMPTY_USER_COMPANY (state) {
       state.userCompany = null
     }
   },
   actions: {
-    async updateApplicantStatus({
+    async updateApplicantStatus ({
       commit
     }, applicant) {
-
       try {
         let {
           jobId,
@@ -192,7 +191,7 @@ export default new Vuex.Store({
           data
         } = await server.patch(`/jobs/${jobId}/applicant`, {
           applicant: applicantId._id,
-          status,
+          status
         }, {
           headers: {
             token: localStorage.getItem('token')
@@ -206,12 +205,12 @@ export default new Vuex.Store({
         commit('SET_UPDATING_APPLICANT_STATUS', false)
       }
     },
-    async searchCompany({
+    async searchCompany ({
       commit
     }, form) {
       let {
         description,
-        country,
+        country
       } = form
       try {
         commit('SET_ISLOADING', true)
@@ -220,7 +219,7 @@ export default new Vuex.Store({
         } = await server.get('/companies/search', {
           params: {
             description,
-            country,
+            country
           },
           headers: {
             token: localStorage.getItem('token')
@@ -233,7 +232,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async removeFromFavorite({
+    async removeFromFavorite ({
       commit
     }, jobId) {
       try {
@@ -256,7 +255,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async addToFavorite({
+    async addToFavorite ({
       commit
     }, jobId) {
       try {
@@ -277,7 +276,7 @@ export default new Vuex.Store({
         commit('SET_ADD_TO_FAVORITE_LOADING', false)
       }
     },
-    async cancelApplication({
+    async cancelApplication ({
       commit
     }, jobId) {
       try {
@@ -300,7 +299,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async applyJob({
+    async applyJob ({
       commit,
       state
     }, jobId) {
@@ -323,7 +322,7 @@ export default new Vuex.Store({
         commit('SET_APPLYING_JOB', false)
       }
     },
-    async updateProfile({
+    async updateProfile ({
       commit,
       state
     }, payload) {
@@ -379,7 +378,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async createProfile({
+    async createProfile ({
       commit,
       dispatch
     }, data) {
@@ -410,7 +409,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async getUniversities({
+    async getUniversities ({
       commit
     }, country) {
       try {
@@ -437,7 +436,7 @@ export default new Vuex.Store({
         }])
       } finally {}
     },
-    async findUseProfile({
+    async findUseProfile ({
       commit
     }, userId) {
       try {
@@ -464,7 +463,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async findUser({
+    async findUser ({
       commit
     }) {
       commit('SET_SEARCHING_USER', true)
@@ -481,16 +480,16 @@ export default new Vuex.Store({
           commit('SET_LOGGED_USER', data)
         }
       } catch (err) {
-        localStorage.removeItem("token");
-        commit("CHECK_LOGIN");
-        commit("RESET");
-        router.push("/");
+        localStorage.removeItem('token')
+        commit('CHECK_LOGIN')
+        commit('RESET')
+        router.push('/')
         this._vm.$alertify.error(err.response.data.message)
       } finally {
         commit('SET_SEARCHING_USER', false)
       }
     },
-    async getCompanyDetail({
+    async getCompanyDetail ({
       commit
     }, companyId) {
       try {
@@ -505,7 +504,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async searchInternalJob({
+    async searchInternalJob ({
       commit
     }, form) {
       let {
@@ -536,7 +535,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async updateJob({
+    async updateJob ({
       commit,
       state
     }, payload) {
@@ -572,7 +571,7 @@ export default new Vuex.Store({
         commit('SET_UPDATING_JOB', false)
       }
     },
-    async findJobDetail({
+    async findJobDetail ({
       commit
     }, jobId) {
       try {
@@ -587,7 +586,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async updateCompany({
+    async updateCompany ({
       commit,
       dispatch,
       state
@@ -616,7 +615,7 @@ export default new Vuex.Store({
       }
     },
 
-    async deleteJob({
+    async deleteJob ({
       commit,
       dispatch
     }, jobId) {
@@ -637,7 +636,7 @@ export default new Vuex.Store({
         commit('SET_DELETING_JOB', false)
       }
     },
-    async createJob({
+    async createJob ({
       commit,
       dispatch
     }, form) {
@@ -677,7 +676,7 @@ export default new Vuex.Store({
         commit('SET_CREATING_JOB', false)
       }
     },
-    async deleteCompany({
+    async deleteCompany ({
       commit
     }, companyId) {
       try {
@@ -699,7 +698,7 @@ export default new Vuex.Store({
         commit('SET_DELETING_COMPANY', false)
       }
     },
-    async createCompany({
+    async createCompany ({
       commit
     }, form) {
       try {
@@ -736,7 +735,7 @@ export default new Vuex.Store({
         commit('SET_CREATING_COMPANY', false)
       }
     },
-    async getCities({
+    async getCities ({
       commit
     }, payload) {
       let {
@@ -769,7 +768,7 @@ export default new Vuex.Store({
       }
     },
 
-    async getRegions({
+    async getRegions ({
       commit
     }, country) {
       try {
@@ -796,7 +795,7 @@ export default new Vuex.Store({
         commit('SET_SEARCHING_REGION', false)
       }
     },
-    async searchUserCompany({
+    async searchUserCompany ({
       commit
     }) {
       try {
@@ -815,7 +814,7 @@ export default new Vuex.Store({
         commit('SET_SEARCHING_USER_COMPANY', false)
       }
     },
-    async getLocation({
+    async getLocation ({
       commit
     }) {
       try {
@@ -830,7 +829,7 @@ export default new Vuex.Store({
         commit('SET_ISLOADING', false)
       }
     },
-    async searchJob({
+    async searchJob ({
       commit
     }, form) {
       commit('SET_EXTERNAL_JOBS', {
