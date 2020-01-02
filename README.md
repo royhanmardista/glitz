@@ -7,7 +7,7 @@ Glintzzz is job portal website I perposely disign to work similar with glints, h
 
 ## API documentation
 
-https://documenter.getpostman.com/view/9288133/SW14UGTA?version=latest
+https://documenter.getpostman.com/view/9288133/SWLce97Y
 
 ## Fitures
 
