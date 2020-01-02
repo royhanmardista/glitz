@@ -11,7 +11,7 @@ https://documenter.getpostman.com/view/9288133/SW14UGTA?version=latest
 
 ## Fitures
 
-- at the front page all non-authenticated users are allowed to search jobs from external websites which are themuse and github
+- at the front page all non-authenticated users are allowed to search jobs from third parties which are themuse and github
 - to get access token user can register manually posting username, email, and password or use google oauth to get access token
 - authenticated users can search internal jobs and company in glintzzz. The search key words include name, location, skilla and experience
 - all users can also view job details that includes name, location company name, description, required skills and required experience
