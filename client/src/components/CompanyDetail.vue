@@ -12,26 +12,26 @@
       <div class="container-fluid">
         <div class="row">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-light"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow d-flex flex-column justify-content-between bg-light"
           >
             <div>
-              <h1>{{companyDetail.name}}</h1>
+              <h1 class="mb-0">{{companyDetail.name}}</h1>
             </div>
             <div
-              class="d-flex justify-content-between text-secondary border-bottom container-fluid"
+              class="text-secondary container-fluid m-0 p-1"
             >
-              <div class="row d-flex justify-content-between pb-2 mt-2">
-                <div class="d-flex justify-content-between flex-column">
+              <div class="row d-flex justify-content-between pb-2 mt-2" id="company_detail">
+                <div class="d-flex justify-content-between flex-column col-md-6">
                   <div>
                     <i class="fa fa-location-arrow mr-1"></i>
                     {{companyDetail.location}}
                   </div>
                   <div>
-                    <i class="fa fa-industry"></i>
+                    <i class="fa fa-truck"></i>
                     {{companyDetail.category}}
                   </div>
                 </div>
-                <div class="d-flex justify-content-between flex-column">
+                <div class="d-flex justify-content-between flex-column col-md-6">
                   <div>
                     <b-link :href="companyDetail.url" target="blank">{{companyDetail.url}}</b-link>
                   </div>
@@ -46,15 +46,15 @@
         </div>
         <div class="row mt-4">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow  d-flex flex-column justify-content-between bg-white"
           >
             <h3>Description</h3>
-            <p v-html="companyDetail.description"></p>
+            <p class="text-justify" v-html="companyDetail.description"></p>
           </div>
         </div>
         <div class="row mt-4">
           <div
-            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow border rounded border-light d-flex flex-column justify-content-between bg-white"
+            class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow  d-flex flex-column justify-content-between bg-white"
           >
             <h3>Jobs</h3>
             <p v-if="!companyDetail.jobs.length">This Company hasn't post any jobs</p>
@@ -129,5 +129,10 @@ export default {
 p {
   margin: 0.5rem 1rem;
   font-family: "Gothic A1", sans-serif;
+}
+
+#company_detail {
+  font-family: "Gothic A1", sans-serif;
+  font-size: 0.9rem
 }
 </style>

@@ -105,28 +105,28 @@
                             </form>
                             <a
                               href
-                              class="ml-2 mt-1"
+                              class="ml-2 mt-1 text-info"
                               size="sm"
                               variant="outline-info"
                               v-b-tooltip.hover
                               title="Change Status"
                               @click.prevent="updateApplicantStatus({applicant, jobId : jobDetail} )"
                             >
-                              <i class="fa fa-check"></i>
+                              <i class="fa fa-gavel"></i>
                             </a>
                           </div>
                         </td>
 
                         <td class style="cursor:pointer">
                           <b-button
-                            class="mt-1 ml-1"
+                            class=""
                             size="sm"
                             variant="outline-info"
                             v-b-tooltip.hover
                             title="See applicants profile"
                             @click.prevent="seeApplicantDetail(applicant.applicantId._id)"
                           >
-                            <i class="fa fa-folder-open"></i>
+                            <i class="fa fa-archive"></i>
                           </b-button>
                         </td>
                       </tr>

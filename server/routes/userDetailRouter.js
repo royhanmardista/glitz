@@ -3,7 +3,6 @@ const router = require('express').Router()
 const userDetailController = require('../controllers/userDetailController')
 const { authenticate, userDetailAuthorization, viewUserDetailAuthorization } = require('../middlewares/auth')
 const upload = require('../middlewares/gcsUpload')
-const { userValidator, validate } = require('../middlewares/expressValidator')
 
 router.use(authenticate)
 router.post('/', upload.single('image'), userDetailController.create)

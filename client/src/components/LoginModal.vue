@@ -9,6 +9,7 @@
       header-text-variant="primary"
       footer-border-variant="warning"
       content-class="shadow"
+      centered
     >
       <template v-slot:modal-title>
         <h4>Sign in to your account</h4>
@@ -68,61 +69,61 @@
 </template>
 
 <script>
-import server from '@/api/server'
+import server from "@/api/server";
 
 export default {
-  name: 'LoginModal',
+  name: "LoginModal",
   components: {},
-  created () {},
-  data () {
+  created() {},
+  data() {
     return {
-      email: '',
-      password: '',
-      errorMessage: '',
-      loginMessage: '',
+      email: "",
+      password: "",
+      errorMessage: "",
+      loginMessage: "",
       loginLoading: false
-    }
+    };
   },
   methods: {
-    success: function (message) {
-      this.$alertify.success(message)
+    success: function(message) {
+      this.$alertify.success(message);
     },
-    resetModal () {
-      this.email = ''
-      this.password = ''
-      this.errorMessage = ''
+    resetModal() {
+      this.email = "";
+      this.password = "";
+      this.errorMessage = "";
     },
-    async login () {
-      this.errorMessage = ''
-      this.loginLoading = true
+    async login() {
+      this.errorMessage = "";
+      this.loginLoading = true;
       try {
-        let { data } = await server.post('/login', {
+        let { data } = await server.post("/login", {
           email: this.email,
           password: this.password
-        })
-        localStorage.setItem('token', data.token)
-        this.success(data.message)
-        this.$refs['login-modal'].hide()
-        this.$store.commit('SET_LOGGED_USER', data.user)
-        this.$store.commit('CHECK_LOGIN')
-        this.$router.push('/home')
+        });
+        localStorage.setItem("token", data.token);
+        this.success(data.message);
+        this.$refs["login-modal"].hide();
+        this.$store.commit("SET_LOGGED_USER", data.user);
+        this.$store.commit("CHECK_LOGIN");
+        this.$router.push("/home");
       } catch (err) {
         if (Array.isArray(err.response.data.message)) {
-          this.errorMessage = err.response.data.message.join(', ')
+          this.errorMessage = err.response.data.message.join(", ");
         } else {
-          this.errorMessage = err.response.data.message
+          this.errorMessage = err.response.data.message;
         }
-        this.$alertify.error(this.errorMessage)
+        this.$alertify.error(this.errorMessage);
       } finally {
-        this.loginLoading = false
+        this.loginLoading = false;
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
 h4 {
-  color: cornflowerblue
+  color: cornflowerblue;
 }
 </style>

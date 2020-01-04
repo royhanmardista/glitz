@@ -53,7 +53,7 @@
           <b-form-file
             v-model="image"
             :state="Boolean(image)"
-            placeholder="Choose your profile picture or drop it here..."
+            placeholder="Choose your profile picture..."
             drop-placeholder="Drop file here..."
           ></b-form-file>
           <div class="my-3">Selected file: {{ image ? image.name : '' }}</div>

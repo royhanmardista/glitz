@@ -20,7 +20,11 @@ class companyController {
                     $options: 'i'
                 }
             })
-            res.json(companies)
+            if (companies.length) {                
+                res.json(companies)
+            } else {
+                res.status(204).json(companies)
+            }
         } catch (err) {
             next(err)
         }
@@ -35,11 +39,13 @@ class companyController {
                 jobs = await Job.find({
                     companyId: company._id
                 })
+                res.json({
+                    company,
+                    jobs
+                }) 
+            } else {
+                res.status(204).json(company)
             }
-            res.json({
-                company,
-                jobs
-            })
         } catch (err) {
             next(err)
         }

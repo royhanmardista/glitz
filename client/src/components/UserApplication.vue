@@ -16,7 +16,7 @@
               style="cursor: pointer"
               v-b-toggle.application-collapse
             >You Have Applied {{loggedUser.appliedJob.length}} Jobs</h5>
-            <b-collapse class="" id="application-collapse" :visible="true">
+            <b-collapse class id="application-collapse" :visible="true">
               <div class="table-responsive" v-if="loggedUser.appliedJob.length">
                 <table class="table table-hover">
                   <thead class="thead-light">
@@ -45,7 +45,7 @@
                         >{{job.jobId.companyId.name}}</a>
                       </td>
                       <td>{{job.jobId.applicants.length}}</td>
-                      <td>{{job.status}}</td>
+                      <td id="applicant_status" :class="{'text-danger' : (job.status == 'not suitable'), 'text-success' : (job.status == 'accepted')}">{{job.status}}</td>
                       <td>
                         <i
                           v-b-tooltip.hover
@@ -81,37 +81,49 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { BeatLoader } from '@saeris/vue-spinners'
+import { mapState } from "vuex";
+import { BeatLoader } from "@saeris/vue-spinners";
 
 export default {
-  name: 'UserApplication',
+  name: "UserApplication",
   components: {
     BeatLoader
   },
   computed: {
-    ...mapState(['loggedUser', 'isSearchingUser', 'isLoading'])
+    ...mapState(["loggedUser", "isSearchingUser", "isLoading"])
   },
-  data () {
-    return {}
+  data() {
+    return {};
   },
   methods: {
-    showJobDetail (job) {
-      this.$router.push(`/jobs/${job._id}`)
-      this.$store.commit('SET_JOBDETAIL', job)
+    showJobDetail(job) {
+      this.$router.push(`/jobs/${job._id}`);
+      this.$store.commit("SET_JOBDETAIL", job);
     },
-    showCompanyDetail (company) {
-      this.$router.push(`/company/${company._id}`)
-      this.$store.dispatch('getCompanyDetail', company._id)
+    showCompanyDetail(company) {
+      this.$router.push(`/company/${company._id}`);
+      this.$store.dispatch("getCompanyDetail", company._id);
     },
-    cancelApplication (jobId) {
-      this.$store.dispatch('cancelApplication', jobId)
+    cancelApplication(jobId) {
+      this.$alertify
+        .confirm(
+          () => this.$alertify.success("ok"),
+          () => this.$store.dispatch("cancelApplication", jobId)
+        )
+        .setHeader(
+          '<h1 class=" text-warning"><i class="fa fa-exclamation-triangle"></i> Warning !!!</h1> '
+        )
+        .setContent(
+          '<h5 class="text-justify" style="min-height:100px"> Are you sure you want to cancel your application ? you cannot revert this !!! </h5>'
+        )
+        .show();
+      
     }
   },
-  created () {
-    this.$store.dispatch('findUser')
+  created() {
+    this.$store.dispatch("findUser");
   }
-}
+};
 </script>
 
 <style scoped>
@@ -128,8 +140,8 @@ a {
 }
 
 td {
-  font-family: "Lateef", cursive;
-  font-size: 1.4rem;
+  font-family: "Gothic A1", sans-serif;
+  font-size: 1 rem;
 }
 
 th {
@@ -139,4 +151,8 @@ th {
 .fa-ban:hover {
   color: red;
 }
+
+#applicant_status {
+  font-weight: bolder
+} 
 </style>

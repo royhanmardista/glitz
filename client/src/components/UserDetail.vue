@@ -25,7 +25,7 @@
                 class="rounded"
               />
             </div>
-            <div class="col-md-9 d-flex flex-column p-0 m-0 container-fluid">
+            <div class="col-md-9 d-flex flex-column p-0 m-2 container-fluid">
               <div class="d-flex">
                 <h3 class="">{{userProfile.fullname.toUpperCase()}}</h3>
                 <div
@@ -70,7 +70,7 @@
                 <div class="col-md-4">
                   <h4 class="text-secondary">Statistic</h4>
                   <h1>{{userProfile.appliedJob.length}}</h1>
-                  <p>Applications Sent</p>
+                  <p class="mb-0">Applications Sent</p>
                 </div>
               </div>
             </div>

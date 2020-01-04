@@ -249,7 +249,6 @@ export default new Vuex.Store({
         this._vm.$alertify.success(data.message)
         commit('SET_LOGGED_USER', data.user)
       } catch (err) {
-        console.log(err.response)
         this._vm.$alertify.error(err.response.data.message)
       } finally {
         commit('SET_ISLOADING', false)
@@ -340,7 +339,6 @@ export default new Vuex.Store({
       } = state.userProfile
       try {
         commit('SET_ISLOADING', true)
-        console.log(location)
         let {
           data
         } = await server.put(`/profile`, {
@@ -692,7 +690,6 @@ export default new Vuex.Store({
         commit('SET_EMPTY_USER_COMPANY')
         router.push('/home')
       } catch (err) {
-        console.log(err)
         this._vm.$alertify.error(err.response.data.message)
       } finally {
         commit('SET_DELETING_COMPANY', false)

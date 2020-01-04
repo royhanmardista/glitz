@@ -88,7 +88,7 @@
             <h5 class="text-uppercase">
               <i class="fa fa-star"></i> Glintzzz
             </h5>
-            <p>Glintzzz is job portal website I perposely disign to work similar with glints, hence the name, but of course not all the features are implemented here hehe. This website use vuejs(vuex) and bootstrap for client side and nodejs with express for server side.</p>
+            <p style="font-size:.8rem" class="text-justify">Glintzzz is job portal website I perposely disign to work similar with glints, hence the name, but of course not all the features are implemented here hehe. This website use vuejs(vuex) and bootstrap for client side and nodejs with express for server side.</p>
           </div>
           <!-- Grid column -->
 

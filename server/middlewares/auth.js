@@ -49,7 +49,7 @@ module.exports = {
                 } else {
                     throw ({
                         status: 403,
-                        message: 'you are not authorized'
+                        message: 'You are Not Authorized'
                     })
                 }
             }

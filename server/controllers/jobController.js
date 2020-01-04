@@ -84,7 +84,11 @@ class jobController {
                     $ne: req.user._id
                 }
             }).populate('companyId')
-            res.json(jobs)
+            if (jobs.length) {
+                res.json(jobs)
+            } else {
+                res.status(204).json(jobs)
+            }
         } catch (err) {
             next(err)
         }
@@ -451,7 +455,7 @@ class jobController {
                         jobs,
                         message: 'job succesfully save',
                         job
-                    })                    
+                    })
                 } else {
                     throw ({
                         status: 400,

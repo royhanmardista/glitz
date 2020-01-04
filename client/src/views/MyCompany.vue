@@ -15,23 +15,23 @@
             class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow d-flex flex-column justify-content-between bg-light"
           >
             <div>
-              <h1>{{userCompany.name}}</h1>
+              <h1 class="mb-0">{{userCompany.name}}</h1>
             </div>
             <div
-              class="d-flex justify-content-between text-secondary border-bottom container-fluid"
+              class="text-secondary border-bottom container-fluid m-0 p-1"
             >
-              <div class="row d-flex justify-content-between pb-2 mt-2">
-                <div class="d-flex justify-content-between flex-column">
+              <div class="row d-flex justify-content-between pb-2 mt-2" id="company_detail">
+                <div class="d-flex flex-column justify-content-between col-md-6">
                   <div>
                     <i class="fa fa-location-arrow mr-1"></i>
                     {{userCompany.location}}
                   </div>
                   <div>
-                    <i class="fa fa-industry"></i>
+                    <i class="fa fa-truck"></i>
                     {{userCompany.category}}
                   </div>
                 </div>
-                <div class="d-flex justify-content-between flex-column">
+                <div class="d-flex justify-content-between flex-column col-md-6">
                   <div>
                     <b-link :href="userCompany.url" target="blank">
                       <div>{{userCompany.url}}</div>
@@ -72,7 +72,7 @@
             class="col-md-10 offset-md-1 p-3 col-sm-12 col-xs-12 shadow d-flex flex-column justify-content-between bg-white"
           >
             <h3>Description</h3>
-            <p v-html="userCompany.description"></p>
+            <p class="text-justify" v-html="userCompany.description"></p>
           </div>
         </div>
         <div class="row mt-4">
@@ -203,7 +203,7 @@ export default {
           () => this.$store.dispatch("deleteCompany", companyId)
         )
         .setHeader(
-          '<h1 class=" text-danger"><i class="fa fa-exclamation-circle"></i> Danger !!!</h1> '
+          '<h1 class=" text-danger"><i class="fa fa-frown-o"></i></i> Danger !!!</h1> '
         )
         .setContent(
           '<h5 class="text-justify" style="min-height:100px"> Are you sure, you want to delete your company ? it will also <span class="text-danger"> delete </span> all jobs you have posted and you cannot revert this !!! </h5>'
@@ -225,10 +225,10 @@ export default {
           () => this.$store.dispatch("deleteJob", id)
         )
         .setHeader(
-          '<h1 class=" text-warning"> <i class="fa fa-question-circle"></i> Warning !!!</h1> '
+          '<h1 class=" text-danger"> <i class="fa fa-exclamation-circle"></i> Warning !!!</h1> '
         )
         .setContent(
-          '<h5 class="text-justify" style="min-height:100px"> Are you sure, you want to delete this job ? you cannot revert this !!! </h5>'
+          '<h5 class="text-justify" style="min-height:100px"> Are you sure, you want to <span class="text-danger">delete</span> this job ? you cannot revert this !!! </h5>'
         )
         .show();
     },
@@ -278,5 +278,10 @@ export default {
 p {
   margin: 0.5rem 1rem;
   font-family: "Gothic A1", sans-serif;
+}
+
+#company_detail {
+  font-family: "Gothic A1", sans-serif;
+  font-size: 0.9rem
 }
 </style>
