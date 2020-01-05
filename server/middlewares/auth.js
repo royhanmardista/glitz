@@ -80,8 +80,9 @@ module.exports = {
         }
     },
     companyAuthorization: async function (req, res, next) {
+        let companyId = req.params.id || req.params.companyId 
         try {
-            let company = await Company.findById(req.params.id)
+            let company = await Company.findById(companyId)
             if (company) {
                 if (String(company.user) == req.user._id) {
                     next()
