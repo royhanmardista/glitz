@@ -1,5 +1,9 @@
 `use strict`
-if (process.env.NODE_ENV === 'development') {
+// if (process.env.NODE_ENV === 'development') {
+//     require('dotenv').config()
+// }
+
+if (process.env.NODE_ENV) {
     require('dotenv').config()
 }
 
@@ -33,3 +37,5 @@ app.use(errorHandler)
 
 // connect to express
 app.listen(port, () => console.log(`App listening on port ${port}!`))
+
+module.exports = app

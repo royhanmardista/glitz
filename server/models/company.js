@@ -22,7 +22,8 @@ const companySchema = new Schema({
     },
     description: {
         type: String,
-        required: [true, 'you must fill the description']
+        required: [true, 'you must fill the description'],
+        minlength: [150, 'minimum description length is 150 character']
     },
     user: {
         type: Schema.Types.ObjectId,
@@ -46,7 +47,7 @@ const companySchema = new Schema({
             'Manufacturing',
             'Creative & Design', null
         ],
-        required : [true, "you must fill your company category "]
+        required : [true, "you must fill your company category"]
     }
 }, {
     timestamps: true,

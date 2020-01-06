@@ -19,8 +19,9 @@ module.exports = (err, req, res, next) => {
                 message: messages
             })   
         case 'CastError':
+            let message =err.message.split('"')[err.message.split('"').length - 2] + 'Id invalid'
             return res.status(400).send({
-                message: `id invalid`
+                message,
             })  
         case 'JsonWebTokenError' : {
             return res.status(400).send({
